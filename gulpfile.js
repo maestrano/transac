@@ -11,47 +11,56 @@ var coffee = require('gulp-coffee');
 var es = require('event-stream');
 var templateCache = require('gulp-angular-templatecache');
 
-/**
- * File patterns
- **/
 
+/**
+ *    Directory patterns
+ **/
 // Root directory
 var rootDirectory = path.resolve('./');
-
 // Source directory for build process
-var sourceDirectory = path.join(rootDirectory, './src');
-
+var sourceDirectory = path.join(rootDirectory, './src/transac');
 // // tests
 // var testDirectory = path.join(rootDirectory, './test/unit');
 
+
+/**
+ *    Source file groups
+ **/
 var sourceCoffee = [
   // Make sure module files are handled first
   path.join(sourceDirectory, '/**/*.module.coffee'),
   // Then add all Coffee files
   path.join(sourceDirectory, '/**/*.coffee')
 ];
-
 var sourceLess = [
-  path.join(sourceDirectory, '/stylesheets/variables.less'),
-  path.join(sourceDirectory, '/stylesheets/mixins.less'),
-  path.join(sourceDirectory, '/stylesheets/globals.less'),
-  path.join(sourceDirectory, '/components/**/*.less')
+  path.join(sourceDirectory, '/styles/variables.less'),
+  path.join(sourceDirectory, '/styles/globals.less'),
+  path.join(sourceDirectory, '/styles/mixins.less'),
+  path.join(sourceDirectory, '/transac.less'),
+  path.join(sourceDirectory, '/{components,common}/**/*.less'),
 ]
-
 var sourceHtml = [
   path.join(sourceDirectory, '**/*.html')
 ]
 
+/**
+ *    Tasks
+ **/
 // Builds Angular $templateCache, compile coffee, build js dist
 gulp.task('build', ['styles'], function() {
   var templateCacheStream = gulp.src([
-      path.join(sourceDirectory, '/components/**/*.html')
+      path.join(sourceDirectory, '/**/*.html')
     ])
     .pipe(templateCache('temp.js', {
-      module: 'transac.templates',
+      module: 'maestrano.transac',
+      // Remove file extension and shorten path nesting.
       transformUrl: function (url) {
-        path_without_file_ext = url.split('.')[0]
-        return path_without_file_ext;
+        if ((url = url.split('/')).length > 1) {
+          url.pop()
+          return url.join('/');
+        } else {
+          return url[0].split('.')[0]
+        }
       }
     }));
 
