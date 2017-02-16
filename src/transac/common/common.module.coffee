@@ -1,1 +1,4 @@
-angular.module('transac.common', [])
+angular.module('transac.common',
+  [
+    'transac.top-bar'
+  ])

@@ -1,0 +1,22 @@
+top-bar {
+  display: block;
+  background-color: @top-bar-background-color;
+  border: @top-bar-border;
+  box-shadow: @top-bar-box-shadow;
+  text-transform: uppercase;
+
+  .menu-section {
+    text-align: center;
+    a {
+      color: @top-bar-menu-item-color;
+      &:hover { text-decoration: none; }
+    }
+    .menu-item {
+      padding: 3px 16px;
+      cursor: pointer;
+      &.active {
+        border-bottom: @top-bar-menu-item-active-border-bottom;
+      }
+    }
+  }
+}
