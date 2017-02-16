@@ -6,12 +6,15 @@ top-bar {
   text-transform: uppercase;
 
   .menu-section {
+    display: flex;
     text-align: center;
     a {
+      width: 100%;
       color: @top-bar-menu-item-color;
       &:hover { text-decoration: none; }
     }
     .menu-item {
+      width: 100%;
       padding: 3px 16px;
       cursor: pointer;
       &.active {
