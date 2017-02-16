@@ -10,6 +10,7 @@ var jshint = require('gulp-jshint');
 var coffee = require('gulp-coffee');
 var es = require('event-stream');
 var templateCache = require('gulp-angular-templatecache');
+var ngAnnotate = require('gulp-ng-annotate');
 
 
 /**
@@ -70,6 +71,7 @@ gulp.task('build', ['styles'], function() {
   ])
   .pipe(plumber())
   .pipe(concat('transac.js'))
+  .pipe(ngAnnotate())
   .pipe(gulp.dest('./dist/'))
   .pipe(uglify())
   .pipe(rename('transac.min.js'))
