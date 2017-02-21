@@ -1,58 +1,71 @@
+// TODO: abstract common styles to mixins / globals
+// TODO: column gutter customisation mixins
 transaction {
   display: block;
   background-color: @transaction-background-color;
-  .component-container {
-    &:hover {
+
+  &:hover {
+    background-color: @transaction-hover-background-color;
+  }
+
+  .summary {
+    height: @transaction-height;
+    width: 100%;
+    display: flex;
+    &.selected {
       background-color: @transaction-hover-background-color;
+      border-bottom: 2px solid darken(@transac-lightgrey, 10%);
     }
-    .summary {
-      height: @transaction-height;
-      width: 100%;
-      display: flex;
-      a.title {
-        width: 87%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        padding: 0px 10px;
-        text-transform: capitalize;
-        font-size: 14px;
-        font-weight: bold;
-        color: inherit;
-        text-decoration: none;
-      }
-      .actions {
-        display: flex;
-        flex-direction: row-reverse;
-        flex-grow: 2;
-        button {
-          border: none;
-          padding: 10px 18px;
-          margin: 1px;
-          max-width: 60px;
-          background-color: inherit;
-        }
-        .deny {
-          color: @transaction-deny-color;
-        }
-        .approve {
-          color: @transaction-approve-color;
-        }
-      }
-      &.selected {
-        border-bottom: 2px solid darken(@transac-lightgrey, 10%);
-      }
+  }
+
+  .summary-title {
+    width: 87%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0px 10px;
+    text-transform: capitalize;
+    font-size: 14px;
+    font-weight: bold;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .summary-actions {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-grow: 2;
+    button {
+      border: none;
+      padding: 10px 18px;
+      margin: 1px;
+      max-width: 60px;
+      background-color: inherit;
     }
-    .detail-container {
-      padding: 5px 15px 0 15px;
-      .detail {
-        background-color: white;
-        .section {
-          max-height: 180px;
-          height: 180px;
-          overflow: auto;
-        }
-      }
+  }
+
+  .summary-actions-approve {
+    color: @transaction-approve-color;
+    &:hover {
+      color: @transaction-approve-color;
     }
+  }
+
+  .summary-actions-deny {
+    color: @transaction-deny-color;
+    &:hover {
+      color: @transaction-deny-color;
+    }
+  }
+
+  .detail {
+    padding: 0 15px;
+    background-color: white;
+  }
+
+  .detail-section {
+    max-height: 180px;
+    height: 180px;
+    overflow: auto;
   }
 }

@@ -1,35 +1,33 @@
-<div class="component-container" ng-class="{ 'selected': $ctrl.isDetailExpanded }">
-  <div class="summary">
-    <a href="" class="title" ng-click="$ctrl.expandDetailsOnClick()">
-      <span>{{$ctrl.title()}}</span>
-    </a>
-    <div class="actions">
-      <button type="button" class="btn btn-default deny" ng-click="$ctrl.commitOnClick()">
-        <i class="fa fa-times fa-2x"></i>
-      </button>
-      <button type="button" class="btn btn-default approve" ng-click="$ctrl.denyOnClick()">
-        <i class="fa fa-check fa-2x"></i>
-      </button>
-    </div>
+<div class="summary" ng-class="{ 'selected': $ctrl.isDetailExpanded }">
+  <a href="" class="summary-title" ng-click="$ctrl.expandDetailsOnClick()">
+    <span>{{$ctrl.title()}}</span>
+  </a>
+  <div class="summary-actions">
+    <button type="button" class="btn btn-default summary-actions-deny" ng-click="$ctrl.commitOnClick()">
+      <i class="fa fa-times fa-2x"></i>
+    </button>
+    <button type="button" class="btn btn-default summary-actions-approve" ng-click="$ctrl.denyOnClick()">
+      <i class="fa fa-check fa-2x"></i>
+    </button>
   </div>
-  <div class="detail-container">
-    <div class="detail row" ng-if="$ctrl.isDetailExpanded">
-      <div class="col-md-5 section">
-        <table class="table borderless table-striped">
-          <tr>
-            <td>Jill</td>
-            <td>Smith</td>
-            <td>50</td>
-          </tr>
-          <tr>
-            <td>Eve</td>
-            <td>Jackson</td>
-            <td>94</td>
-          </tr>
-        </table>
-      </div>
-      <div class="col-md-4 section"></div>
-      <div class="col-md-3 section"></div>
+</div>
+<div class="detail" ng-if="$ctrl.isDetailExpanded">
+  <div class="row">
+    <div class="col-md-5 detail-section">
+      <table class="table table-striped borderless">
+        <tr>
+          <td>Jill</td>
+          <td>Smith</td>
+          <td>50</td>
+        </tr>
+        <tr>
+          <td>Eve</td>
+          <td>Jackson</td>
+          <td>94</td>
+        </tr>
+      </table>
     </div>
+    <div class="col-md-4 detail-section"></div>
+    <div class="col-md-3 detail-section"></div>
   </div>
 </div>
