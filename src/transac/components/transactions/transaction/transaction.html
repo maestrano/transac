@@ -3,11 +3,11 @@
     <span>{{$ctrl.title()}}</span>
   </div>
   <div class="actions">
-    <button type="button" class="btn btn-default approve">
-      <i class="fa fa-square"></i>
-    </button>
     <button type="button" class="btn btn-default deny" ng-click="$ctrl.commitOnClick()">
-      <i class="fa fa-square"></i>
+      <i class="fa fa-times fa-2x"></i>
+    </button>
+    <button type="button" class="btn btn-default approve" ng-click="$ctrl.denyOnClick()">
+      <i class="fa fa-check fa-2x"></i>
     </button>
   </div>
 </div>

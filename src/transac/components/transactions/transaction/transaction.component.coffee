@@ -14,13 +14,17 @@ angular.module('transac.transaction').component('transaction', {
     ctrl.title = ()->
       TransactionService.formatTitle(ctrl.transaction)
 
+    ctrl.expandDetailsOnClick = ()->
+      console.log('expanded!')
+
     ctrl.commitOnClick = ()->
       mappings = ctrl.transaction.mappings
       console.log('commit click!', mappings)
       TransactionService.commit(ctrl.transaction.links.commit, mappings)
 
-    ctrl.expandDetailsOnClick = ()->
-      console.log('expanded!')
+    ctrl.denyOnClick = ()->
+      mappings = ctrl.transaction.mappings
+      console.log('deny click!', mappings)
 
     return
 })
