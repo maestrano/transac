@@ -15,7 +15,7 @@ angular.module('transac.transaction').component('transaction', {
       TransactionService.formatTitle(ctrl.transaction)
 
     ctrl.expandDetailsOnClick = ()->
-      console.log('expanded!')
+      ctrl.isDetailExpanded = !ctrl.isDetailExpanded
 
     ctrl.commitOnClick = ()->
       mappings = ctrl.transaction.mappings
