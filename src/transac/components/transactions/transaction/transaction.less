@@ -1,0 +1,31 @@
+transaction {
+  display: block;
+  padding: 5px 15px;
+  height: @transaction-height;
+  background-color: @transaction-background-color;
+  margin: 5px 0;
+
+  .content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    .title {
+      width: 87%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      text-transform: capitalize;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .actions {
+      display: flex;
+      flex-direction: row-reverse;
+      flex-grow: 2;
+      button {
+        padding: 10px 25px;
+        border: 1px solid white;
+      }
+    }
+  }
+}

@@ -1,1 +1,3 @@
-angular.module('transac.transactions', [])
+angular.module('transac.transactions', [
+  'transac.transaction'
+])

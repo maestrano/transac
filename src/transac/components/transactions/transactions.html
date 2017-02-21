@@ -1,5 +1,4 @@
-<div class="row">
-  <div ng-repeat="transaction in $ctrl.transactions track by $index">
-    <p>Transaction: {{::transaction.name}}</p>
-  </div>
+<!-- <transactions-controls></transactions-controls> -->
+<div class="transaction-container">
+  <transaction transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by $index"></transaction>
 </div>
