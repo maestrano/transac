@@ -3,13 +3,14 @@ transaction {
   padding: 5px 15px;
   height: @transaction-height;
   background-color: @transaction-background-color;
-  margin: 5px 0;
-
+  &:hover {
+    background-color: @transaction-hover-background-color;
+  }
   .content {
     height: 100%;
     width: 100%;
     display: flex;
-    .title {
+    a.title {
       width: 87%;
       height: 100%;
       display: flex;
@@ -17,15 +18,19 @@ transaction {
       text-transform: capitalize;
       font-size: 14px;
       font-weight: bold;
+      color: inherit;
+      text-decoration: none;
     }
     .actions {
       display: flex;
       flex-direction: row-reverse;
       flex-grow: 2;
       button {
+        border: none;
         padding: 10px 18px;
         margin: 1px;
-        border: 1px solid white;
+        max-width: 60px;
+        background-color: inherit;
       }
       .deny {
         color: @transaction-deny-color;
