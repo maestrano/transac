@@ -5,21 +5,20 @@ top-bar {
   box-shadow: @top-bar-box-shadow;
   text-transform: uppercase;
 
-  .menu-section {
+  .menu {
     display: flex;
     text-align: center;
-    a {
-      width: 100%;
-      color: @top-bar-menu-item-color;
-      text-decoration: none;
-    }
-    .menu-item {
-      width: 100%;
-      padding: 3px 16px;
-      cursor: pointer;
-      &.active {
-        border-bottom: @top-bar-menu-item-active-border-bottom;
-      }
+  }
+
+  .menu-tab {
+    width: 100%;
+    color: @top-bar-menu-item-color;
+    text-decoration: none;
+    width: 100%;
+    padding: 3px 16px;
+    cursor: pointer;
+    &.active {
+      border-bottom: @top-bar-menu-item-active-border-bottom;
     }
   }
 }
