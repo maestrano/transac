@@ -23,6 +23,7 @@ angular.module('transac.transaction').service('TransactionService', ()->
   # Format title depending on transaction entity type
   # TODO: dynamic way of building the titles?
   #     - compile transcluded components into <transaction>? e.g <account> or <credit-note>
+  #     - API handled?
   @formatTitle = (transaction)->
     action = transaction.transaction_log.action.toLowerCase()
     entity = transaction.transaction_log.entity_type.split('::').slice(-1)[0].toLowerCase()
@@ -34,7 +35,7 @@ angular.module('transac.transaction').service('TransactionService', ()->
     "#{action} #{entity}: #{title}"
 
   # Flatten nested objects to display all changes fields simply.
-  # TODO: like @formatTitle, I think components for each entity type may be neccessary.
+  # TODO: change API for more UI friendly layout
   @flattenChanges = (x, result = {}, prefix = null)->
     if _.isObject(x)
       _.each(x, (v, k)-> _self.flattenChanges(v, result, k))

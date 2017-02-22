@@ -3,10 +3,10 @@
     <span>{{::$ctrl.title()}}</span>
   </a>
   <div class="summary-actions">
-    <button type="button" class="summary-actions-deny" ng-click="$ctrl.commitOnClick()">
+    <button type="button" class="summary-actions-action--deny" ng-click="$ctrl.denyOnClick()">
       <i class="fa fa-times fa-2x"></i>
     </button>
-    <button type="button" class="summary-actions-approve" ng-click="$ctrl.denyOnClick()">
+    <button type="button" class="summary-actions-action--approve" ng-click="$ctrl.commitOnClick(true)">
       <i class="fa fa-check fa-2x"></i>
     </button>
   </div>
@@ -25,11 +25,30 @@
       <div class="detail-section-title">
         <h5>Select apps to share with:</h5>
       </div>
-      <div type="button" class="detail-section-app" ng-repeat="mapping in $ctrl.transaction.mappings track by mapping.group_id" ng-click="$ctrl.selectAppOnClick($event, mapping)">
+      <div class="detail-section-app" ng-repeat="mapping in $ctrl.transaction.mappings track by mapping.group_id" ng-click="$ctrl.selectAppOnClick($event, mapping)">
         <span>{{::mapping.app_name}}</span>
         <input type="checkbox" ng-checked="mapping.commit">
       </div>
     </div>
-    <div class="col-md-3 detail-section no-gutters"></div>
+    <div class="col-md-3 detail-section no-gutters">
+      <div class="detail-section-action detail-section-action--approve" ng-click="$ctrl.commitOnClick()">
+        <span>Approve only this time</span>
+        <button type="button">
+          <i class="fa fa-check fa-2x"></i>
+        </button>
+      </div>
+      <div class="detail-section-action detail-section-action--deny" ng-click="$ctrl.denyOnClick(true)">
+        <span>Never share this record</span>
+        <button type="button">
+          <i class="fa fa-ban"></i>
+        </button>
+      </div>
+      <div class="detail-section-action detail-section-action--duplicate" ng-click="$ctrl.mergeOnClick()">
+        <span>This record is a duplicate</span>
+        <button type="button">
+          <i class="fa fa-link fa-2x"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </div>

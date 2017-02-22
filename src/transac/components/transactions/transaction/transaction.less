@@ -2,7 +2,7 @@ transaction {
   display: block;
   background-color: @transaction-background-color;
 
-  .list-on-hover(@transaction-hover-background-color);
+  .transac-list-on-hover(@transaction-hover-background-color);
 
   .summary {
     height: @transaction-height;
@@ -31,27 +31,14 @@ transaction {
     display: flex;
     flex-direction: row-reverse;
     flex-grow: 2;
-    button {
-      border: none;
-      padding: 10px 18px;
-      margin: 1px;
-      max-width: 60px;
-      background-color: inherit;
-    }
   }
 
-  .summary-actions-approve {
-    color: @transaction-approve-color;
-    &:hover {
-      color: lighten(@transaction-approve-color, 10%);
-    }
+  .summary-actions-action--approve {
+    .transac-action-button(@transaction-approve-color);
   }
 
-  .summary-actions-deny {
-    color: @transaction-deny-color;
-    &:hover {
-      color: lighten(@transaction-deny-color, 10%);
-    }
+  .summary-actions-action--deny {
+    .transac-action-button(@transaction-deny-color);
   }
 
   .detail {
@@ -67,12 +54,15 @@ transaction {
 
   .detail-section-title {
     text-align: center;
+    h5 {
+      .transac-sub-heading();
+    }
   }
 
   .detail-section-app {
     display: flex;
     padding: 10px;
-    .list-on-hover(@transaction-hover-background-color);
+    .transac-list-on-hover(@transaction-hover-background-color);
     span {
       display: flex;
       flex-grow: 1;
@@ -81,4 +71,40 @@ transaction {
       display: flex;
     }
   }
+
+  .detail-section-action {
+    display: flex;
+    align-items: center;
+    span {
+      text-align: right;
+      display: flex;
+      flex-grow: 1;
+      flex-direction: row-reverse;
+      margin-right: 5px;
+      .transac-sub-heading();
+    }
+  }
+
+  .detail-section-action--approve {
+    margin-top: 10px;
+    button {
+      .transac-action-button(@transaction-approve-color);
+    }
+  }
+
+  .detail-section-action--deny {
+    button {
+      .transac-action-button(@transaction-deny-color);
+    }
+    .fa-ban {
+      font-size: 23px;
+    }
+  }
+
+  .detail-section-action--duplicate {
+    button {
+      .transac-action-button(@transaction-duplicate-color);
+    }
+  }
+
 }

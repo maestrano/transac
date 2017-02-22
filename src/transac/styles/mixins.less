@@ -1,5 +1,22 @@
-.list-on-hover(@color: @transac-lightgrey) {
+.transac-list-on-hover(@color: @transac-lightgrey) {
   &:hover {
     background-color: @color;
   }
+}
+
+.transac-action-button(@color) {
+  color: @color;
+  border: none;
+  padding: 10px 18px;
+  margin: 1px;
+  max-width: 60px;
+  background-color: inherit;
+  &:hover {
+    color: lighten(@color, 10%);
+  }
+}
+
+.transac-sub-heading(@font-size: 13px, @color: lighten(@transac-darkgrey, 15%)) {
+  font-size: @font-size;
+  color: @color;
 }
