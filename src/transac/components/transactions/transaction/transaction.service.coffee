@@ -1,5 +1,7 @@
 angular.module('transac.transaction').service('TransactionService', ()->
 
+  _self = @
+
   # PUT http://localhost:8080/api/v2/org-fbcy/accounts/a7c747f0-d577-0134-317d-74d43510c326/commit
   # {
   #   'mappings:'[{
@@ -30,6 +32,15 @@ angular.module('transac.transaction').service('TransactionService', ()->
       when 'creditnote'
         "#{_.get(transaction.changes, 'transaction_number')} (#{_.get(transaction.changes, 'type')})"
     "#{action} #{entity}: #{title}"
+
+  # Flatten nested objects to display all changes fields simply.
+  # TODO: like @formatTitle, I think components for each entity type may be neccessary.
+  @flattenChanges = (x, result = {}, prefix = null)->
+    if _.isObject(x)
+      _.each(x, (v, k)-> _self.flattenChanges(v, result, k))
+    else
+      result[prefix] = x
+    result
 
   return @
 )

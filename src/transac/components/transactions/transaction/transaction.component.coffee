@@ -10,21 +10,26 @@ angular.module('transac.transaction').component('transaction', {
     ctrl = this
 
     ctrl.$onInit = ->
+      ctrl.changes = TransactionService.flattenChanges(ctrl.transaction.changes)
+      # set default commit for each mapping to true
+      _.each(ctrl.transaction.mappings, (m)-> m.commit = true)
 
     ctrl.title = ()->
       TransactionService.formatTitle(ctrl.transaction)
 
-    ctrl.expandDetailsOnClick = ()->
-      ctrl.isDetailExpanded = !ctrl.isDetailExpanded
+    ctrl.selectOnClick = ()->
+      ctrl.isSelected = !ctrl.isSelected
 
     ctrl.commitOnClick = ()->
-      mappings = ctrl.transaction.mappings
-      console.log('commit click!', mappings)
-      TransactionService.commit(ctrl.transaction.links.commit, mappings)
+      console.log('commit click!', ctrl.transaction.mappings)
+      TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
 
     ctrl.denyOnClick = ()->
-      mappings = ctrl.transaction.mappings
-      console.log('deny click!', mappings)
+      console.log('deny click!', ctrl.transaction.mappings)
+
+    ctrl.selectAppOnClick = ($event, mapping)->
+      mapping.commit = !mapping.commit
+      console.log('select app!', mapping)
 
     return
 })

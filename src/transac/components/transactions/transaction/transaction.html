@@ -1,6 +1,6 @@
-<div class="summary" ng-class="{ 'selected': $ctrl.isDetailExpanded }">
-  <a href="" class="summary-title" ng-click="$ctrl.expandDetailsOnClick()">
-    <span>{{$ctrl.title()}}</span>
+<div class="summary" ng-class="{ 'selected': $ctrl.isSelected }">
+  <a href="" class="summary-title" ng-click="$ctrl.selectOnClick()">
+    <span>{{::$ctrl.title()}}</span>
   </a>
   <div class="summary-actions">
     <button type="button" class="summary-actions-deny" ng-click="$ctrl.commitOnClick()">
@@ -11,23 +11,25 @@
     </button>
   </div>
 </div>
-<div class="detail" ng-if="$ctrl.isDetailExpanded">
+<div class="detail" ng-if="$ctrl.isSelected">
   <div class="row">
-    <div class="col-md-5 detail-section no-gutters">
+    <div class="col-md-6 detail-section no-gutters">
       <table class="table table-striped borderless">
-        <tr>
-          <td>Jill</td>
-          <td>Smith</td>
-          <td>50</td>
-        </tr>
-        <tr>
-          <td>Eve</td>
-          <td>Jackson</td>
-          <td>94</td>
+        <tr ng-repeat="(key, value) in $ctrl.changes track by $index">
+          <td>{{::key}}</td>
+          <td>{{::value}}</td>
         </tr>
       </table>
     </div>
-    <div class="col-md-4 detail-section no-gutters"></div>
+    <div class="col-md-3 detail-section no-gutters">
+      <div class="detail-section-title">
+        <h5>Select apps to share with:</h5>
+      </div>
+      <div type="button" class="detail-section-app" ng-repeat="mapping in $ctrl.transaction.mappings track by mapping.group_id" ng-click="$ctrl.selectAppOnClick($event, mapping)">
+        <span>{{::mapping.app_name}}</span>
+        <input type="checkbox" ng-checked="mapping.commit">
+      </div>
+    </div>
     <div class="col-md-3 detail-section no-gutters"></div>
   </div>
 </div>

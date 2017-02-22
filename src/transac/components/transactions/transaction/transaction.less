@@ -2,9 +2,7 @@ transaction {
   display: block;
   background-color: @transaction-background-color;
 
-  &:hover {
-    background-color: @transaction-hover-background-color;
-  }
+  .list-on-hover(@transaction-hover-background-color);
 
   .summary {
     height: @transaction-height;
@@ -65,5 +63,22 @@ transaction {
     max-height: 180px;
     height: 180px;
     overflow: auto;
+  }
+
+  .detail-section-title {
+    text-align: center;
+  }
+
+  .detail-section-app {
+    display: flex;
+    padding: 10px;
+    .list-on-hover(@transaction-hover-background-color);
+    span {
+      display: flex;
+      flex-grow: 1;
+    }
+    input {
+      display: flex;
+    }
   }
 }
