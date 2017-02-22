@@ -21,19 +21,23 @@ angular.module('transac.transaction').component('transaction', {
     ctrl.selectOnClick = ()->
       ctrl.isSelected = !ctrl.isSelected
 
-    ctrl.commitOnClick = (auto=false)->
-      console.log('commit click!', auto, ctrl.transaction.mappings)
+    ctrl.approveOnClick = (auto=false)->
+      _.each(ctrl.transaction.mappings, (m)-> m.auto_commit = auto)
       TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
 
     ctrl.denyOnClick = (auto=false)->
-      console.log('deny click! ', auto, ctrl.transaction.mappings)
+      _.each(ctrl.transaction.mappings, (m)->
+        m.push_disabled = auto
+        m.commit = false
+      )
+      TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
 
     ctrl.mergeOnClick = ()->
-      console.log('merge click! ', ctrl.transaction.mappings)
+      console.log('displaying merge view!')
+      ctrl.displayMergeView = true
 
     ctrl.selectAppOnClick = ($event, mapping)->
       mapping.commit = !mapping.commit
-      console.log('select app!', mapping)
 
     return
 })

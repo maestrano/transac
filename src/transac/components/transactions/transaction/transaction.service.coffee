@@ -17,8 +17,8 @@ angular.module('transac.transaction').service('TransactionService', ()->
   # auto_commit: (true/false) automatically notify this application of future updates
   # pull_disabled: (true/false) rejects update coming from this application
   # push_disabled: (true/false) do not notify this application of updates
-  @commit = (url, params={})->
-    console.log('TransactionService.commit ', url, params)
+  @commit = (url, mappings)->
+    console.log('TransactionService.commit ', url, mappings)
 
   # Format title depending on transaction entity type
   # TODO: dynamic way of building the titles?
