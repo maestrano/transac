@@ -21,7 +21,7 @@ angular.module('transac.transaction').component('transaction', {
       ctrl.changes = TransactionService.flattenChanges(ctrl.transaction.changes)
       # Select to share with all apps by default
       _.each(ctrl.transaction.mappings, (m)-> m.sharedWith = true)
-      # Match transcation for potential duplicates
+      # Match transaction for potential duplicates
       TransactionService.matches(ctrl.transaction.links.matches).then(
         (transactions)->
           ctrl.matches = transactions
@@ -66,12 +66,7 @@ angular.module('transac.transaction').component('transaction', {
       )
 
     ctrl.mergeOnClick = ()->
-      # ctrl.onCommit(
-      #   EventEmitter({
-      #     transaction: ctrl.transaction
-      #     matches: ctrl.matches
-      #   })
-      # )
+      console.log('merge view!')
 
     ctrl.selectAppOnClick = ($event, mapping)->
       mapping.sharedWith = !mapping.sharedWith

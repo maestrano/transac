@@ -1,3 +1,3 @@
-<top-bar on-select-menu="$ctrl.onTopBarSelectMenu($event)"></top-bar>
+<top-bar on-select-menu="$ctrl.onTopBarSelectMenu($event)" transactions-count="$ctrl.transactionsCount"></top-bar>
 
-<transactions></transactions>
+<transactions on-transactions-change="$ctrl.updateTransactionsCount($event)"></transactions>

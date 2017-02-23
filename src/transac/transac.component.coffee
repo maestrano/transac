@@ -6,10 +6,16 @@ angular.module('maestrano.transac').component('transac', {
   },
   templateUrl: 'transac',
   controller: ()->
-    this.title = 'Transac! root component!'
+    ctrl = this
 
-    this.onTopBarSelectMenu = ({menu})->
+    ctrl.$onInit = ->
+      ctrl.transactionsCount = 0
+
+    ctrl.onTopBarSelectMenu = ({menu})->
       console.log('selected menu: ', menu)
+
+    ctrl.updateTransactionsCount = ({count})->
+      ctrl.transactionsCount = count
 
     return
 })

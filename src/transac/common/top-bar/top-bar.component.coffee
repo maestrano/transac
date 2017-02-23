@@ -4,6 +4,7 @@
 angular.module('transac.top-bar').component('topBar', {
   bindings: {
     onSelectMenu: '&'
+    transactionsCount: '<'
   },
   templateUrl: 'common/top-bar',
   controller: (MENUS, EventEmitter)->
@@ -21,6 +22,9 @@ angular.module('transac.top-bar').component('topBar', {
       ctrl.onSelectMenu(
         EventEmitter({menu: menu})
       )
+
+    ctrl.getCount = (menu)->
+      (menu.title && ctrl[menu.title.toLowerCase() + 'Count']) || 0
 
     return
 })

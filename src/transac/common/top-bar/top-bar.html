@@ -1,5 +1,5 @@
 <div class="menu">
   <a href="" class="menu-tab" ng-class="{ 'active': menu.active }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">
-    <h5>{{::menu.title}}</h5>
+    <h5>{{::menu.title}} ({{$ctrl.getCount(menu)}})</h5>
   </a>
 </div>
