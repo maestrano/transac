@@ -27,7 +27,6 @@ angular.module('transac.transaction').service('TransactionService', ($http)->
   # Find matching transacations rated with a score representing duplicate likelyhood.
   # GET http://localhost:8080/api/v2/org-fbcy/organizations/b1733560-d577-0134-317d-74d43510c326/matches
   @matches = (url, entity)->
-    console.log('TransactionService.match', url)
     isOrganization = _.includes(url, 'organizations')
     url = '/bower_components/transac/src/transac/components/transactions/matching-transactions.json'
     $http.get(url).then(

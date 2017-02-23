@@ -1,2 +1,2 @@
 <!-- <transactions-controls></transactions-controls> -->
-<transaction transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by $index"></transaction>
+<transaction transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)"></transaction>

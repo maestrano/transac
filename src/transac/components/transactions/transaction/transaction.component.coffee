@@ -4,9 +4,10 @@
 angular.module('transac.transaction').component('transaction', {
   bindings: {
     transaction: '<'
+    onCommit: '&'
   }
   templateUrl: 'components/transactions/transaction'
-  controller: (TransactionService)->
+  controller: (TransactionService, EventEmitter)->
     ctrl = this
 
     # Action Recipies
@@ -48,6 +49,9 @@ angular.module('transac.transaction').component('transaction', {
         return
       )
       TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
+      ctrl.onCommit(
+        EventEmitter({ transaction: ctrl.transaction })
+      )
 
     ctrl.denyOnClick = (auto=false)->
       # TODO: should push_disabled be force set false when m.commit is true?
@@ -57,10 +61,17 @@ angular.module('transac.transaction').component('transaction', {
         return
       )
       TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
+      ctrl.onCommit(
+        EventEmitter({ transaction: ctrl.transaction })
+      )
 
     ctrl.mergeOnClick = ()->
-      console.log('displaying merge view!')
-      ctrl.displayMergeView = true
+      # ctrl.onCommit(
+      #   EventEmitter({
+      #     transaction: ctrl.transaction
+      #     matches: ctrl.matches
+      #   })
+      # )
 
     ctrl.selectAppOnClick = ($event, mapping)->
       mapping.sharedWith = !mapping.sharedWith
