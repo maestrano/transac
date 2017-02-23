@@ -10,13 +10,12 @@ angular.module('transac.transactions').component('transactions', {
     ctrl = this
 
     ctrl.$onInit = ->
-      TransactionsService.getPendingTransactions().then(
-        (transactionGroups)->
-          ctrl.transactions = _.flatten(_.values(transactionGroups))
+      TransactionsService.get().then(
+        (transactions)->
+          ctrl.transactions = transactions
           ctrl.onTransactionsChange(
             EventEmitter({ count: ctrl.transactions.length })
           )
-          console.log('transactions: ', ctrl.transactions)
         (error)->
           # display error message
       )
