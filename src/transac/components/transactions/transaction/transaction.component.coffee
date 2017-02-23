@@ -9,26 +9,52 @@ angular.module('transac.transaction').component('transaction', {
   controller: (TransactionService)->
     ctrl = this
 
+    # Action Recipies
+    # “approve all the time” = `commit: true, auto_commit: true, push_disabled: false, pull_disabled: false`
+    # “approve once” = `commit: true, auto_commit: false, push_disabled: false, pull_disabled: false`
+    # “never share this record” = `commit: false, auto_commit: false, push_disabled: true, pull_disabled: false`
+    # “deny once” = `commit: false, auto_commit: false, push_disabled: false, pull_disabled: false`
+
     ctrl.$onInit = ->
       # Prepare transaction changes hash for display
       ctrl.changes = TransactionService.flattenChanges(ctrl.transaction.changes)
-      # Set default commit for each mapping to true
-      _.each(ctrl.transaction.mappings, (m)-> m.commit = true)
+      # Select to share with all apps by default
+      _.each(ctrl.transaction.mappings, (m)-> m.sharedWith = true)
+      # Match transcation for potential duplicates
+      TransactionService.matches(ctrl.transaction.links.matches).then(
+        (transactions)->
+          ctrl.matches = transactions
+        (error)->
+          # handle error
+      )
 
     ctrl.title = ()->
       TransactionService.formatTitle(ctrl.transaction)
+
+    ctrl.matchTitle = (transaction)->
+      TransactionService.formatMatchTitle(transaction)
+
+    ctrl.hasMatches = ->
+      ctrl.matches && ctrl.matches.length
 
     ctrl.selectOnClick = ()->
       ctrl.isSelected = !ctrl.isSelected
 
     ctrl.approveOnClick = (auto=false)->
-      _.each(ctrl.transaction.mappings, (m)-> m.auto_commit = auto)
+      # TODO: should auto_commit be force set false when m.commit is false?
+      _.each(ctrl.transaction.mappings, (m)->
+        m.commit = m.sharedWith
+        m.auto_commit = auto
+        return
+      )
       TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
 
     ctrl.denyOnClick = (auto=false)->
+      # TODO: should push_disabled be force set false when m.commit is true?
       _.each(ctrl.transaction.mappings, (m)->
+        m.commit = !m.sharedWith
         m.push_disabled = auto
-        m.commit = false
+        return
       )
       TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
 
@@ -37,7 +63,7 @@ angular.module('transac.transaction').component('transaction', {
       ctrl.displayMergeView = true
 
     ctrl.selectAppOnClick = ($event, mapping)->
-      mapping.commit = !mapping.commit
+      mapping.sharedWith = !mapping.sharedWith
 
     return
 })

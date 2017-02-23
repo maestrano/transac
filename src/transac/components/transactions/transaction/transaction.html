@@ -1,53 +1,82 @@
-<div class="summary" ng-class="{ 'selected': $ctrl.isSelected }">
-  <a href="" class="summary-title" ng-click="$ctrl.selectOnClick()">
-    <span>{{::$ctrl.title()}}</span>
-  </a>
-  <div class="summary-actions">
-    <button type="button" class="summary-actions-action--deny" ng-click="$ctrl.denyOnClick()">
-      <i class="fa fa-times fa-2x"></i>
-    </button>
-    <button type="button" class="summary-actions-action--approve" ng-click="$ctrl.approveOnClick(true)">
-      <i class="fa fa-check fa-2x"></i>
-    </button>
+<div ng-class="{ 'selected': $ctrl.isSelected }">
+  <div class="summary">
+    <a href="" class="summary-title" ng-click="$ctrl.selectOnClick()">
+      <div class="summary-title-caption">
+        <span>{{::$ctrl.title()}}</span>
+      </div>
+      <div class="summary-title-warning">
+        <div ng-if="$ctrl.hasMatches()">
+          <i class="fa fa-exclamation-triangle fa-lg"></i>
+          <span>This record may be a duplicate</span>
+        </div>
+      </div>
+    </a>
+    <div class="summary-actions">
+      <button type="button" class="summary-actions-action--deny" ng-click="$ctrl.denyOnClick()">
+        <i class="fa fa-times fa-2x"></i>
+      </button>
+      <button type="button" class="summary-actions-action--approve" ng-click="$ctrl.approveOnClick(true)">
+        <i class="fa fa-check fa-2x"></i>
+      </button>
+    </div>
   </div>
-</div>
-<div class="detail" ng-if="$ctrl.isSelected">
-  <div class="row">
-    <div class="col-md-6 detail-section no-gutters">
-      <table class="table table-striped borderless">
-        <tr ng-repeat="(key, value) in $ctrl.changes track by $index">
-          <td>{{::key}}</td>
-          <td>{{::value}}</td>
-        </tr>
-      </table>
+  <div class="detail" ng-if="$ctrl.isSelected">
+    <div class="row">
+      <div class="col-md-6 detail-section  no-gutters">
+        <table class="table table-striped borderless">
+          <tr ng-repeat="(key, value) in $ctrl.changes track by $index">
+            <td>{{::key}}</td>
+            <td>{{::value}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-3 detail-section no-gutters">
+        <div class="detail-section-title">
+          <h5>Select apps to share with:</h5>
+        </div>
+        <div class="detail-section-app" ng-repeat="mapping in $ctrl.transaction.mappings track by mapping.group_id" ng-click="$ctrl.selectAppOnClick($event, mapping)">
+          <span>{{::mapping.app_name}}</span>
+          <input type="checkbox" ng-checked="mapping.sharedWith">
+        </div>
+      </div>
+      <div class="col-md-3 detail-section no-gutters">
+        <div class="detail-section-action detail-section-action--approve" ng-click="$ctrl.approveOnClick()">
+          <span>Approve only this time</span>
+          <button type="button">
+            <i class="fa fa-check fa-2x"></i>
+          </button>
+        </div>
+        <div class="detail-section-action detail-section-action--deny" ng-click="$ctrl.denyOnClick(true)">
+          <span>Never share this record</span>
+          <button type="button">
+            <i class="fa fa-ban"></i>
+          </button>
+        </div>
+        <div class="detail-section-action detail-section-action--duplicate" ng-click="$ctrl.mergeOnClick()">
+          <span>This record is a duplicate</span>
+          <button type="button">
+            <i class="fa fa-link fa-2x"></i>
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="col-md-3 detail-section no-gutters">
-      <div class="detail-section-title">
-        <h5>Select apps to share with:</h5>
+    <div ng-if="$ctrl.hasMatches()">
+      <div class="row detail-spacers">
+        <div class="detail-spacers-spacer detail-spacers-spacer--left"></div>
+        <div class="detail-spacers-title">
+          <div>
+            <i class="fa fa-exclamation fa-lg"></i>
+            <span>Potential Duplicates</span>
+          </div>
+        </div>
+        <div class="detail-spacers-spacer detail-spacers-spacer--right"></div>
       </div>
-      <div class="detail-section-app" ng-repeat="mapping in $ctrl.transaction.mappings track by mapping.group_id" ng-click="$ctrl.selectAppOnClick($event, mapping)">
-        <span>{{::mapping.app_name}}</span>
-        <input type="checkbox" ng-checked="mapping.commit">
-      </div>
-    </div>
-    <div class="col-md-3 detail-section no-gutters">
-      <div class="detail-section-action detail-section-action--approve" ng-click="$ctrl.approveOnClick()">
-        <span>Approve only this time</span>
-        <button type="button">
-          <i class="fa fa-check fa-2x"></i>
-        </button>
-      </div>
-      <div class="detail-section-action detail-section-action--deny" ng-click="$ctrl.denyOnClick(true)">
-        <span>Never share this record</span>
-        <button type="button">
-          <i class="fa fa-ban"></i>
-        </button>
-      </div>
-      <div class="detail-section-action detail-section-action--duplicate" ng-click="$ctrl.mergeOnClick()">
-        <span>This record is a duplicate</span>
-        <button type="button">
-          <i class="fa fa-link fa-2x"></i>
-        </button>
+      <div class="row">
+        <div class="col-md-12 col-xs-12 detail-section detail-section-matches">
+          <div ng-repeat="match in $ctrl.matches track by $index" class="detail-section-matches-match">
+            {{::$ctrl.matchTitle(match)}}
+          </div>
+        </div>
       </div>
     </div>
   </div>

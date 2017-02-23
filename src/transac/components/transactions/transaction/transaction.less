@@ -4,27 +4,41 @@ transaction {
 
   .transac-list-on-hover(@transaction-hover-background-color);
 
+  .selected {
+    box-shadow: 0px 5px 10px -4px;
+    .summary {
+      background-color: @transaction-hover-background-color;
+      border-bottom: 2px solid @transac-grey;
+    }
+  }
+
   .summary {
     height: @transaction-height;
     width: 100%;
     display: flex;
-    &.selected {
-      background-color: @transaction-hover-background-color;
-      border-bottom: 2px solid darken(@transac-lightgrey, 10%);
-    }
   }
 
   .summary-title {
-    width: 87%;
     height: 100%;
     display: flex;
+    flex-grow: 30;
     align-items: center;
     padding: 0px 10px;
-    text-transform: capitalize;
-    font-size: 14px;
-    font-weight: bold;
     color: inherit;
     text-decoration: none;
+  }
+
+  .summary-title-caption {
+    display: flex;
+    flex-grow: 2;
+    .transac-heading();
+  }
+
+  .summary-title-warning {
+    display: flex;
+    flex-grow: 0;
+    color: @transaction-duplicate-warning-color;
+    span { font-size: 13px; }
   }
 
   .summary-actions {
@@ -46,6 +60,26 @@ transaction {
     background-color: white;
   }
 
+  .detail-spacers {
+    display: flex;
+  }
+  .detail-spacers-spacer {
+    display: flex;
+    border-bottom: 2px solid @transac-grey;
+    height: 12px;
+  }
+  .detail-spacers-title {
+    padding: 0px 12px;
+    color: @transaction-details-duplicate-warning-color;
+    i { padding: 0 3px }
+  }
+  .detail-spacers-spacer--left {
+    flex-grow: 1;
+  }
+  .detail-spacers-spacer--right {
+    flex-grow: 2.5;
+  }
+
   .detail-section {
     max-height: 180px;
     height: 180px;
@@ -53,7 +87,7 @@ transaction {
   }
 
   .detail-section-title {
-    text-align: center;
+    padding-left: 10px;
     h5 {
       .transac-sub-heading();
     }
@@ -105,6 +139,16 @@ transaction {
     button {
       .transac-action-button(@transaction-duplicate-color);
     }
+  }
+
+  .detail-section-matches {
+    height: 120px;
+    border-bottom: 1px solid @transac-lightgrey;
+  }
+
+  .detail-section-matches-match {
+    .transac-heading();
+    padding: 10px 0;
   }
 
 }
