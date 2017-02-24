@@ -26,10 +26,10 @@ angular.module('maestrano.transac').component('transac', {
       ctrl.isMerging = true
       ctrl.mergeData = args
 
-    ctrl.onMergeComplete = ({id, callback})->
+    ctrl.renderTransactionsComponent = ({id, callback} = {})->
       ctrl.isMerging = false
       ctrl.mergeData = null
-      callback(id)
+      callback(id) if callback && id
 
     return
 })

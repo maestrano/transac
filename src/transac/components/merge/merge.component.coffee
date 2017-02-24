@@ -20,5 +20,8 @@ angular.module('transac.merge').component('merge', {
         })
       )
 
+    ctrl.back = ->
+      ctrl.onMergeComplete(EventEmitter(null))
+
     return
 })
