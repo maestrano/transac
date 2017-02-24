@@ -1,3 +1,8 @@
-<top-bar on-select-menu="$ctrl.onTopBarSelectMenu($event)" transactions-count="$ctrl.transactionsCount"></top-bar>
+<div ng-hide="$ctrl.isMerging">
+  <top-bar on-select-menu="$ctrl.onTopBarSelectMenu($event)" transactions-count="$ctrl.transactionsCount"></top-bar>
 
-<transactions on-transactions-change="$ctrl.updateTransactionsCount($event)"></transactions>
+  <transactions on-transactions-change="$ctrl.updateTransactionsCount($event)" on-merge-duplicates="$ctrl.renderMergeComponent($event)"></transactions>
+</div>
+<div ng-show="$ctrl.isMerging">
+  <merge merge-data="$ctrl.mergeData" on-merge-complete="$ctrl.onMergeComplete($event)"></merge>
+</div>

@@ -5,6 +5,7 @@ angular.module('transac.transaction').component('transaction', {
   bindings: {
     transaction: '<'
     onCommit: '&'
+    onMerge: '&'
   }
   templateUrl: 'components/transactions/transaction'
   controller: (TransactionService, EventEmitter)->
@@ -22,6 +23,7 @@ angular.module('transac.transaction').component('transaction', {
       # Select to share with all apps by default
       _.each(ctrl.transaction.mappings, (m)-> m.sharedWith = true)
       # Match transaction for potential duplicates
+      # TODO: Move to API
       TransactionService.matches(ctrl.transaction.links.matches).then(
         (transactions)->
           ctrl.matches = transactions
@@ -42,31 +44,39 @@ angular.module('transac.transaction').component('transaction', {
       ctrl.isSelected = !ctrl.isSelected
 
     ctrl.approveOnClick = (auto=false)->
-      # TODO: should auto_commit be force set false when m.commit is false?
       _.each(ctrl.transaction.mappings, (m)->
         m.commit = m.sharedWith
+        # note: Connec! automatically sets auto_commit to false if commit is false
         m.auto_commit = auto
         return
       )
+      # TODO: move to transactions.component
       TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
       ctrl.onCommit(
         EventEmitter({ transaction: ctrl.transaction })
       )
 
     ctrl.denyOnClick = (auto=false)->
-      # TODO: should push_disabled be force set false when m.commit is true?
       _.each(ctrl.transaction.mappings, (m)->
         m.commit = !m.sharedWith
+        # note: Connec! automatically sets push_disable to false if commit is true
         m.push_disabled = auto
         return
       )
+      # TODO: move to transactions.component
       TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
       ctrl.onCommit(
         EventEmitter({ transaction: ctrl.transaction })
       )
 
     ctrl.mergeOnClick = ()->
-      console.log('merge view!')
+      return unless ctrl.hasMatches()
+      ctrl.onMerge(
+        EventEmitter({
+          transaction: ctrl.transaction
+          matches: ctrl.matches
+        })
+      )
 
     ctrl.selectAppOnClick = ($event, mapping)->
       mapping.sharedWith = !mapping.sharedWith
