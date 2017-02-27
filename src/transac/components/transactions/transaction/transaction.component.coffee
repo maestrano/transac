@@ -8,7 +8,7 @@ angular.module('transac.transaction').component('transaction', {
     onMerge: '&'
   }
   templateUrl: 'components/transactions/transaction'
-  controller: (TransactionService, EventEmitter)->
+  controller: (TransactionsService, EventEmitter)->
     ctrl = this
 
     # Action Recipies
@@ -19,12 +19,12 @@ angular.module('transac.transaction').component('transaction', {
 
     ctrl.$onInit = ->
       # Prepare transaction changes hash for display
-      ctrl.changes = TransactionService.flattenChanges(ctrl.transaction.changes)
+      ctrl.changes = TransactionsService.flattenChanges(ctrl.transaction.changes)
       # Select to share with all apps by default
       _.each(ctrl.transaction.mappings, (m)-> m.sharedWith = true)
       # Match transaction for potential duplicates
       # TODO: Move to API
-      TransactionService.matches(ctrl.transaction.links.matches).then(
+      TransactionsService.matches(ctrl.transaction.links.matches).then(
         (transactions)->
           ctrl.matches = transactions
         (error)->
@@ -32,10 +32,10 @@ angular.module('transac.transaction').component('transaction', {
       )
 
     ctrl.title = ()->
-      TransactionService.formatTitle(ctrl.transaction)
+      TransactionsService.formatTitle(ctrl.transaction)
 
     ctrl.matchTitle = (transaction)->
-      TransactionService.formatMatchTitle(transaction)
+      TransactionsService.formatMatchTitle(transaction)
 
     ctrl.hasMatches = ->
       ctrl.matches && ctrl.matches.length
@@ -51,7 +51,7 @@ angular.module('transac.transaction').component('transaction', {
         return
       )
       # TODO: move to transactions.component
-      TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
+      TransactionsService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
       ctrl.onCommit(
         EventEmitter({ transaction: ctrl.transaction })
       )
@@ -64,16 +64,18 @@ angular.module('transac.transaction').component('transaction', {
         return
       )
       # TODO: move to transactions.component
-      TransactionService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
+      TransactionsService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
       ctrl.onCommit(
         EventEmitter({ transaction: ctrl.transaction })
       )
 
     ctrl.mergeOnClick = ()->
       return unless ctrl.hasMatches()
+      # Prepare transaction for merge component display
+      transaction = angular.merge({}, ctrl.transaction.transaction_log, ctrl.transaction.changes)
       ctrl.onMerge(
         EventEmitter({
-          transaction: ctrl.transaction
+          transaction: transaction
           matches: ctrl.matches
         })
       )

@@ -1,5 +1,31 @@
 <div>
-  <p>hello world, Merge!</p>
   <button ng-click="$ctrl.back()">Back</button>
-  <button ng-click="$ctrl.publish()">Done</button>
+
+  <div class="edit" ng-show="$ctrl.editing">
+    <div class="edit--flex-wrap">
+      <div class="edit-transaction" ng-repeat="transaction in $ctrl.transactions track by $index">
+
+        <table class="table table-striped borderless">
+          <!-- <tr ng-repeat="(key, value) in transaction track by $index"> -->
+          <tr>
+            <th>Select</th>
+            <th>Field</th>
+            <th>Value</th>
+          </tr>
+          <tr>
+            <td><input type="checkbox"/></td>
+            <td>Code</td>
+            <td>EX-13340</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <button ng-click="$ctrl.next()">Next</button>
+  </div>
+
+  <div class="review" ng-hide="$ctrl.editing">
+
+    <button ng-click="$ctrl.publish()">Done</button>
+  </div>
 </div>

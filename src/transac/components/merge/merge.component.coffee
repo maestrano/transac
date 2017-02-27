@@ -11,11 +11,18 @@ angular.module('transac.merge').component('merge', {
     ctrl = this
 
     ctrl.$onInit = ->
+      console.log('mergeData: ', ctrl.mergeData)
+      ctrl.transactions = [].concat(ctrl.mergeData.transaction, ctrl.mergeData.matches)
+      # ctrl.transactions = [1,2,3,4,5,6]
+      ctrl.editing = true
+
+    ctrl.next = ->
+      ctrl.editing = false
 
     ctrl.publish = ->
       ctrl.onMergeComplete(
         EventEmitter({
-          id: ctrl.mergeData.transaction.transaction_log.id
+          id: ctrl.mergeData.transaction.id
           callback: ctrl.mergeData.callback
         })
       )

@@ -52,7 +52,7 @@
             <i class="fa fa-ban"></i>
           </button>
         </div>
-        <div class="detail-section-action detail-section-action--duplicate" ng-click="$ctrl.mergeOnClick()">
+        <div class="detail-section-action detail-section-action--duplicate" ng-click="$ctrl.mergeOnClick()" ng-if="$ctrl.hasMatches()">
           <span>This record is a duplicate</span>
           <button type="button">
             <i class="fa fa-link fa-2x"></i>

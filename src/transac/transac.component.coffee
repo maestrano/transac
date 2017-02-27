@@ -22,7 +22,6 @@ angular.module('maestrano.transac').component('transac', {
       ctrl.transactionsCount = count
 
     ctrl.renderMergeComponent = (args)->
-      console.log('renderMergeComponent: ', args)
       ctrl.isMerging = true
       ctrl.mergeData = args
 

@@ -3,6 +3,6 @@
 
   <transactions on-transactions-change="$ctrl.updateTransactionsCount($event)" on-merge-duplicates="$ctrl.renderMergeComponent($event)"></transactions>
 </div>
-<div ng-show="$ctrl.isMerging">
+<div ng-if="$ctrl.isMerging">
   <merge merge-data="$ctrl.mergeData" on-merge-complete="$ctrl.renderTransactionsComponent($event)"></merge>
 </div>
