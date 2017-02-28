@@ -6,11 +6,13 @@
 @transac-red: #d41414;
 @transac-orange: #ffb032;
 
+@default-box-shadow: 0px 1px 8px -4px;
+
 // top-bar component
 @top-bar-background-color: white;
 @top-bar-menu-item-color: rgba(0,0,0,0.54);
 @top-bar-border: 1px solid @transac-lightgrey;
-@top-bar-box-shadow: 0px 1px 8px -4px;
+@top-bar-box-shadow: @default-box-shadow;
 @top-bar-menu-item-active-border-bottom: 2px solid black;
 
 // transactions component
@@ -24,3 +26,6 @@
 @transaction-hover-background-color: @transac-lightgrey;
 @transaction-duplicate-warning-color: lighten(@transac-darkgrey, 15%);
 @transaction-details-duplicate-warning-color: @transac-orange;
+
+// transaction-reoncile
+@reconcile-transaction-tile-box-shadow: @default-box-shadow;

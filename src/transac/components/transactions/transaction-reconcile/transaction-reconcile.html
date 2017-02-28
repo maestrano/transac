@@ -1,29 +1,21 @@
-<div>
-  <button ng-click="$ctrl.back()">Back</button>
-
-  <div class="edit" ng-show="$ctrl.editing">
-    <div class="edit--flex-wrap">
-      <div class="edit-transaction" ng-repeat="transaction in ::$ctrl.duplicates track by transaction.id">
-        <table>
-          <tr>
-            <th>Select</th>
-            <th>Field</th>
-            <th>Value</th>
-          </tr>
-          <tr ng-repeat="(key, value) in transaction.formatted">
-            <td><input type="checkbox"/></td>
-            <td>{{::key}}</td>
-            <td>{{::value}}</td>
-          </tr>
-        </table>
-      </div>
+<div class="top-panel">
+  <button class="top-panel__action-btns" ng-click="$ctrl.back()">
+    <i class="fa fa-angle-double-left fa-2x"></i>
+  </button>
+  <div class="top-panel__title">
+    <span>Reconcile duplicate records</span>
+  </div>
+  <button class="top-panel__action-btns right-align" ng-if="$ctrl.editing" ng-click="$ctrl.next()">
+    <i class="fa fa-angle-double-right fa-2x"></i>
+  </button>
+</div>
+<div class="edit" ng-show="$ctrl.editing">
+  <div class="edit__transactions">
+    <div class="edit__transactions__transaction" ng-repeat="transaction in ::$ctrl.duplicates track by transaction.id">
+      <transaction-changes changes="::transaction.formatted" on-select-all="$ctrl.onSelectTransaction"></transaction-changes>
     </div>
-
-    <button ng-click="$ctrl.next()">Next</button>
   </div>
-
-  <div class="review" ng-hide="$ctrl.editing">
-
-    <button ng-click="$ctrl.publish()">Done</button>
-  </div>
+</div>
+<div class="review" ng-hide="$ctrl.editing">
+  <button class="review__done-btn" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">Done</button>
 </div>

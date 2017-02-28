@@ -1,0 +1,14 @@
+<div class="table-responsive">
+  <table class="table table-striped borderless">
+    <tr ng-if="$ctrl.onSelectAll">
+      <th>Tick</th>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+    <tr ng-repeat="(key, value) in ::$ctrl.changes">
+      <td><input type="checkbox" ng-if="$ctrl.onSelect"></td>
+      <td>{{::key}}</td>
+      <td>{{::value}}</td>
+    </tr>
+  </table>
+</div>

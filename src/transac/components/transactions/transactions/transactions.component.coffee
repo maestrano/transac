@@ -1,6 +1,3 @@
-#
-# Transactions Component
-#
 angular.module('transac.transactions').component('transactions', {
   bindings: {
     onTransactionsChange: '&'

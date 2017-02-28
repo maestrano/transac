@@ -22,19 +22,14 @@
   </div>
   <div class="detail" ng-if="$ctrl.isSelected">
     <div class="row">
-      <div class="col-md-6 detail-section  no-gutters">
-        <table class="table table-striped borderless">
-          <tr ng-repeat="(key, value) in $ctrl.changes track by $index">
-            <td>{{::key}}</td>
-            <td>{{::value}}</td>
-          </tr>
-        </table>
+      <div class="col-md-6 detail-section no-gutters">
+        <transaction-changes changes="$ctrl.changes"></transaction-changes>
       </div>
       <div class="col-md-3 detail-section no-gutters">
         <div class="detail-section-title">
           <h5>Select apps to share with:</h5>
         </div>
-        <div class="detail-section-app" ng-repeat="mapping in $ctrl.transaction.mappings track by mapping.group_id" ng-click="$ctrl.selectAppOnClick($event, mapping)">
+        <div class="detail-section-app" ng-repeat="mapping in ::$ctrl.transaction.mappings track by mapping.group_id" ng-click="$ctrl.selectAppOnClick($event, mapping)">
           <span>{{::mapping.app_name}}</span>
           <input type="checkbox" ng-checked="mapping.sharedWith">
         </div>
@@ -73,7 +68,7 @@
       </div>
       <div class="row">
         <div class="col-md-12 col-xs-12 detail-section detail-section-matches">
-          <div ng-repeat="match in $ctrl.matches track by $index" class="detail-section-matches-match">
+          <div ng-repeat="match in ::$ctrl.matches" class="detail-section-matches-match">
             {{::$ctrl.matchTitle(match)}}
           </div>
         </div>
