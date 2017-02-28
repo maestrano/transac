@@ -42,7 +42,7 @@ angular.module('transac.transactions').service('TransactionsService', ($http)->
   # GET http://localhost:8080/api/v2/org-fbcy/organizations/b1733560-d577-0134-317d-74d43510c326/matches
   @matches = (url, entity)->
     isOrganization = _.includes(url, 'organizations')
-    url = '/bower_components/transac/src/transac/components/transactions/matching-transactions.json'
+    url = '/bower_components/transac/src/transac/components/transactions/transactions-matching.json'
     $http.get(url).then(
       (transactions)->
         # Temporary stub
@@ -51,6 +51,10 @@ angular.module('transac.transactions').service('TransactionsService', ($http)->
         transactions.data.organizations
       (error)-> console.error(error)
     )
+
+  ##
+  ## Display Formatting Methods
+  ##
 
   # Format title depending on transaction entity type
   # TODO: dynamic way of building the titles?
@@ -83,12 +87,19 @@ angular.module('transac.transactions').service('TransactionsService', ($http)->
 
   # Flatten nested objects to display all changes fields simply.
   # TODO: change API changes hash for more UI friendly layout.
-  @flattenChanges = (x, result = {}, prefix = null)->
+  @flattenObject = (x, result = {}, prefix = null)->
     if _.isObject(x)
-      _.each(x, (v, k)-> _self.flattenChanges(v, result, (if prefix then prefix + '_' else '') + k))
+      _.each(x, (v, k)-> _self.flattenObject(v, result, (if prefix then prefix + '_' else '') + k))
     else
       result[prefix] = x
     result
+
+  # Add a object to the transaction with relevant 'changes' by resource types for display.
+  @buildFormattedChanges = (transaction)->
+    # TODO: move keys to constant by entity
+    accepted_changes = _.pick(transaction, ['name', 'status', 'address', 'email', 'phone', 'referred_leads', 'website'])
+    transaction.formatted = _self.flattenObject(accepted_changes)
+    transaction
 
   return @
 )

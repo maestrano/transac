@@ -1,11 +1,8 @@
-#
-# Transaction Component
-#
-angular.module('transac.transaction').component('transaction', {
+angular.module('transac.transactions').component('transaction', {
   bindings: {
     transaction: '<'
     onCommit: '&'
-    onMerge: '&'
+    onReconcile: '&'
   }
   templateUrl: 'components/transactions/transaction'
   controller: (TransactionsService, EventEmitter)->
@@ -19,7 +16,7 @@ angular.module('transac.transaction').component('transaction', {
 
     ctrl.$onInit = ->
       # Prepare transaction changes hash for display
-      ctrl.changes = TransactionsService.flattenChanges(ctrl.transaction.changes)
+      ctrl.changes = TransactionsService.flattenObject(ctrl.transaction.changes)
       # Select to share with all apps by default
       _.each(ctrl.transaction.mappings, (m)-> m.sharedWith = true)
       # Match transaction for potential duplicates
@@ -69,11 +66,11 @@ angular.module('transac.transaction').component('transaction', {
         EventEmitter({ transaction: ctrl.transaction })
       )
 
-    ctrl.mergeOnClick = ()->
+    ctrl.reconcileOnClick = ()->
       return unless ctrl.hasMatches()
-      # Prepare transaction for merge component display
+      # Prepare transaction for reconciliation
       transaction = angular.merge({}, ctrl.transaction.transaction_log, ctrl.transaction.changes)
-      ctrl.onMerge(
+      ctrl.onReconcile(
         EventEmitter({
           transaction: transaction
           matches: ctrl.matches

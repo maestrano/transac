@@ -3,7 +3,7 @@
 
   <div class="edit" ng-show="$ctrl.editing">
     <div class="edit--flex-wrap">
-      <div class="edit-transaction" ng-repeat="transaction in ::$ctrl.transactions track by transaction.id">
+      <div class="edit-transaction" ng-repeat="transaction in ::$ctrl.duplicates track by transaction.id">
         <table>
           <tr>
             <th>Select</th>

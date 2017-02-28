@@ -9,26 +9,17 @@ angular.module('maestrano.transac').component('transac', {
     ctrl = this
 
     ctrl.$onInit = ->
-      ctrl.isMerging = false
+      ctrl.isTopBarShown = true
       ctrl.transactionsCount = 0
-
-    ctrl.toggleMergeComponent = ->
-      ctrl.isMerging = !ctrl.isMerging
 
     ctrl.onTopBarSelectMenu = ({menu})->
       console.log('selected menu: ', menu)
 
-    ctrl.updateTransactionsCount = ({count})->
+    ctrl.updateTransactionsCount = ({count, topbar})->
       ctrl.transactionsCount = count
 
-    ctrl.renderMergeComponent = (args)->
-      ctrl.isMerging = true
-      ctrl.mergeData = args
-
-    ctrl.renderTransactionsComponent = ({id, callback} = {})->
-      ctrl.isMerging = false
-      ctrl.mergeData = null
-      callback(id) if callback && id
+    ctrl.toggleTopBar = ({isReconciling})->
+      ctrl.isTopBarShown = !isReconciling
 
     return
 })
