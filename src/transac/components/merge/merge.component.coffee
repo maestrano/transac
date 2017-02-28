@@ -7,13 +7,18 @@ angular.module('transac.merge').component('merge', {
     onMergeComplete: '&'
   },
   templateUrl: 'components/merge',
-  controller: (EventEmitter)->
+  controller: (EventEmitter, TransactionsService)->
     ctrl = this
 
     ctrl.$onInit = ->
       console.log('mergeData: ', ctrl.mergeData)
-      ctrl.transactions = [].concat(ctrl.mergeData.transaction, ctrl.mergeData.matches)
-      # ctrl.transactions = [1,2,3,4,5,6]
+      transactions = [].concat(ctrl.mergeData.transaction, ctrl.mergeData.matches)
+      # TODO: refactor
+      ctrl.transactions = _.each(transactions, (t) ->
+        # TODO: move accepted attrs to constant by entity
+        accepted_changes = _.pick(t, ['name', 'status', 'address', 'email', 'phone', 'referred_leads', 'website'])
+        t.formatted = TransactionsService.flattenChanges(accepted_changes)
+      )
       ctrl.editing = true
 
     ctrl.next = ->

@@ -85,7 +85,7 @@ angular.module('transac.transactions').service('TransactionsService', ($http)->
   # TODO: change API changes hash for more UI friendly layout.
   @flattenChanges = (x, result = {}, prefix = null)->
     if _.isObject(x)
-      _.each(x, (v, k)-> _self.flattenChanges(v, result, k))
+      _.each(x, (v, k)-> _self.flattenChanges(v, result, (if prefix then prefix + '_' else '') + k))
     else
       result[prefix] = x
     result

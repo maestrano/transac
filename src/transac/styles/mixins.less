@@ -26,3 +26,20 @@
   font-weight: @font-weight;
   text-transform: capitalize;
 }
+
+.transac-table() {
+  table {
+    width: 100%;
+  }
+  tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0.5em 0;
+    border: 1px solid rgba(3,3,3,0.2);
+  }
+  td, th {
+    flex: 1 1 150px;
+    border: 0.5px solid rgba(3,3,3,0.2);
+  }
+}

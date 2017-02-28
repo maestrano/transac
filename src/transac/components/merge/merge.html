@@ -3,19 +3,17 @@
 
   <div class="edit" ng-show="$ctrl.editing">
     <div class="edit--flex-wrap">
-      <div class="edit-transaction" ng-repeat="transaction in $ctrl.transactions track by $index">
-
-        <table class="table table-striped borderless">
-          <!-- <tr ng-repeat="(key, value) in transaction track by $index"> -->
+      <div class="edit-transaction" ng-repeat="transaction in ::$ctrl.transactions track by transaction.id">
+        <table>
           <tr>
             <th>Select</th>
             <th>Field</th>
             <th>Value</th>
           </tr>
-          <tr>
+          <tr ng-repeat="(key, value) in transaction.formatted">
             <td><input type="checkbox"/></td>
-            <td>Code</td>
-            <td>EX-13340</td>
+            <td>{{::key}}</td>
+            <td>{{::value}}</td>
           </tr>
         </table>
       </div>
