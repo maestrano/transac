@@ -1,21 +1,30 @@
 <div class="top-panel">
-  <button class="top-panel__action-btns" ng-click="$ctrl.back()">
+  <button class="top-panel_action-btns" ng-click="$ctrl.back()">
     <i class="fa fa-angle-double-left fa-2x"></i>
   </button>
-  <div class="top-panel__title">
+  <div class="top-panel_title">
     <span>Reconcile duplicate records</span>
   </div>
-  <button class="top-panel__action-btns right-align" ng-if="$ctrl.editing" ng-click="$ctrl.next()">
+  <button class="top-panel_action-btns right-align" ng-if="$ctrl.editing" ng-click="$ctrl.next()">
     <i class="fa fa-angle-double-right fa-2x"></i>
   </button>
 </div>
 <div class="edit" ng-show="$ctrl.editing">
-  <div class="edit__transactions">
-    <div class="edit__transactions__transaction" ng-repeat="transaction in ::$ctrl.duplicates track by transaction.id">
-      <transaction-changes changes="::transaction.formatted" on-select-all="$ctrl.onSelectTransaction"></transaction-changes>
+  <div class="edit_txs">
+    <div class="edit_txs_tx" ng-repeat="transaction in ::$ctrl.duplicates track by transaction.id">
+      <div class="edit_txs_tx_topbar row no-gutters" ng-click="$ctrl.onSelect(transaction)">
+        <div class="edit_txs_tx_topbar_checkbox">
+          <input type="checkbox">
+        </div>
+        <div class="edit_txs_tx_topbar_text">
+          <h5>Transaction</h5>
+          <span>From {{::transaction.app_name}}</span>
+        </div>
+      </div>
+      <transaction-changes changes="::transaction.formatted"></transaction-changes>
     </div>
   </div>
 </div>
 <div class="review" ng-hide="$ctrl.editing">
-  <button class="review__done-btn" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">Done</button>
+  <button class="review_done-btn" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">Done</button>
 </div>

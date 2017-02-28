@@ -12,7 +12,8 @@ angular.module('transac.transactions').component('transactionReconcile', {
       ctrl.editing = true
       ctrl.duplicates = [].concat(ctrl.transaction, ctrl.matches)
 
-    ctrl.onSelectTransaction = ()->
+    ctrl.onSelect = (transaction)->
+      console.log('selected!', transaction)
 
     ctrl.next = ->
       ctrl.editing = false
