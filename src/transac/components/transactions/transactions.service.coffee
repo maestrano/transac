@@ -13,7 +13,7 @@ angular.module('transac.transactions').service('TransactionsService', ($http)->
     # secret = ''
     # credentials = window.btoa("#{key}:#{secret}")
     # opts = { Authorization: 'Basic ' + credentials }
-    $http.get(url, opts || {}).then(
+    $http.get(url, {}).then(
       (response)->
         # Transactions are returned grouped by entity, flatten for simpler display.
         _.flatten(_.values(response.data))
