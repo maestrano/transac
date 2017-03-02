@@ -12,19 +12,22 @@ angular.module('transac.transactions').component('transactionReconcile', {
       ctrl.editing = true
       ctrl.transactions = [].concat(ctrl.transaction, ctrl.matches)
       ctrl.txsSelectionMap = {}
-      # Select transaction checkbox model
+      # Init select transaction checkbox model
       _.each(_.map(ctrl.transactions, (tx)-> tx.id), (id)->
         ctrl.txsSelectionMap[id] = false
         return
       )
 
-    ctrl.onSelect = (transaction)->
+    ctrl.onSelect = ({tx})->
       # Only one transactions can be selected at a time
       _.each(ctrl.txsSelectionMap, (v, k)->
-        ctrl.txsSelectionMap[k] = false if k != transaction.id
+        ctrl.txsSelectionMap[k] = false if k != tx.id
         return
       )
-      ctrl.txsSelectionMap[transaction.id] = !ctrl.txsSelectionMap[transaction.id]
+      ctrl.txsSelectionMap[tx.id] = !ctrl.txsSelectionMap[tx.id]
+
+    ctrl.isTxChecked = (tx)->
+      ctrl.txsSelectionMap[tx.id]
 
     ctrl.next = ->
       ctrl.editing = false

@@ -11,20 +11,10 @@
 </div>
 <div class="edit" ng-show="$ctrl.editing">
   <div class="edit_txs">
-    <div class="edit_txs_tx" ng-repeat="transaction in ::$ctrl.transactions track by transaction.id">
-      <div class="edit_txs_tx_topbar row no-gutters" ng-click="$ctrl.onSelect(transaction)">
-        <div class="edit_txs_tx_topbar_checkbox">
-          <input type="checkbox" ng-checked="$ctrl.txsSelectionMap[transaction.id]">
-        </div>
-        <div class="edit_txs_tx_topbar_text">
-          <h5>Transaction</h5>
-          <span>From {{::transaction.app_name}}</span>
-        </div>
-      </div>
-      <transaction-changes changes="::transaction.formatted"></transaction-changes>
-    </div>
+    <transaction-tile ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" on-select="$ctrl.onSelect($event)"></transaction-tile>
   </div>
 </div>
 <div class="review" ng-hide="$ctrl.editing">
+
   <button class="review_done-btn" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">Done</button>
 </div>

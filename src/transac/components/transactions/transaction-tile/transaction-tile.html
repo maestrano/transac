@@ -1,0 +1,12 @@
+<div class="tx-tile">
+  <div class="tx-tile_topbar row no-gutters" ng-click="$ctrl.onSelectTx()">
+    <div class="tx-tile_topbar_checkbox">
+      <input type="checkbox" ng-checked="$ctrl.checked">
+    </div>
+    <div class="tx-tile_topbar_text">
+      <h5>Transaction</h5>
+      <span>From {{::$ctrl.transaction.app_name}}</span>
+    </div>
+  </div>
+  <transaction-changes changes="::$ctrl.transaction.formatted"></transaction-changes>
+</div>
