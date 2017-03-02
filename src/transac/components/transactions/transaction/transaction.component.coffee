@@ -74,6 +74,9 @@ angular.module('transac.transactions').component('transaction', {
         EventEmitter({
           transaction: transaction
           matches: ctrl.matches
+          # TODO: should apps reflect the selections made in the transaction "shared with"
+          # checkboxes? Should only commit: true apps be included?
+          apps: _.map(ctrl.transaction.mappings, (m)-> m.app_name)
         })
       )
 

@@ -1,6 +1,8 @@
 angular.module('transac.transactions').component('transactionTile', {
   bindings: {
     transaction: '<'
+    title: '<?'
+    subtitle: '<?'
     checked: '<?'
     onSelect: '&?'
   },
@@ -9,6 +11,8 @@ angular.module('transac.transactions').component('transactionTile', {
     ctrl = this
 
     ctrl.$onInit = ->
+      ctrl.title ||= 'Transaction'
+      ctrl.subtitle ||= if ctrl.transaction.app_name then "From #{ctrl.transaction.app_name}" else ''
 
     ctrl.isOnSelectDefined = ->
       !_.isUndefined(ctrl.onSelect)

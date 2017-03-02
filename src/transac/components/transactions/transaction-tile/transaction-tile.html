@@ -4,8 +4,8 @@
       <input type="checkbox" ng-checked="$ctrl.checked">
     </div>
     <div class="tx-tile_topbar_text">
-      <h5>Transaction</h5>
-      <span>From {{::$ctrl.transaction.app_name}}</span>
+      <h5>{{::$ctrl.title}}</h5>
+      <span>{{::$ctrl.subtitle}}</span>
     </div>
   </div>
   <transaction-changes changes="::$ctrl.transaction.formatted"></transaction-changes>

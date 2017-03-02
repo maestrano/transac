@@ -2,6 +2,7 @@ angular.module('transac.transactions').component('transactionReconcile', {
   bindings: {
     transaction: '<'
     matches: '<'
+    apps: '<'
     onReconciled: '&'
   },
   templateUrl: 'components/transactions/transaction-reconcile',
@@ -39,6 +40,8 @@ angular.module('transac.transactions').component('transactionReconcile', {
 
     ctrl.next = ->
       return unless ctrl.isNextBtnShown()
+      ctrl.selectedTxTitle = 'Reconciled Record'
+      ctrl.selectedTxSubtitle = "will be updated in #{ctrl.apps.join(', ')}"
       ctrl.editing = false
 
     ctrl.publish = ->

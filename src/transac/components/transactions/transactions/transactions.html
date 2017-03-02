@@ -3,5 +3,5 @@
   <transaction transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transaction>
 </div>
 <div ng-if="$ctrl.reconciling">
-  <transaction-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" on-reconciled="$ctrl.onTransactionReconciled($event)"></transaction-reconcile>
+  <transaction-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transaction-reconcile>
 </div>

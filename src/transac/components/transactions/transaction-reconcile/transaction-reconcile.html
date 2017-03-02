@@ -12,9 +12,9 @@
 <div class="edit" ng-show="$ctrl.editing">
   <transaction-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" on-select="$ctrl.onSelect($event)"></transaction-tile>
 </div>
-<div class="review" ng-hide="$ctrl.editing">
+<div class="review" ng-if="!$ctrl.editing">
   <div class="review_tx">
-    <transaction-tile transaction="$ctrl.selectedTx"></transaction-tile>
+    <transaction-tile transaction="$ctrl.selectedTx" title="$ctrl.selectedTxTitle" subtitle="$ctrl.selectedTxSubtitle"></transaction-tile>
   </div>
   <button class="review_done-btn" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">Done</button>
 </div>
