@@ -1,8 +1,8 @@
 angular.module('transac.transactions').component('transactionTile', {
   bindings: {
     transaction: '<'
-    checked: '<'
-    onSelect: '&'
+    checked: '<?'
+    onSelect: '&?'
   },
   templateUrl: 'components/transactions/transaction-tile',
   controller: (EventEmitter)->
@@ -10,7 +10,11 @@ angular.module('transac.transactions').component('transactionTile', {
 
     ctrl.$onInit = ->
 
+    ctrl.isOnSelectDefined = ->
+      !_.isUndefined(ctrl.onSelect)
+
     ctrl.onSelectTx = ()->
+      return unless ctrl.isOnSelectDefined()
       ctrl.onSelect(EventEmitter(tx: ctrl.transaction))
 
     ctrl.onSelectTxField = ->
