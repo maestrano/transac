@@ -28,6 +28,8 @@ angular.module('transac.transactions').component('transactionReconcile', {
 
     ctrl.next = ->
       ctrl.editing = false
+      ctrl.selectedTx = _.find(ctrl.transactions, (tx)-> ctrl.txsSelectionMap[tx.id])
+      console.log('selectedTx', ctrl.selectedTx)
 
     ctrl.publish = ->
       ctrl.onReconciled(
