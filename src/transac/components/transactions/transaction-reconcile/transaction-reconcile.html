@@ -5,7 +5,7 @@
   <div class="top-panel_title">
     <span>Reconcile duplicate records</span>
   </div>
-  <button class="top-panel_action-btns right-align" ng-if="$ctrl.editing" ng-click="$ctrl.next()">
+  <button class="top-panel_action-btns right-align" ng-if="$ctrl.isNextBtnShown()" ng-click="$ctrl.next()">
     <i class="fa fa-angle-double-right fa-2x"></i>
   </button>
 </div>
@@ -15,6 +15,6 @@
   </div>
 </div>
 <div class="review" ng-hide="$ctrl.editing">
-
+  <transaction-tile transaction="$ctrl.selectedTx"></transaction-tile>
   <button class="review_done-btn" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">Done</button>
 </div>

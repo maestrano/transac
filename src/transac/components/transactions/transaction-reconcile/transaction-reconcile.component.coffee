@@ -11,6 +11,7 @@ angular.module('transac.transactions').component('transactionReconcile', {
     ctrl.$onInit = ->
       ctrl.editing = true
       ctrl.transactions = [].concat(ctrl.transaction, ctrl.matches)
+      ctrl.selectedTx = {}
       ctrl.txsSelectionMap = {}
       # Init select transaction checkbox model
       _.each(_.map(ctrl.transactions, (tx)-> tx.id), (id)->
@@ -24,15 +25,21 @@ angular.module('transac.transactions').component('transactionReconcile', {
         ctrl.txsSelectionMap[k] = false if k != tx.id
         return
       )
-      ctrl.txsSelectionMap[tx.id] = !ctrl.txsSelectionMap[tx.id]
+      ctrl.txsSelectionMap[tx.id] = true
+      ctrl.selectedTx = _.find(ctrl.transactions, (tx)-> ctrl.txsSelectionMap[tx.id])
 
     ctrl.isTxChecked = (tx)->
       ctrl.txsSelectionMap[tx.id]
 
+    ctrl.isSelectedTxSelected = ->
+      !_.isEmpty(ctrl.selectedTx)
+
+    ctrl.isNextBtnShown = ->
+      ctrl.editing && ctrl.isSelectedTxSelected()
+
     ctrl.next = ->
+      return unless ctrl.isNextBtnShown()
       ctrl.editing = false
-      ctrl.selectedTx = _.find(ctrl.transactions, (tx)-> ctrl.txsSelectionMap[tx.id])
-      console.log('selectedTx', ctrl.selectedTx)
 
     ctrl.publish = ->
       ctrl.onReconciled(
