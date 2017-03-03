@@ -29,8 +29,8 @@ angular.module('transac.transactions').component('transactions', {
 
     ctrl.onReconcileTransactions = ({transaction, matches, apps})->
       ctrl.reconcileData =
-        transaction: TransactionsService.buildFormattedChanges(transaction)
-        matches: _.map(matches, (m)-> TransactionsService.buildFormattedChanges(m))
+        transaction: TransactionsService.formatChanges(transaction)
+        matches: _.map(matches, (m)-> TransactionsService.formatChanges(m))
         apps: apps
       ctrl.reconciling = true
       ctrl.onReconciling(EventEmitter(isReconciling: true))

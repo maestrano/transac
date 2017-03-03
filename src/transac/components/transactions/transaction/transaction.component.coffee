@@ -21,10 +21,13 @@ angular.module('transac.transactions').component('transaction', {
       _.each(ctrl.transaction.mappings, (m)-> m.sharedWith = true)
       # Match transaction for potential duplicates
       # TODO: Move to API
-      TransactionsService.matches(ctrl.transaction.links.matches).then(
-        (transactions)->
-          ctrl.matches = transactions
-        (error)->
+      TransactionsService.matches(
+        ctrl.transaction.links.matches,
+        ctrl.transaction.transaction_log.resource_type
+      ).then(
+        (response)->
+          ctrl.matches = response.matches
+        (err)->
           # handle error
       )
 
