@@ -4,15 +4,15 @@
   }
 }
 
-.transac-action-button(@color) {
+.transac-action-button(@color: @transac-blue, @margin: 1px) {
   color: @color;
   border: none;
   padding: 10px 18px;
-  margin: 1px;
+  margin: @margin;
   max-width: 60px;
   background-color: inherit;
   &:hover {
-    color: lighten(@color, 10%);
+    color: lighten(@color, 15%);
   }
 }
 

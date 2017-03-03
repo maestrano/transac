@@ -17,18 +17,18 @@ transaction-reconcile {
 
   .top-panel_action-btns {
     position: absolute;
-    .transac-action-button(black);
-    margin: 10px;
-    &:hover {
-      background-color: @transac-grey;
-    }
+    .transac-action-button(@transac-darkgrey, 10px);
     &.right-align {
       top: 0;
       right: 0;
     }
   }
 
-  .edit {
+  .top-panel_action-btns--done {
+    .transac-action-button(@transac-green, 10px);
+  }
+
+  .edit_tx {
     display: flex;
     flex-wrap: wrap;
 
@@ -49,6 +49,7 @@ transaction-reconcile {
   .review_tx {
     display: flex;
     justify-content: center;
+    padding-bottom: 40px;
 
     transaction-tile {
       flex: 1;

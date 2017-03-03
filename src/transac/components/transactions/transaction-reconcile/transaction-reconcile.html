@@ -8,13 +8,17 @@
   <button class="top-panel_action-btns right-align" ng-if="$ctrl.isNextBtnShown()" ng-click="$ctrl.next()">
     <i class="fa fa-angle-double-right fa-2x"></i>
   </button>
+  <button class="top-panel_action-btns top-panel_action-btns--done right-align" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">
+    <i class="fa fa-check fa-2x"></i>
+  </button>
 </div>
 <div class="edit" ng-show="$ctrl.editing">
-  <transaction-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" on-select="$ctrl.onSelect($event)"></transaction-tile>
+  <div class="edit_tx">
+    <transaction-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" on-select="$ctrl.onSelect($event)"></transaction-tile>
+  </div>
 </div>
 <div class="review" ng-if="!$ctrl.editing">
   <div class="review_tx">
     <transaction-tile transaction="$ctrl.selectedTx" title="$ctrl.selectedTxTitle" subtitle="$ctrl.selectedTxSubtitle"></transaction-tile>
   </div>
-  <button class="review_done-btn" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">Done</button>
 </div>
