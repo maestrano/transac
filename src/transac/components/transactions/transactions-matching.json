@@ -1,130 +1,550 @@
 {
-  "organizations": [
+  "tax_codes": [
     {
-      "id": "f2e2aba0-da50-0134-49b2-74d43510c326",
-      "name": "DIISR - Small Business Services",
+      "id": "68425791-df9a-0134-594b-43d4a6cba5c4",
       "status": "ACTIVE",
-      "referred_leads": [],
-      "is_customer": true,
-      "is_supplier": false,
-      "is_lead": false,
-      "address": {
-        "billing": {
-          "attention": "Accounts Dept.",
-          "line1": "Melbourne Regional Office\n",
-          "line2": "L3, Southbank House\n",
-          "city": "Melbourne",
-          "postal_code": "3131"
-        },
-        "billing2": {},
-        "shipping": {
-          "line1": "Melbourne Regional Office\n",
-          "line2": "L3, Southbank House\n",
-          "city": "Melbourne",
-          "postal_code": "3131"
-        },
-        "shipping2": {}
-      },
-      "email": {
-        "address": "accounts@diisr.govt"
-      },
-      "website": {},
-      "phone": {
-        "landline": "4389376",
-        "landline2": "",
-        "mobile": "",
-        "fax": "4389379"
-      },
-      "contact_channel": {},
-      "created_at": "2017-02-21T10:46:39Z",
-      "updated_at": "2017-02-21T10:46:39Z",
-      "channel_id": "org-fbcy",
-      "resource_type": "organizations",
-      "_score": 1.3333333333333333
+      "name": "BAS Excluded",
+      "tax_type": "BASEXCLUDED",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "684dc941-df9a-0134-594f-43d4a6cba5c4",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:06Z",
+      "updated_at": "2017-02-28T04:15:06Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 5.5
     },
     {
-      "id": "f2e2aba0-da50-0134-4932-74d43510c326",
-      "name": "DIISR - Small Business Services",
+      "id": "684cb7d1-df9a-0134-594e-43d4a6cba5c4",
       "status": "ACTIVE",
-      "referred_leads": [],
-      "is_customer": true,
-      "is_supplier": false,
-      "is_lead": false,
-      "address": {
-        "billing": {
-          "attention": "Accounts Dept.",
-          "line1": "Melbourne Regional Office\n",
-          "line2": "L3, Southbank House\n",
-          "city": "Melbourne",
-          "postal_code": "3131"
-        },
-        "billing2": {},
-        "shipping": {
-          "line1": "Melbourne Regional Office\n",
-          "line2": "L3, Southbank House\n",
-          "city": "Melbourne",
-          "postal_code": "3131"
-        },
-        "shipping2": {}
-      },
-      "email": {
-        "address": "accounts@diisr.govt"
-      },
-      "website": {},
-      "phone": {
-        "landline": "4389376",
-        "landline2": "",
-        "mobile": "",
-        "fax": "4389379"
-      },
-      "contact_channel": {},
-      "created_at": "2017-02-21T10:46:39Z",
-      "updated_at": "2017-02-21T10:46:39Z",
-      "channel_id": "org-fbcy",
-      "resource_type": "organizations",
-      "_score": 1.3333333333333333
+      "name": "BAS Excluded",
+      "tax_type": "BASEXCLUDED",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "6852f961-df9a-0134-5951-43d4a6cba5c4",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:06Z",
+      "updated_at": "2017-02-28T04:15:06Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 5.5
     },
     {
-      "id": "f2e2aba0-ja50-0134-49b2-74d43510c326",
-      "name": "DIISR - Small Business Services",
+      "id": "68c06131-df9a-0134-5968-43d4a6cba5c4",
       "status": "ACTIVE",
-      "referred_leads": [],
-      "is_customer": true,
-      "is_supplier": false,
-      "is_lead": false,
-      "address": {
-        "billing": {
-          "attention": "Accounts Dept.",
-          "line1": "Melbourne Regional Office\n",
-          "line2": "L3, Southbank House\n",
-          "city": "Melbourne",
-          "postal_code": "3131"
-        },
-        "billing2": {},
-        "shipping": {
-          "line1": "Melbourne Regional Office\n",
-          "line2": "L3, Southbank House\n",
-          "city": "Melbourne",
-          "postal_code": "3131"
-        },
-        "shipping2": {}
-      },
-      "email": {
-        "address": "accounts@diisr.govt"
-      },
-      "website": {},
-      "phone": {
-        "landline": "4389376",
-        "landline2": "",
-        "mobile": "",
-        "fax": "4389379"
-      },
-      "contact_channel": {},
-      "created_at": "2017-02-21T10:46:39Z",
-      "updated_at": "2017-02-21T10:46:39Z",
-      "channel_id": "org-fbcy",
-      "resource_type": "organizations",
-      "_score": 1.3333333333333333
+      "name": "GST Free Capital",
+      "tax_type": "EXEMPTCAPITAL",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "68c1c0c1-df9a-0134-596d-43d4a6cba5c4",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:06Z",
+      "updated_at": "2017-02-28T04:15:06Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "68cdceb1-df9a-0134-5971-43d4a6cba5c4",
+      "status": "ACTIVE",
+      "name": "GST Free Capital",
+      "tax_type": "EXEMPTCAPITAL",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "68d08dc0-df9a-0134-5977-43d4a6cba5c4",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:06Z",
+      "updated_at": "2017-02-28T04:15:06Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "68d018a0-df9a-0134-5975-43d4a6cba5c4",
+      "status": "ACTIVE",
+      "name": "GST Free Capital",
+      "tax_type": "EXEMPTCAPITAL",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "68d4faa1-df9a-0134-5978-43d4a6cba5c4",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:06Z",
+      "updated_at": "2017-02-28T04:15:06Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "69072e31-df9a-0134-4648-39c9fd412142",
+      "status": "ACTIVE",
+      "name": "GST Free Expenses",
+      "tax_type": "EXEMPTEXPENSES",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "69088dc1-df9a-0134-4649-39c9fd412142",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:06Z",
+      "updated_at": "2017-02-28T04:15:06Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "6905a791-df9a-0134-4647-39c9fd412142",
+      "status": "ACTIVE",
+      "name": "GST Free Expenses",
+      "tax_type": "EXEMPTEXPENSES",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "6908dbe1-df9a-0134-464a-39c9fd412142",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:06Z",
+      "updated_at": "2017-02-28T04:15:06Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "68fcf501-df9a-0134-936c-0331cea0c0ab",
+      "status": "ACTIVE",
+      "name": "GST Free Expenses",
+      "tax_type": "EXEMPTEXPENSES",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "69050b50-df9a-0134-4645-39c9fd412142",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:06Z",
+      "updated_at": "2017-02-28T04:15:06Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "6930fd51-df9a-0134-4665-39c9fd412142",
+      "status": "ACTIVE",
+      "name": "GST Free Exports",
+      "tax_type": "EXEMPTEXPORT",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "6936f0b0-df9a-0134-4667-39c9fd412142",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "69393ab1-df9a-0134-56df-00043de7f9da",
+      "status": "ACTIVE",
+      "name": "GST Free Exports",
+      "tax_type": "EXEMPTEXPORT",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "693ac151-df9a-0134-56e1-00043de7f9da",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "6938ec90-df9a-0134-56de-00043de7f9da",
+      "status": "ACTIVE",
+      "name": "GST Free Exports",
+      "tax_type": "EXEMPTEXPORT",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "693a9a41-df9a-0134-56e0-00043de7f9da",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "6955ea71-df9a-0134-56f8-00043de7f9da",
+      "status": "ACTIVE",
+      "name": "GST Free Income",
+      "tax_type": "EXEMPTOUTPUT",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "6956fbe1-df9a-0134-56fb-00043de7f9da",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "695722f1-df9a-0134-56fc-00043de7f9da",
+      "status": "ACTIVE",
+      "name": "GST Free Income",
+      "tax_type": "EXEMPTOUTPUT",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "6958a991-df9a-0134-56fd-00043de7f9da",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "69615c21-df9a-0134-0190-0797908cb1c6",
+      "status": "ACTIVE",
+      "name": "GST Free Income",
+      "tax_type": "EXEMPTOUTPUT",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "696a83e0-df9a-0134-e0fc-055c41ab98ae",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "6991e201-df9a-0134-a199-379035e5f859",
+      "status": "ACTIVE",
+      "name": "GST on Capital Imports",
+      "tax_type": "GSTONCAPIMPORTS",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "699368a1-df9a-0134-a19a-379035e5f859",
+          "name": "Capital Imports GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "699b7ef1-df9a-0134-f3bb-0f16e94e1a82",
+      "status": "ACTIVE",
+      "name": "GST on Capital Imports",
+      "tax_type": "GSTONCAPIMPORTS",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "699cb771-df9a-0134-f3bc-0f16e94e1a82",
+          "name": "Capital Imports GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "69ca3011-df9a-0134-d2ec-3bc9cc2e70eb",
+      "status": "ACTIVE",
+      "name": "GST on Imports",
+      "tax_type": "GSTONIMPORTS",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "69cbddc0-df9a-0134-d2ed-3bc9cc2e70eb",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:08Z",
+      "updated_at": "2017-02-28T04:15:08Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "6a10fd11-df9a-0134-afcd-3935b4b216ec",
+      "status": "ACTIVE",
+      "name": "Input Taxed",
+      "tax_type": "INPUTTAXED",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "6a13bc31-df9a-0134-afd1-3935b4b216ec",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:08Z",
+      "updated_at": "2017-02-28T04:15:08Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "6a131ff1-df9a-0134-afd0-3935b4b216ec",
+      "status": "ACTIVE",
+      "name": "Input Taxed",
+      "tax_type": "INPUTTAXED",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "6a145870-df9a-0134-afd3-3935b4b216ec",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:08Z",
+      "updated_at": "2017-02-28T04:15:08Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "6a1d3211-df9a-0134-afdb-3935b4b216ec",
+      "status": "ACTIVE",
+      "name": "Input Taxed",
+      "tax_type": "INPUTTAXED",
+      "sale_tax_rate": 0,
+      "sale_taxes": [
+        {
+          "id": "6a1e91a1-df9a-0134-19a9-1dd3b0cbd271",
+          "name": "GST",
+          "rate": 0,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:08Z",
+      "updated_at": "2017-02-28T04:15:08Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 3
+    },
+    {
+      "id": "696f65e1-df9a-0134-e102-055c41ab98ae",
+      "status": "ACTIVE",
+      "name": "GST on Capital",
+      "tax_type": "CAPEXINPUT",
+      "sale_tax_rate": 10,
+      "sale_taxes": [
+        {
+          "id": "697a6260-df9a-0134-e6a9-7bcf1c4a6562",
+          "name": "GST",
+          "rate": 10,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 1.5
+    },
+    {
+      "id": "697e0be1-df9a-0134-e6ad-7bcf1c4a6562",
+      "status": "ACTIVE",
+      "name": "GST on Capital",
+      "tax_type": "CAPEXINPUT",
+      "sale_tax_rate": 10,
+      "sale_taxes": [
+        {
+          "id": "697f4460-df9a-0134-e6b0-7bcf1c4a6562",
+          "name": "GST",
+          "rate": 10,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:07Z",
+      "updated_at": "2017-02-28T04:15:07Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 1.5
+    },
+    {
+      "id": "69ab3661-df9a-0134-d2ce-3bc9cc2e70eb",
+      "status": "ACTIVE",
+      "name": "GST on Expenses",
+      "tax_type": "INPUT",
+      "sale_tax_rate": 10,
+      "sale_taxes": [
+        {
+          "id": "69b03f71-df9a-0134-d2d5-3bc9cc2e70eb",
+          "name": "GST",
+          "rate": 10,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:08Z",
+      "updated_at": "2017-02-28T04:15:08Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 1.5
+    },
+    {
+      "id": "69b1c611-df9a-0134-d2d6-3bc9cc2e70eb",
+      "status": "ACTIVE",
+      "name": "GST on Expenses",
+      "tax_type": "INPUT",
+      "sale_tax_rate": 10,
+      "sale_taxes": [
+        {
+          "id": "69b56f80-df9a-0134-d2d8-3bc9cc2e70eb",
+          "name": "GST",
+          "rate": 10,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:08Z",
+      "updated_at": "2017-02-28T04:15:08Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 1.5
+    },
+    {
+      "id": "69ebe8e1-df9a-0134-d306-3bc9cc2e70eb",
+      "status": "ACTIVE",
+      "name": "GST on Income",
+      "tax_type": "OUTPUT",
+      "sale_tax_rate": 10,
+      "sale_taxes": [
+        {
+          "id": "69ed4871-df9a-0134-d307-3bc9cc2e70eb",
+          "name": "GST",
+          "rate": 10,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:08Z",
+      "updated_at": "2017-02-28T04:15:08Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 1.5
+    },
+    {
+      "id": "69f585d1-df9a-0134-6246-087129754a12",
+      "status": "ACTIVE",
+      "name": "GST on Income",
+      "tax_type": "OUTPUT",
+      "sale_tax_rate": 10,
+      "sale_taxes": [
+        {
+          "id": "69f6e561-df9a-0134-6247-087129754a12",
+          "name": "GST",
+          "rate": 10,
+          "tax_type_applicable": "TaxOnAmount"
+        }
+      ],
+      "purchase_taxes": [],
+      "created_at": "2017-02-28T04:15:08Z",
+      "updated_at": "2017-02-28T04:15:08Z",
+      "channel_id": "org-fbba",
+      "resource_type": "tax_codes",
+      "_score": 1.5
     }
   ]
 }
