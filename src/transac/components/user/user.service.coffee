@@ -23,6 +23,10 @@ angular.module('transac.user').provider('TransacUserService', ()->
     service.get = ->
       return angular.copy(service.user)
 
+    service.getCurrentOrg = ->
+      return {} if _.isEmpty(service.user)
+      _.find(service.user.organizations, (org)-> org.id == service.user.currentOrgId)
+
     service.fetch = ->
       promises = _.map(options, (callback, key)->
         if callback? then callback() else $q.reject("transac error: no #{key} callback configured.")
