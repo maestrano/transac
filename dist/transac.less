@@ -5,17 +5,21 @@
 @transac-green: #29b528;
 @transac-red: #d41414;
 @transac-orange: #ffb032;
+@transac-blue: #4053c3;
 
-@default-box-shadow: 0px 1px 8px -4px;
+// standard styles
+@transac-whiteframe: 0px 1px 8px -4px;
+
+//
+// Component variables
+//
 
 // top-bar component
 @top-bar-background-color: white;
 @top-bar-menu-item-color: rgba(0,0,0,0.54);
 @top-bar-border: 1px solid @transac-lightgrey;
-@top-bar-box-shadow: @default-box-shadow;
+@top-bar-box-shadow: @transac-whiteframe;
 @top-bar-menu-item-active-border-bottom: 2px solid black;
-
-// transactions component
 
 // transaction component
 @transaction-height: 60px;
@@ -27,8 +31,18 @@
 @transaction-duplicate-warning-color: lighten(@transac-darkgrey, 15%);
 @transaction-details-duplicate-warning-color: @transac-orange;
 
-// transaction-reoncile
-@reconcile-transaction-tile-box-shadow: @default-box-shadow;
+// transaction-tile component
+@transaction-tile-box-shadow: @transac-whiteframe;
+
+/*
+** Transac! Global Classes
+*/
+
+
+
+/*
+** Bootstrap overrides / class customisations
+*/
 
 // Remove borders from Bootstrap table
 .table.borderless td, .table.borderless th {
@@ -40,19 +54,12 @@
   margin-right: 0;
   margin-left: 0;
 }
+
 // remove gutters from Boostrap column
 [class^="col-"].no-gutters,
 [class*=" col-"].no-gutters {
   padding-right: 0;
   padding-left: 0;
-}
-
-// mobile fix for bootstrap container
-@media (max-width: 768px) {
-  html, body {
-    width: auto !important;
-    overflow-x: hidden !important;
-  }
 }
 
 .transac-list-on-hover(@color: @transac-lightgrey) {
@@ -61,15 +68,15 @@
   }
 }
 
-.transac-action-button(@color) {
+.transac-action-button(@color: @transac-blue, @margin: 1px) {
   color: @color;
   border: none;
   padding: 10px 18px;
-  margin: 1px;
+  margin: @margin;
   max-width: 60px;
   background-color: inherit;
   &:hover {
-    color: lighten(@color, 10%);
+    color: lighten(@color, 15%);
   }
 }
 
@@ -285,7 +292,6 @@ transaction {
 
 }
 
-
 transaction-reconcile {
   display: block;
   background-color: white;
@@ -305,45 +311,79 @@ transaction-reconcile {
 
   .top-panel_action-btns {
     position: absolute;
-    .transac-action-button(black);
-    margin: 10px;
-    &:hover {
-      background-color: @transac-grey;
-    }
+    .transac-action-button(@transac-darkgrey, 10px);
     &.right-align {
       top: 0;
       right: 0;
     }
   }
 
-  .edit_txs {
+  .top-panel_action-btns--done {
+    .transac-action-button(@transac-green, 10px);
+  }
+
+  .edit_tx {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+
+    transaction-tile {
+      flex: 1;
+      min-width: 48%;
+      max-width: 48%;
+      margin: 1%;
+
+      @media (max-width: 992px) {
+        min-width: 100%;
+        max-width: 100%;
+        margin: 0;
+      }
+    }
   }
 
-  .edit_txs_tx {
+  .review_tx {
     display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    margin: 15px;
-    box-shadow: @reconcile-transaction-tile-box-shadow;
-    border: 1px solid @transac-grey;
+    justify-content: center;
+    padding-bottom: 40px;
+
+    transaction-tile {
+      flex: 1;
+      min-width: 50%;
+      max-width: 50%;
+
+      @media (max-width: 992px) {
+        min-width: 100%;
+        max-width: 100%;
+      }
+    }
   }
 
-  .edit_txs_tx_topbar {
+}
+
+
+transaction-tile {
+  box-shadow: @transaction-tile-box-shadow;
+  border: 1px solid @transac-grey;
+
+  .tx-tile {
+    width: 100%;
+  }
+
+  .tx-tile_topbar {
     height: 60px;
     border-bottom: 1px solid @transac-grey;
+    &.no-click {
+      cursor: default;
+    }
   }
 
-  .edit_txs_tx_topbar_checkbox {
+  .tx-tile_topbar_checkbox {
     position: absolute;
     width: 50px;
     height: 50px;
     padding: 16px;
   }
 
-  .edit_txs_tx_topbar_text {
+  .tx-tile_topbar_text {
     text-align: center;
     h5 {
       font-size: 17px;
