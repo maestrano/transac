@@ -47,9 +47,10 @@ angular.module('transac.transactions').component('transactionReconcile', {
     ctrl.publish = ->
       ctrl.onReconciled(
         EventEmitter(
-          id: ctrl.transaction.id
-          matches: _.map(ctrl.matches, (m)-> m.id)
-          attributes: {}
+          txId: ctrl.transaction.id
+          mergeParams:
+            ids: _.map(ctrl.matches, (m)-> m.id)
+            # TODO: merge tx fields
         )
       )
 

@@ -28,7 +28,7 @@ angular.module('transac.transactions').component('transaction', {
         (response)->
           ctrl.matches = response.matches
         (err)->
-          # handle error
+          # TODO: display error alert
       )
 
     ctrl.title = ()->
@@ -50,8 +50,6 @@ angular.module('transac.transactions').component('transaction', {
         m.auto_commit = auto
         return
       )
-      # TODO: move to transactions.component
-      TransactionsService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
       ctrl.onCommit(
         EventEmitter({ transaction: ctrl.transaction })
       )
@@ -63,15 +61,15 @@ angular.module('transac.transactions').component('transaction', {
         m.push_disabled = auto
         return
       )
-      # TODO: move to transactions.component
-      TransactionsService.commit(ctrl.transaction.links.commit, ctrl.transaction.mappings)
       ctrl.onCommit(
         EventEmitter({ transaction: ctrl.transaction })
       )
 
     ctrl.reconcileOnClick = ()->
       return unless ctrl.hasMatches()
-      # Prepare transaction for reconciliation
+      # Prepare transaction for reconciliation (formats the transaction into same object
+      # structure as matches to streamline the collection for display within the
+      # tx-reconcile cmp)
       transaction = angular.merge({}, ctrl.transaction.transaction_log, ctrl.transaction.changes)
       ctrl.onReconcile(
         EventEmitter({

@@ -11,20 +11,31 @@ angular.module('transac.transactions').component('transactions', {
       ctrl.reconciling = false
       # TODO: move to store
       TransactionsService.get().then(
-        (transactions)->
-          ctrl.transactions = transactions
+        (response)->
+          ctrl.transactions = response.transactions
           ctrl.onTransactionsChange(
             EventEmitter({ count: ctrl.transactions.length })
           )
         (error)->
-          # display error message
+          # TODO: display error alert
       )
 
     ctrl.onTransactionCommit = ({transaction})->
-      # TODO: move to store
-      ctrl.transactions = _.reject(ctrl.transactions, (t)-> t.transaction_log.id == transaction.transaction_log.id)
-      ctrl.onTransactionsChange(
-        EventEmitter({ count: ctrl.transactions.length })
+      # TODO: move to transactions.component
+      TransactionsService.commit(
+        transaction.links.commit
+        transaction.transaction_log.resource_type
+        transaction.mappings
+      ).then(
+        (response)->
+          # TODO: display success alert
+          # TODO: move to store
+          ctrl.transactions = _.reject(ctrl.transactions, (tx)-> tx.transaction_log.id == transaction.transaction_log.id)
+          ctrl.onTransactionsChange(
+            EventEmitter({ count: ctrl.transactions.length })
+          )
+        (err)->
+          # TODO: display error alert
       )
 
     ctrl.onReconcileTransactions = ({transaction, matches, apps})->
@@ -40,10 +51,25 @@ angular.module('transac.transactions').component('transactions', {
       ctrl.reconciling = false
       ctrl.onReconciling(EventEmitter(isReconciling: false))
       return unless args?
-      # TODO: move to store
-      ctrl.transactions = _.reject(ctrl.transactions, (t)-> t.transaction_log.id == args.id)
-      ctrl.onTransactionsChange(
-        EventEmitter({ count: ctrl.transactions.length })
+      # Restore full transaction object
+      transaction = _.find(ctrl.transactions, (tx) -> tx.transaction_log.id == args.txId)
+      return unless transaction? # TODO: display error alert
+      TransactionsService.merge(
+        transaction.links.merge
+        transaction.transaction_log.resource_type
+        args.mergeParams
+      ).then(
+        (response)->
+          # TODO: display success alert
+          # TODO: move to store
+          ctrl.transactions = _.reject(ctrl.transactions, (tx)->
+            tx.transaction_log.id == transaction.transaction_log.id
+          )
+          ctrl.onTransactionsChange(
+            EventEmitter({ count: ctrl.transactions.length })
+          )
+        (err)->
+          # TODO: display error alert
       )
 
     return

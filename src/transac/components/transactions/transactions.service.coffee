@@ -17,14 +17,14 @@ angular.module('transac.transactions').service('TransactionsService', ($http, Tr
       _self.HTTP_CONFIG = params: { sso_session: TransacUserService.get().sso_session }
       _self._developer = false
 
-  # GET /api/v2/org-fbcy/transaction_logs/pending
-  @get = (params={})->
+  # Get pending or historical transactions
+  # GET /api/v2/org-fbcy/transaction_logs/{pending|history}
+  @get = (type='pending')->
     orgUid = if _self.developer() then DEV_AUTH.orgUid else TransacUserService.getCurrentOrg().uid
-    url = "https://api-connec-sit.maestrano.io/api/v2/#{orgUid}/transaction_logs/pending"
-    params = angular.merge({}, _self.HTTP_CONFIG, params)
-    $http.get(url, params).then(
+    url = "https://api-connec-sit.maestrano.io/api/v2/#{orgUid}/transaction_logs/#{type}"
+    $http.get(url, _self.HTTP_CONFIG).then(
       (response)->
-        response.data.transactions
+        transactions: response.data.transactions
       (err)->
         console.error(err)
         err
@@ -46,20 +46,45 @@ angular.module('transac.transactions').service('TransactionsService', ($http, Tr
   # auto_commit: (true/false) automatically notify this application of future updates
   # pull_disabled: (true/false) rejects update coming from this application
   # push_disabled: (true/false) do not notify this application of updates
-  @commit = (url, mappings=[])->
-    acceptedParams = ['group_id', 'commit', 'auto_commit', 'pull_disabled', 'push_disabled']
+  @commit = (url, resource, mappings=[])->
+    # acceptedParams = ['group_id', 'commit', 'auto_commit', 'pull_disabled', 'push_disabled']
     params =
-      mappings: _.map(mappings, (m)-> _.pick(m, acceptedParams))
-    console.log('TransactionsService.commit ', url, params)
+      # mappings: _.map(mappings, (m)-> _.pick(m, acceptedParams))
+      mappings: mappings
+    $http.put(url, params, _self.HTTP_CONFIG).then(
+      (response)->
+        transaction: response.data[resource]
+      (err)->
+        console.error(err)
+        err
+    )
 
   # Find matching transacations rated with a score representing duplicate likelyhood.
   # GET /api/v2/org-fbcy/organizations/b1733560-d577-0134-317d-74d43510c326/matches
-  @matches = (url, entity, params={})->
+  @matches = (url, resource, params={})->
     params = angular.merge({}, _self.HTTP_CONFIG, params)
     $http.get(url, params).then(
       (response)->
-        matches: response.data[entity] || []
+        matches: response.data[resource] || []
         pagination: response.data.pagination
+      (err)->
+        console.error(err)
+        err
+    )
+
+  # Merge transactions, reconciling duplicate records.
+  # PUT http://localhost:8080/api/v2/org-fbcy/accounts/a7c747f0-d577-0134-317d-74d43510c326/merge
+  # {
+  #   "ids": ["a7ca3ab0-d441-0134-17b1-74d43510c326", "a7ca3ab0-d443-0134-17b4-74d43510c326"],
+  #   "accounts" => {
+  #     'name' => 'Business Bank Account',
+  #     'description' => 'The account to keep'
+  #   }
+  # }
+  @merge = (url, resource, params={})->
+    $http.put(url, params, _self.HTTP_CONFIG).then(
+      (response)->
+        transaction: response.data[resource]
       (err)->
         console.error(err)
         err
