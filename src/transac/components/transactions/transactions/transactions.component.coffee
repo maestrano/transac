@@ -9,6 +9,7 @@ angular.module('transac.transactions').component('transactions', {
 
     ctrl.$onInit = ->
       ctrl.reconciling = false
+      ctrl.loading = true
       # TODO: move to store
       TransactionsService.get().then(
         (response)->
@@ -19,6 +20,7 @@ angular.module('transac.transactions').component('transactions', {
         (error)->
           # TODO: display error alert
       )
+      .finally(-> ctrl.loading = false)
 
     ctrl.onTransactionCommit = ({transaction})->
       # TODO: move to transactions.component
