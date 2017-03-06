@@ -94,22 +94,20 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
   ## Txs Display Formatting Methods
   ##
 
-  # Format title depending on transaction entity type
-  # TODO: refactor to take action & resource_type as params
+  # Format title depending on transaction action & resource type
   @formatTitle = (transaction)->
     action = transaction.transaction_log.action.toLowerCase()
-    entity = transaction.transaction_log.resource_type
-    formatted_entity = _.capitalize(_.words(entity).join(' '))
-    title = switch entity
+    resource = transaction.transaction_log.resource_type
+    formatted_resource = _.capitalize(_.words(resource).join(' '))
+    title = switch resource
       when 'credit_notes'
         "#{_.get(transaction.changes, 'transaction_number')} (#{_.get(transaction.changes, 'type')})"
       else
         _.get(transaction.changes, 'name', 'No name found')
 
-    "#{action} #{formatted_entity}: #{title}"
+    "#{action} #{formatted_resource}: #{title}"
 
   # Format a matching transaction's title on resource type.
-  # TODO: refactor to take resource_type as param
   @formatMatchTitle = (transaction)->
     title = switch transaction.resource_type
       when 'organizations'
@@ -124,7 +122,6 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
     title
 
   # Add a object to the transaction with relevant 'changes' by resource types for display.
-  # TODO: refactor to take resource_type as param
   @formatChanges = (transaction)->
     attributes = switch transaction.resource_type
       when 'organizations'
@@ -137,13 +134,12 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
         []
     accepted_changes = _.pick(transaction, attributes)
     # Default to all fields
-    # TODO: define all accepted changes attributes for each entity
+    # TODO: define all accepted changes attributes for each possible resource
     accepted_changes = if _.isEmpty(accepted_changes) then transaction else accepted_changes
     transaction.formatted = _self.flattenObject(accepted_changes)
     transaction
 
   # Flatten nested objects to display all changes fields simply.
-  # TODO: try lodash _.flatMapDeep
   @flattenObject = (x, result = {}, prefix = null)->
     if _.isObject(x)
       _.each(x, (v, k)-> _self.flattenObject(v, result, (if prefix then prefix + '_' else '') + k))
