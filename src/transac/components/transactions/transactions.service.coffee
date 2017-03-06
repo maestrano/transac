@@ -95,6 +95,7 @@ angular.module('transac.transactions').service('TransactionsService', ($http, Tr
   ##
 
   # Format title depending on transaction entity type
+  # TODO: refactor to take action & resource_type as params
   @formatTitle = (transaction)->
     action = transaction.transaction_log.action.toLowerCase()
     entity = transaction.transaction_log.resource_type
@@ -108,6 +109,7 @@ angular.module('transac.transactions').service('TransactionsService', ($http, Tr
     "#{action} #{formatted_entity}: #{title}"
 
   # Format a matching transaction's title on resource type.
+  # TODO: refactor to take resource_type as param
   @formatMatchTitle = (transaction)->
     title = switch transaction.resource_type
       when 'organizations'
@@ -122,6 +124,7 @@ angular.module('transac.transactions').service('TransactionsService', ($http, Tr
     title
 
   # Add a object to the transaction with relevant 'changes' by resource types for display.
+  # TODO: refactor to take resource_type as param
   @formatChanges = (transaction)->
     attributes = switch transaction.resource_type
       when 'organizations'

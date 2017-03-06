@@ -5,7 +5,9 @@
     </div>
     <div class="tx-tile_topbar_text">
       <h5>{{::$ctrl.title}}</h5>
-      <span>{{::$ctrl.subtitle}}</span>
+      <div class="tx-tile_topbar_text_subtitle">
+        <p>{{::$ctrl.subtitle}}</p>
+      </div>
     </div>
   </div>
   <transaction-changes changes="::$ctrl.transaction.formatted"></transaction-changes>
