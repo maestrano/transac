@@ -34,6 +34,13 @@ angular.module('transac.transactions').component('transacTx', {
     ctrl.title = ()->
       TransacTxsService.formatTitle(ctrl.transaction)
 
+    ctrl.icon = ()->
+      switch ctrl.transaction.transaction_log.action.toLowerCase()
+        when 'create'
+          'fa-plus-circle'
+        when 'update'
+          'fa-pencil-square'
+
     ctrl.matchTitle = (transaction)->
       TransacTxsService.formatMatchTitle(transaction)
 

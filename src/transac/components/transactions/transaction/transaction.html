@@ -1,12 +1,15 @@
 <div ng-class="{ 'selected': $ctrl.isSelected }">
   <div class="summary">
     <a href="" class="summary_title" ng-click="$ctrl.selectOnClick()">
+      <div class="summary_title_icon">
+        <i class="fa {{$ctrl.icon()}} fa-2x" aria-hidden="true"></i>
+      </div>
       <div class="summary_title_caption">
         <span>{{::$ctrl.title()}}</span>
       </div>
       <div class="summary_title_warning">
         <div ng-if="$ctrl.hasMatches()">
-          <i class="fa fa-exclamation-triangle fa-lg"></i>
+          <i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>
           <span>This record may be a duplicate</span>
         </div>
       </div>
@@ -60,7 +63,7 @@
         <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>
         <div class="detail_dup-line-break_title">
           <div>
-            <i class="fa fa-exclamation fa-lg"></i>
+            <i class="fa fa-exclamation fa-lg" aria-hidden="true"></i>
             <span>Potential Duplicates</span>
           </div>
         </div>
