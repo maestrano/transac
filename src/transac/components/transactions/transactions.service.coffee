@@ -94,7 +94,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
   ## Txs Display Formatting Methods
   ##
 
-  # Format title depending on transaction action & resource type
+  # Format title based on tx action & resource type
   @formatTitle = (transaction)->
     action = transaction.transaction_log.action.toLowerCase()
     resource = transaction.transaction_log.resource_type
@@ -111,6 +111,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
   @formatMatchTitle = (transaction)->
     title = switch transaction.resource_type
       when 'organizations'
+        # Determine type of organization (e.g customer, supplier)
         key = _.map(transaction, (v, k)->
           return k if _.includes(k, ['is_']) && v == true
         )
@@ -121,9 +122,15 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
         _.get(transaction, 'name', 'No name found')
     title
 
-  # Add a object to the transaction with relevant 'changes' by resource types for display.
-  @formatChanges = (transaction)->
-    attributes = switch transaction.resource_type
+  ###
+  #   @desc Formats transaction object by selecting resource relevant attributes for display.
+  #   @param {object} [txChanges] A tx changes object
+  #   @param {string} [resource] Tx resource type e.g 'accounts'
+  #   @returns {object} Formatted transaction display fields by resource type
+  #   @TODO: Define all accepted attributes for each possible resource type (and possibly move these attr lists out into a constant)
+  ###
+  @getFormattedChanges = (txChanges, resource)->
+    attributes = switch resource
       when 'organizations'
         ['name', 'status', 'address', 'email', 'phone', 'referred_leads', 'website']
       when 'tax_codes'
@@ -131,13 +138,16 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
       when 'accounts'
         ['name', 'reference', 'code', 'currency', 'description', 'status']
       else
+        # Default to all fields
         []
-    accepted_changes = _.pick(transaction, attributes)
-    # Default to all fields
-    # TODO: define all accepted changes attributes for each possible resource
-    accepted_changes = if _.isEmpty(accepted_changes) then transaction else accepted_changes
-    transaction.formatted = _self.flattenObject(accepted_changes)
-    transaction
+    acceptedChanges = _.pick(txChanges, attributes)
+    acceptedChanges = if _.isEmpty(acceptedChanges) then txChanges else acceptedChanges
+    _.each(['updated_at', 'created_at'], (key)->
+      acceptedChanges[key] = moment(_.get(txChanges, key)).format('MMM d, Y h:m')
+      return
+    )
+    _self.flattenObject(acceptedChanges)
+
 
   # Flatten nested objects to display all changes fields simply.
   @flattenObject = (x, result = {}, prefix = null)->
