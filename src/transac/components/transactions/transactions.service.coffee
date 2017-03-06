@@ -1,7 +1,7 @@
 #
 # Transactions Component Service
 #
-angular.module('transac.transactions').service('TransactionsService', ($http, TransacUserService, DEV_AUTH)->
+angular.module('transac.transactions').service('TransacTxsService', ($http, TransacUserService, DEV_AUTH)->
 
   _self = @
 

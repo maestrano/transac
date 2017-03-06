@@ -1,4 +1,4 @@
-angular.module('transac.transactions').component('transactionChanges', {
+angular.module('transac.transactions').component('transacTxChanges', {
   bindings: {
     changes: '<'
     onSelect: '&?'

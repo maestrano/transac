@@ -1,7 +1,7 @@
 #
 # TopBar Component
 #
-angular.module('transac.top-bar').component('topBar', {
+angular.module('transac.top-bar').component('transacTopBar', {
   bindings: {
     onSelectMenu: '&'
     transactionsCount: '<'

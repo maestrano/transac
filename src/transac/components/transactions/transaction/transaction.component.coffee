@@ -1,11 +1,11 @@
-angular.module('transac.transactions').component('transaction', {
+angular.module('transac.transactions').component('transacTx', {
   bindings: {
     transaction: '<'
     onCommit: '&'
     onReconcile: '&'
   }
   templateUrl: 'components/transactions/transaction'
-  controller: (TransactionsService, EventEmitter)->
+  controller: (TransacTxsService, EventEmitter)->
     ctrl = this
 
     # Action Recipies
@@ -16,12 +16,12 @@ angular.module('transac.transactions').component('transaction', {
 
     ctrl.$onInit = ->
       # Prepare transaction changes hash for display
-      ctrl.changes = TransactionsService.flattenObject(ctrl.transaction.changes)
+      ctrl.changes = TransacTxsService.flattenObject(ctrl.transaction.changes)
       # Select to share with all apps by default
       _.each(ctrl.transaction.mappings, (m)-> m.sharedWith = true)
       # Match transaction for potential duplicates
       # TODO: Move to API
-      TransactionsService.matches(
+      TransacTxsService.matches(
         ctrl.transaction.links.matches,
         ctrl.transaction.transaction_log.resource_type
       ).then(
@@ -32,10 +32,10 @@ angular.module('transac.transactions').component('transaction', {
       )
 
     ctrl.title = ()->
-      TransactionsService.formatTitle(ctrl.transaction)
+      TransacTxsService.formatTitle(ctrl.transaction)
 
     ctrl.matchTitle = (transaction)->
-      TransactionsService.formatMatchTitle(transaction)
+      TransacTxsService.formatMatchTitle(transaction)
 
     ctrl.hasMatches = ->
       ctrl.matches && ctrl.matches.length

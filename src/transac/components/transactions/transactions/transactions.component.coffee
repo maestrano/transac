@@ -1,17 +1,17 @@
-angular.module('transac.transactions').component('transactions', {
+angular.module('transac.transactions').component('transacTxs', {
   bindings: {
     onTransactionsChange: '&'
     onReconciling: '&'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: (EventEmitter, TransactionsService)->
+  controller: (EventEmitter, TransacTxsService)->
     ctrl = this
 
     ctrl.$onInit = ->
       ctrl.reconciling = false
       ctrl.loading = true
       # TODO: move to store
-      TransactionsService.get().then(
+      TransacTxsService.get().then(
         (response)->
           ctrl.transactions = response.transactions
           ctrl.onTransactionsChange(
@@ -23,8 +23,7 @@ angular.module('transac.transactions').component('transactions', {
       .finally(-> ctrl.loading = false)
 
     ctrl.onTransactionCommit = ({transaction})->
-      # TODO: move to transactions.component
-      TransactionsService.commit(
+      TransacTxsService.commit(
         transaction.links.commit
         transaction.transaction_log.resource_type
         transaction.mappings
@@ -42,8 +41,8 @@ angular.module('transac.transactions').component('transactions', {
 
     ctrl.onReconcileTransactions = ({transaction, matches, apps})->
       ctrl.reconcileData =
-        transaction: TransactionsService.formatChanges(transaction)
-        matches: _.map(matches, (m)-> TransactionsService.formatChanges(m))
+        transaction: TransacTxsService.formatChanges(transaction)
+        matches: _.map(matches, (m)-> TransacTxsService.formatChanges(m))
         apps: apps
       ctrl.reconciling = true
       ctrl.onReconciling(EventEmitter(isReconciling: true))
@@ -56,7 +55,7 @@ angular.module('transac.transactions').component('transactions', {
       # Restore full transaction object
       transaction = _.find(ctrl.transactions, (tx) -> tx.transaction_log.id == args.txId)
       return unless transaction? # TODO: display error alert
-      TransactionsService.merge(
+      TransacTxsService.merge(
         transaction.links.merge
         transaction.transaction_log.resource_type
         args.mergeParams

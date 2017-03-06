@@ -1,4 +1,4 @@
-angular.module('transac.transactions').component('transactionTile', {
+angular.module('transac.transactions').component('transacTxTile', {
   bindings: {
     transaction: '<'
     title: '<?'

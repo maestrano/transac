@@ -1,4 +1,4 @@
-angular.module('transac.transactions').component('transactionReconcile', {
+angular.module('transac.transactions').component('transacTxReconcile', {
   bindings: {
     transaction: '<'
     matches: '<'

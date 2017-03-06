@@ -33,7 +33,7 @@ angular.module('transac.user').provider('TransacUserService', ()->
       )
       return $q.all(promises).then(
         (response) ->
-          service.user = angular.merge(response[0], response[1])
+          service.user = angular.merge({}, response[0], response[1])
           return service.user
         (err) ->
           $log.error(err)

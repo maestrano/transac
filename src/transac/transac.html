@@ -1,7 +1,7 @@
 <div ng-if="$ctrl.transacReady">
-  <top-bar ng-show="$ctrl.isTopBarShown" on-select-menu="$ctrl.onTopBarSelectMenu($event)" transactions-count="$ctrl.transactionsCount"></top-bar>
+  <transac-top-bar ng-show="$ctrl.isTopBarShown" on-select-menu="$ctrl.onTopBarSelectMenu($event)" transactions-count="$ctrl.transactionsCount"></transac-top-bar>
 
-  <transactions on-transactions-change="$ctrl.updateTransactionsCount($event)" on-reconciling="$ctrl.toggleTopBar($event)"></transactions>
+  <transac-txs on-transactions-change="$ctrl.updateTransactionsCount($event)" on-reconciling="$ctrl.toggleTopBar($event)"></transac-txs>
 </div>
 <div ng-if="!$ctrl.transacReady">
   <p>Loading...</p>

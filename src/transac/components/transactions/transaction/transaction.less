@@ -1,25 +1,25 @@
-transaction {
+transac-tx {
   display: block;
-  background-color: @transaction-background-color;
+  background-color: @transac-tx-background-color;
 
-  .transac-list-on-hover(@transaction-hover-background-color);
+  .transac-list-on-hover(@transac-tx-hover-background-color);
 
   .selected {
     box-shadow: 0px 5px 10px -4px;
     border-bottom: 1px solid @transac-lightgrey;
     .summary {
-      background-color: @transaction-hover-background-color;
+      background-color: @transac-tx-hover-background-color;
       border-bottom: 2px solid @transac-grey;
     }
   }
 
   .summary {
-    height: @transaction-height;
+    height: @transac-tx-height;
     width: 100%;
     display: flex;
   }
 
-  .summary-title {
+  .summary_title {
     height: 100%;
     display: flex;
     flex-grow: 30;
@@ -29,31 +29,31 @@ transaction {
     text-decoration: none;
   }
 
-  .summary-title-caption {
+  .summary_title_caption {
     display: flex;
     flex-grow: 2;
     .transac-heading();
   }
 
-  .summary-title-warning {
+  .summary_title_warning {
     display: flex;
     flex-grow: 0;
-    color: @transaction-duplicate-warning-color;
+    color: @transac-tx-duplicate-warning-color;
     span { font-size: 13px; }
   }
 
-  .summary-actions {
+  .summary_actions {
     display: flex;
     flex-direction: row-reverse;
     flex-grow: 2;
   }
 
-  .summary-actions-action--approve {
-    .transac-action-button(@transaction-approve-color);
+  .summary_actions_action--approve {
+    .transac-action-button(@transac-tx-approve-color);
   }
 
-  .summary-actions-action--deny {
-    .transac-action-button(@transaction-deny-color);
+  .summary_actions_action--deny {
+    .transac-action-button(@transac-tx-deny-color);
   }
 
   .detail {
@@ -61,43 +61,43 @@ transaction {
     background-color: white;
   }
 
-  .detail-spacers {
+  .detail_dup-line-break {
     display: flex;
   }
-  .detail-spacers-spacer {
+  .detail_dup-line-break_spacer {
     display: flex;
     border-bottom: 2px solid @transac-grey;
     height: 12px;
   }
-  .detail-spacers-title {
+  .detail_dup-line-break_title {
     padding: 0px 12px;
-    color: @transaction-details-duplicate-warning-color;
+    color: @transac-tx-details-duplicate-warning-color;
     i { padding: 0 3px }
   }
-  .detail-spacers-spacer--left {
+  .detail_dup-line-break_spacer--left {
     flex-grow: 1;
   }
-  .detail-spacers-spacer--right {
+  .detail_dup-line-break_spacer--right {
     flex-grow: 2.5;
   }
 
-  .detail-section {
+  .detail_section {
     max-height: 180px;
     height: 180px;
     overflow: auto;
   }
 
-  .detail-section-title {
+  .detail_section_title {
     padding-left: 10px;
     h5 {
       .transac-sub-heading();
     }
   }
 
-  .detail-section-app {
+  .detail_section_app {
     display: flex;
     padding: 10px;
-    .transac-list-on-hover(@transaction-hover-background-color);
+    .transac-list-on-hover(@transac-tx-hover-background-color);
     span {
       display: flex;
       flex-grow: 1;
@@ -107,7 +107,7 @@ transaction {
     }
   }
 
-  .detail-section-action {
+  .detail_section_action {
     display: flex;
     align-items: center;
     span {
@@ -120,33 +120,33 @@ transaction {
     }
   }
 
-  .detail-section-action--approve {
+  .detail_section_action--approve {
     margin-top: 10px;
     button {
-      .transac-action-button(@transaction-approve-color);
+      .transac-action-button(@transac-tx-approve-color);
     }
   }
 
-  .detail-section-action--deny {
+  .detail_section_action--deny {
     button {
-      .transac-action-button(@transaction-deny-color);
+      .transac-action-button(@transac-tx-deny-color);
     }
     .fa-ban {
       font-size: 23px;
     }
   }
 
-  .detail-section-action--duplicate {
+  .detail_section_action--duplicate {
     button {
-      .transac-action-button(@transaction-duplicate-color);
+      .transac-action-button(@transac-tx-duplicate-color);
     }
   }
 
-  .detail-section-matches {
+  .detail_section_matches {
     height: 120px;
   }
 
-  .detail-section-matches-match {
+  .detail_section_matches_match {
     .transac-heading();
     padding: 10px 0;
   }
