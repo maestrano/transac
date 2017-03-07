@@ -7,7 +7,10 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
 
   _self.HTTP_CONFIG = {}
 
-  # Dev config for reaching Connec! with Basic Auth (add keys in transaction.module.coffee).
+  ###
+  #   @desc Invoke to configure basic auth (add keys in transaction.module.coffee), if no keys are provided, sso_session will be used.
+  #   @returns {boolean} Whether dev api creds are configured or sso token is being used.
+  ###
   @developer = ->
     return _self.developer unless _.isUndefined(_self._developer)
     if DEV_AUTH.apiKey && DEV_AUTH.apiSecret && DEV_AUTH.orgUid
@@ -17,8 +20,12 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
       _self.HTTP_CONFIG = params: { sso_session: TransacUserService.get().sso_session }
       _self._developer = false
 
-  # Get pending or historical transactions
-  # GET /api/v2/org-fbcy/transaction_logs/{pending|history}
+  ###
+  #   @desc Get pending or historical unreconcilled Transactions.
+  #   @http GET /api/v2/org-fbcy/transaction_logs/{pending|history}
+  #   @param {string} [type] Type of transactions e.g 'pending', 'history'
+  #   @returns {Promise<array>} List of Transactions.
+  ###
   @get = (type='pending')->
     orgUid = if _self.developer() then DEV_AUTH.orgUid else TransacUserService.getCurrentOrg().uid
     url = "https://api-connec-sit.maestrano.io/api/v2/#{orgUid}/transaction_logs/#{type}"
@@ -30,17 +37,25 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
         err
     )
 
-  # Commit transcation, reconciling records.
-  # PUT /api/v2/org-fbcy/accounts/a7c747f0-d577-0134-317d-74d43510c326/commit
-  # {
-  #   'mappings:'[{
-  #     'group_id'=>'cld-abc',
-  #     'commit'=>true,
-  #     'auto_commit'=>true,
-  #     'pull_disabled'=>false,
-  #     'push_disabled'=>false
-  #   }]
-  # }
+  ###
+  #   @desc Commit transcation, reconciling the record.
+  #   @http PUT /api/v2/org-fbcy/accounts/a7c747f0-d577-0134-317d-74d43510c326/commit
+  #   @httpBody
+  #   {
+  #     'mappings:'[{
+  #       'group_id'=>'cld-abc',
+  #       'commit'=>true,
+  #       'auto_commit'=>true,
+  #       'pull_disabled'=>false,
+  #       'push_disabled'=>false
+  #     }]
+  #   }
+  #   @param {string} [url] Transaction links commit URL.
+  #   @param {string} [resource] Transaction resource type.
+  #   @param {array} [mappings] Transaction mappings to include in http body of PUT request.
+  #   @returns {Promise} The commited Transaction.
+  ###
+  # API mapping behaviour notes:
   # group_id: group_id of the application to commit transaction to
   # commit: (true/false) notify application of the transaction
   # auto_commit: (true/false) automatically notify this application of future updates
@@ -59,8 +74,14 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
         err
     )
 
-  # Find matching transacations rated with a score representing duplicate likelyhood.
-  # GET /api/v2/org-fbcy/organizations/b1733560-d577-0134-317d-74d43510c326/matches
+  ###
+  #   @desc Find matching transacations rated with a score representing duplicate likelyhood.
+  #   @http GET /api/v2/org-fbcy/organizations/b1733560-d577-0134-317d-74d43510c326/matches
+  #   @param {string} [url] Transaction links matches URL.
+  #   @param {string} [resource] Transaction resource type.
+  #   @param {object} [params] Params to serialise into GET request URL.
+  #   @returns {Promise} Matching transactions & pagination data.
+  ###
   @matches = (url, resource, params={})->
     params = angular.merge({}, _self.HTTP_CONFIG, params)
     $http.get(url, params).then(
@@ -72,15 +93,22 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
         err
     )
 
-  # Merge transactions, reconciling duplicate records.
-  # PUT http://localhost:8080/api/v2/org-fbcy/accounts/a7c747f0-d577-0134-317d-74d43510c326/merge
-  # {
-  #   "ids": ["a7ca3ab0-d441-0134-17b1-74d43510c326", "a7ca3ab0-d443-0134-17b4-74d43510c326"],
-  #   "accounts" => {
-  #     'name' => 'Business Bank Account',
-  #     'description' => 'The account to keep'
+  ###
+  #   @desc Merge transactions and transaction attributes, reconciling duplicate records.
+  #   @http PUT http://localhost:8080/api/v2/org-fbcy/accounts/a7c747f0-d577-0134-317d-74d43510c326/merge
+  #   @httpBody
+  #   {
+  #     "ids": ["a7ca3ab0-d441-0134-17b1-74d43510c326", "a7ca3ab0-d443-0134-17b4-74d43510c326"],
+  #     "accounts" => {
+  #       'name' => 'Business Bank Account',
+  #       'description' => 'The account to keep'
+  #     }
   #   }
-  # }
+  #   @param {string} [url] Transaction links merge URL.
+  #   @param {string} [resource] Transaction resource type.
+  #   @param {object} [params] Params to include in http body of PUT request.
+  #   @returns {Promise} The updated Transaction.
+  ###
   @merge = (url, resource, params={})->
     $http.put(url, params, _self.HTTP_CONFIG).then(
       (response)->
@@ -94,7 +122,11 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
   ## Txs Display Formatting Methods
   ##
 
-  # Format title based on tx action & resource type
+  ###
+  #   @desc Format tx title based on action & resource type.
+  #   @param {object} [transaction] A Transaction object.
+  #   @returns {string} A formatted tx title.
+  ###
   @formatTitle = (transaction)->
     action = transaction.transaction_log.action.toLowerCase()
     resource = transaction.transaction_log.resource_type
@@ -107,30 +139,34 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
 
     "#{action} #{formatted_resource}: #{title}"
 
-  # Format a matching transaction's title on resource type.
-  @formatMatchTitle = (transaction)->
-    title = switch transaction.resource_type
+  ###
+  #   @desc Format a matching transaction title based on resource type.
+  #   @param {object} [match] A Matched Transaction object.
+  #   @returns {string} A formatted matching tx title.
+  ###
+  @formatMatchTitle = (match)->
+    title = switch match.resource_type
       when 'organizations'
         # Determine type of organization (e.g customer, supplier)
-        key = _.map(transaction, (v, k)->
+        key = _.map(match, (v, k)->
           return k if _.includes(k, ['is_']) && v == true
         )
         key = _.compact(key)[0]
         type = key.split('_').slice(-1)
-        "#{type}: #{transaction.name}"
+        "#{type}: #{match.name}"
       else
-        _.get(transaction, 'name', 'No name found')
+        _.get(match, 'name', 'No name found')
     title
 
   ###
   #   @desc Formats transaction object by selecting resource relevant attributes for display.
-  #   @param {object} [txChanges] A tx changes object
-  #   @param {string} [resource] Tx resource type e.g 'accounts'
-  #   @returns {object} Formatted transaction display fields by resource type
-  #   @TODO: Define all accepted attributes for each possible resource type (and possibly move these attr lists out into a constant)
+  #   @param {object} [txAttrs] Tx attributes object.
+  #   @param {string} [resource] Tx resource type e.g 'accounts'.
+  #   @returns {object} Formatted transaction attributes by resource type.
+  #   @TODO: Define all accepted attributes for each possible resource type (and possibly move these attr lists out into a constant).
   ###
-  @getFormattedChanges = (txChanges, resource)->
-    attributes = switch resource
+  @formatAttributes = (txAttrs, resource)->
+    acceptedAttrs = switch resource
       when 'organizations'
         ['name', 'status', 'address', 'email', 'phone', 'referred_leads', 'website']
       when 'tax_codes'
@@ -140,16 +176,20 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
       else
         # Default to all fields
         []
-    acceptedChanges = _.pick(txChanges, attributes)
-    acceptedChanges = if _.isEmpty(acceptedChanges) then txChanges else acceptedChanges
+    acceptedTxAttrs = _.pick(txAttrs, acceptedAttrs)
+    acceptedTxAttrs = if _.isEmpty(acceptedTxAttrs) then txAttrs else acceptedTxAttrs
     _.each(['updated_at', 'created_at'], (key)->
-      acceptedChanges[key] = moment(_.get(txChanges, key)).format('MMM d, Y h:m')
+      acceptedTxAttrs[key] = moment(_.get(txAttrs, key)).format('MMM d, Y h:m')
       return
     )
-    _self.flattenObject(acceptedChanges)
+    _self.flattenObject(acceptedTxAttrs)
 
 
-  # Flatten nested objects to display all changes fields simply.
+  ###
+  #   @desc Flatten nested objects to display all changes fields simply.
+  #   @param {object} [x] Object to flatten.
+  #   @returns {object} Flattened object.
+  ###
   @flattenObject = (x, result = {}, prefix = null)->
     if _.isObject(x)
       _.each(x, (v, k)-> _self.flattenObject(v, result, (if prefix then prefix + '_' else '') + k))

@@ -16,7 +16,7 @@ angular.module('transac.transactions').component('transacTx', {
 
     ctrl.$onInit = ->
       # Formats transaction changes for display
-      ctrl.formattedChanges = TransacTxsService.getFormattedChanges(
+      ctrl.formattedChanges = TransacTxsService.formatAttributes(
         ctrl.transaction.changes
         ctrl.transaction.transaction_log.resource_type
       )
