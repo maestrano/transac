@@ -58,12 +58,6 @@ angular.module('transac.transactions').component('transacTx', {
         when 'update'
           'fa-pencil-square'
 
-    # ctrl.getTxDate = (action)->
-    #   moment(_.get(ctrl.transaction.changes, "#{action}d_at")).format('MMM d, Y h:m')
-
-    ctrl.matchTitle = (transaction)->
-      TransacTxsService.formatMatchTitle(transaction)
-
     ctrl.hasMatches = ->
       ctrl.matches && ctrl.matches.length
 

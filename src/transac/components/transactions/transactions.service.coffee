@@ -1,7 +1,7 @@
 ###
 #   @desc Contains business logic for Transactions & Matches.
 ###
-angular.module('transac.transactions').service('TransacTxsService', ($log, $http, $q, TransacUserService, DEV_AUTH)->
+angular.module('transac.transactions').service('TransacTxsService', ($log, $http, $q, $window, TransacUserService, DEV_AUTH)->
 
   _self = @
 
@@ -181,11 +181,18 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
     acceptedTxAttrs = _.pick(txAttrs, acceptedAttrs)
     acceptedTxAttrs = if _.isEmpty(acceptedTxAttrs) then txAttrs else acceptedTxAttrs
     _.each(['updated_at', 'created_at'], (key)->
-      acceptedTxAttrs[key] = moment(_.get(txAttrs, key)).format('MMM d, Y h:m')
+      acceptedTxAttrs[key] = _self.formatDisplayDate(_.get(txAttrs, key))
       return
     )
     _self.flattenObject(acceptedTxAttrs)
 
+  ###
+  #   @desc Format datestring into Transac! date display format
+  #   @param {string} [date] A date string
+  #   @return {string} A formatted date string
+  ###
+  @formatDisplayDate = (date)->
+    $window.moment(date).format('MMM d, Y h:m')
 
   ###
   #   @desc Flatten nested objects to display all changes fields simply.

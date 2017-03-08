@@ -36,16 +36,13 @@ transac-tx {
   .summary_content_caption {
     display: flex;
     flex-direction: column;
-    flex-grow: 2;
   }
 
   .summary_content_caption_title {
-    display: flex;
     .transac-title();
   }
 
   .summary_content_caption_subtitle {
-    display: flex;
     .transac-subtitle();
   }
 
@@ -97,7 +94,7 @@ transac-tx {
 
   .detail_section {
     max-height: 180px;
-    height: 180px;
+    min-height: 180px;
     overflow: auto;
   }
 
@@ -157,12 +154,8 @@ transac-tx {
   }
 
   .detail_section_matches {
-    height: 120px;
-  }
-
-  .detail_section_matches_match {
-    .transac-title();
-    padding: 10px 0;
+    min-height: 70px;
+    max-height: 120px;
   }
 
 }

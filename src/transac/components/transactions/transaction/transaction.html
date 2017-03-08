@@ -76,9 +76,7 @@
       </div>
       <div class="row">
         <div class="col-md-12 col-xs-12 detail_section detail_section_matches">
-          <div ng-repeat="match in ::$ctrl.matches" class="detail_section_matches_match">
-            {{::$ctrl.matchTitle(match)}}
-          </div>
+          <transac-tx-matches matches="::$ctrl.matches"></transac-tx-matches>
         </div>
       </div>
     </div>
