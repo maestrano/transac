@@ -4,41 +4,23 @@ angular.module('transac.transactions').component('transacTxs', {
     onReconciling: '&'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: (EventEmitter, TransacTxsService, $scope)->
+  controller: (EventEmitter, TransacTxsService)->
     ctrl = this
+
+    # Public
 
     ctrl.$onInit = ->
       ctrl.reconciling = false
-      ctrl.loading = true
       ctrl.pagination =
         nbItems: 10
         page: 1
-      TransacTxsService.get('pending', params: {$skip: 0, $top: ctrl.pagination.nbItems}).then(
-        (response)->
-          ctrl.transactions = response.transactions
-          ctrl.onTransactionsChange(
-            EventEmitter({ count: ctrl.transactions.length })
-          )
-        (error)->
-        # TODO: display error alert
-      )
-      .finally(-> ctrl.loading = false)
+      ctrl.transactions = []
+      loadTxs($skip: 0, $top: ctrl.pagination.nbItems)
 
     ctrl.loadMoreTransactions = ->
-      ctrl.loading = true
       ctrl.pagination.page += 1
       offset = (ctrl.pagination.page - 1) * ctrl.pagination.nbItems
-      params = $skip: offset, $top: ctrl.pagination.nbItems
-      TransacTxsService.get('pending', params: params).then(
-        (response)->
-          ctrl.transactions = ctrl.transactions.concat(response.transactions)
-          ctrl.onTransactionsChange(
-            EventEmitter({ count: ctrl.transactions.length })
-          )
-        (error)->
-          # TODO: display error alert
-      )
-      .finally(-> ctrl.loading = false)
+      loadTxs($skip: offset, $top: ctrl.pagination.nbItems)
 
     ctrl.onTransactionCommit = ({transaction})->
       TransacTxsService.commit(
@@ -90,6 +72,22 @@ angular.module('transac.transactions').component('transacTxs', {
         (err)->
           # TODO: display error alert
       )
+
+    # Private
+
+    loadTxs = (params)->
+      ctrl.loading = true
+      # TODO: move to store
+      TransacTxsService.get('pending', params: params).then(
+        (response)->
+          ctrl.transactions = ctrl.transactions.concat(response.transactions)
+          ctrl.onTransactionsChange(
+            EventEmitter({ count: ctrl.transactions.length })
+          )
+        (error)->
+        # TODO: display error alert
+      )
+      .finally(-> ctrl.loading = false)
 
     return
 })
