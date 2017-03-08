@@ -1,7 +1,6 @@
-##                                                                        ##
-##                      MAESTRANO TRANSAC! LIBRARY                        ##
-##                                                                        ##
-############################################################################
+###
+#   @desc The Maestrano Transac! Library!
+###
 angular.module('maestrano.transac',
   [
     'transac.components'

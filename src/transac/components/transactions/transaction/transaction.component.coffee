@@ -1,3 +1,10 @@
+###
+#   @desc Displays a horizontal Transaction list item, expandable details section on click, and actions to reconcile the transaction.
+#   @require transac-tx-changes component.
+#   @binding {Object} [transaction] A transaction
+#   @binding {Function} [onCommit] Callback fired on commit transaction (approve or deny)
+#   @binding {Function} [onReconcile] Callback fired on reconcile matches found (potential dups)
+###
 angular.module('transac.transactions').component('transacTx', {
   bindings: {
     transaction: '<'

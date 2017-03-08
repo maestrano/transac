@@ -1,11 +1,11 @@
 ###
-#   @desc A 'tile' shaped transaction card for viewing tx / match tx changes and selecting the tx.
-#   @component requires transac-tx-changes.
+#   @desc A 'tile' shaped transaction card for viewing tx / match tx changes and selecting the tx / tx attributes.
+#   @require transac-tx-changes component.
 #   @binding {object} [transaction] A formatted transaction object (match transaction object structure).
 #   @binding {string=} [title] Tx tile topbar title.
 #   @binding {string=} [subtitle] Tx tile topbar subtitle.
 #   @binding {boolean=} [checked] Bind whether the transaction is checked.
-#   @binding {function=} [onSelect] Callback event fired on tx-tile topbar click.
+#   @binding {Function=} [onSelect] Callback event fired on tx-tile topbar click.
 ###
 angular.module('transac.transactions').component('transacTxTile', {
   bindings: {

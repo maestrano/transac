@@ -1,3 +1,11 @@
+###
+#   @desc The root component of the transactions module. Responsible for displaying transactions and delegating requests to reconcile to the tx service.
+#   @require transac-tx component
+#   @require transac-tx-reconcile component
+#   @require infinite-scroll directive (external)
+#   @binding {Function} [onTransactionsChange] Callback fired on change to stored txs model
+#   @binding {Function} [onReconciling] Callback fire on reconcile tx with matches (dups)
+###
 angular.module('transac.transactions').component('transacTxs', {
   bindings: {
     onTransactionsChange: '&'

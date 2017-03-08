@@ -1,3 +1,11 @@
+###
+#   @desc Displays tx and tx matches side-by-side, responsibile for tx and tx attribute selection, emitting which tx / tx attributes should be merged.
+#   @require transac-tx-tile component.
+#   @binding {Object} [transaction] A formatted transaction (match transaction object structure).
+#   @binding {Array<Object>} [matches] List of matches (potential dups).
+#   @binding {Array<string>} [apps] List of applications the transaction will be published to.
+#   @binding {Function} [onReconciled] Callback fired on publish reconcilations.
+###
 angular.module('transac.transactions').component('transacTxReconcile', {
   bindings: {
     transaction: '<'

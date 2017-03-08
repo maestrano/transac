@@ -1,3 +1,6 @@
+###
+#   @desc Components for the Transac! library Top Bar Menu feature.
+###
 angular.module('transac.top-bar',
   [
     # deps

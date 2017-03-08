@@ -1,6 +1,6 @@
-#
-# Transac! Root Component
-#
+###
+#   @desc Transac! Root Component - embeds the library feature components.
+###
 angular.module('maestrano.transac').component('transac', {
   bindings: {
   },

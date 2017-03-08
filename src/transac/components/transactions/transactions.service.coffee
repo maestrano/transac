@@ -1,6 +1,6 @@
-#
-# Transactions Component Service
-#
+###
+#   @desc Contains business logic for Transactions & Matches.
+###
 angular.module('transac.transactions').service('TransacTxsService', ($log, $http, $q, TransacUserService, DEV_AUTH)->
 
   _self = @
@@ -24,7 +24,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @desc Get pending or historical unreconcilled Transactions.
   #   @http GET /api/v2/org-fbcy/transaction_logs/{pending|history}
   #   @param {string} [type] Type of transactions e.g 'pending', 'history'
-  #   @returns {Promise<array>} List of Transactions.
+  #   @returns {Promise<Object>} A promise to the list of Transactions and pagination data.
   ###
   @get = (type='pending', params={})->
     orgUid = if _self.developer() then DEV_AUTH.orgUid else TransacUserService.getCurrentOrg().uid
@@ -55,7 +55,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @param {string} [url] Transaction links commit URL.
   #   @param {string} [resource] Transaction resource type.
   #   @param {array} [mappings] Transaction mappings to include in http body of PUT request.
-  #   @returns {Promise} The commited Transaction.
+  #   @returns {Promise<Object>} A promise to the commited Transaction.
   ###
   # API mapping behaviour notes:
   # group_id: group_id of the application to commit transaction to
@@ -81,8 +81,8 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @http GET /api/v2/org-fbcy/organizations/b1733560-d577-0134-317d-74d43510c326/matches
   #   @param {string} [url] Transaction links matches URL.
   #   @param {string} [resource] Transaction resource type.
-  #   @param {object} [params] Params to serialise into GET request URL.
-  #   @returns {Promise} Matching transactions & pagination data.
+  #   @param {Object} [params] Params to serialise into GET request URL.
+  #   @returns {Promise<Object>} A promise to the matching transactions & pagination data.
   ###
   @matches = (url, resource, params={})->
     params = angular.merge({}, _self.HTTP_CONFIG, params)
@@ -108,8 +108,8 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   }
   #   @param {string} [url] Transaction links merge URL.
   #   @param {string} [resource] Transaction resource type.
-  #   @param {object} [params] Params to include in http body of PUT request.
-  #   @returns {Promise} The updated Transaction.
+  #   @param {Object} [params] Params to include in http body of PUT request.
+  #   @returns {Promise<Object>} A promise to updated Transaction.
   ###
   @merge = (url, resource, params={})->
     $http.put(url, params, _self.HTTP_CONFIG).then(
@@ -126,7 +126,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
 
   ###
   #   @desc Format tx title based on action & resource type.
-  #   @param {object} [transaction] A Transaction object.
+  #   @param {Object} [transaction] A Transaction object.
   #   @returns {string} A formatted tx title.
   ###
   @formatTitle = (transaction)->
@@ -143,7 +143,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
 
   ###
   #   @desc Format a matching transaction title based on resource type.
-  #   @param {object} [match] A Matched Transaction object.
+  #   @param {Object} [match] A Matched Transaction object.
   #   @returns {string} A formatted matching tx title.
   ###
   @formatMatchTitle = (match)->
@@ -162,9 +162,9 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
 
   ###
   #   @desc Formats transaction object by selecting resource relevant attributes for display.
-  #   @param {object} [txAttrs] Tx attributes object.
+  #   @param {Object} [txAttrs] Tx attributes object.
   #   @param {string} [resource] Tx resource type e.g 'accounts'.
-  #   @returns {object} Formatted transaction attributes by resource type.
+  #   @returns {Object} Formatted transaction attributes by resource type.
   #   @TODO: Define all accepted attributes for each possible resource type (and possibly move these attr lists out into a constant).
   ###
   @formatAttributes = (txAttrs, resource)->
@@ -189,8 +189,8 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
 
   ###
   #   @desc Flatten nested objects to display all changes fields simply.
-  #   @param {object} [x] Object to flatten.
-  #   @returns {object} Flattened object.
+  #   @param {Object} [x] Object to flatten.
+  #   @returns {Object} Flattened object.
   ###
   @flattenObject = (x, result = {}, prefix = null)->
     if _.isObject(x)

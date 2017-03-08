@@ -1,6 +1,6 @@
-##
-## This is the transactions module. It includes all of our components for the Transactions feature.
-##
+###
+#   @desc Components for viewing & reconciling transactions, composing the Maestrano Transactions feature.
+###
 angular.module('transac.transactions',
   [
     'transac.user'
@@ -9,7 +9,7 @@ angular.module('transac.transactions',
   ])
   # EventEmitter wrapper for emitting events through component '&' callbacks.
   .value('EventEmitter', (payload)-> { $event: payload })
-  # Configured infinite-scroll to process scroll events a maximum of once every x milliseconds
+  # Configure infinite-scroll to process scroll events a maximum of once every x milliseconds
   .value('THROTTLE_MILLISECONDS', 1000)
   # Add Connec API! basic auth keys - DO NOT COMMIT.
   # Note: this is temporary while the app is in early stages of developement.

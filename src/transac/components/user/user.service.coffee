@@ -1,11 +1,14 @@
+###
+#   @desc Provider configuration & service business logic for the current user state.
+###
 angular.module('transac.user').provider('TransacUserService', ()->
 
   provider = @
   # Private Defaults
   # ------------------------------------------------
   options = {
-    user: null, # @params Function -> returns Promise
-    organizations: null # @params Function -> return Promise
+    user: null, # @param {Function} -> @returns Promise<User>
+    organizations: null # @param {Function} -> @returns Promise<[Organization]>
   }
 
   # Methods accessible injected in a .config & .run function
@@ -20,13 +23,23 @@ angular.module('transac.user').provider('TransacUserService', ()->
     # ------------------------------------------------
     service.user = {}
 
+    ###
+    #   @returns {Object} Current user model
+    ###
     service.get = ->
       return angular.copy(service.user)
 
+    ###
+    #   @returns {Object} Currently selected organization
+    ###
     service.getCurrentOrg = ->
       return {} if _.isEmpty(service.user)
       _.find(service.user.organizations, (org)-> org.id == service.user.currentOrgId)
 
+    ###
+    #   @desc Retrieves & update store with latest User data
+    #   @returns {Promise<Object>} A promise to the current user
+    ###
     service.fetch = ->
       promises = _.map(options, (callback, key)->
         if callback? then callback() else $q.reject("transac error: no #{key} callback configured.")
