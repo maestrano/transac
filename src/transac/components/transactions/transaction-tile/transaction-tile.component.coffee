@@ -1,5 +1,5 @@
 ###
-#   @desc A 'tile' shaped transaction card for viewing tx changes and selecting the tx.
+#   @desc A 'tile' shaped transaction card for viewing tx / match tx changes and selecting the tx.
 #   @component requires transac-tx-changes.
 #   @binding {object} [transaction] A formatted transaction object (match transaction object structure).
 #   @binding {string=} [title] Tx tile topbar title.
@@ -21,8 +21,15 @@ angular.module('transac.transactions').component('transacTxTile', {
 
     ctrl.$onInit = ->
       ctrl.title ||= 'Transaction'
-      ctrl.subtitle ||= if ctrl.transaction.app_name then "From #{ctrl.transaction.app_name}" else ''
+      ctrl.subtitle ||= ctrl.buildSubtitle()
       ctrl.formattedTxAttrs = TransacTxsService.formatAttributes(ctrl.transaction, ctrl.transaction.resource_type)
+
+    ctrl.buildSubtitle = ->
+      # For when transaction is a transaction
+      return "From #{ctrl.transaction.app_name}" if ctrl.transaction.app_name
+      # For when transaction is a match
+      matchTxLogs = ctrl.transaction.transaction_logs
+      if _.isEmpty(matchTxLogs) then '' else "From #{matchTxLogs[0].app_name}"
 
     ctrl.isOnSelectDefined = ->
       !_.isUndefined(ctrl.onSelect)
