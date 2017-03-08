@@ -7,7 +7,6 @@ angular.module('maestrano.transac',
     'transac.components'
     'transac.common'
     # external
-    'ngSanitize'
   ])
   .config(['$httpProvider',
     ($httpProvider)->
