@@ -1,7 +1,7 @@
 #
 # Transactions Component Service
 #
-angular.module('transac.transactions').service('TransacTxsService', ($http, TransacUserService, DEV_AUTH)->
+angular.module('transac.transactions').service('TransacTxsService', ($log, $http, $q, TransacUserService, DEV_AUTH)->
 
   _self = @
 
@@ -35,8 +35,8 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
         transactions: response.data.transactions
         pagination: response.data.pagination
       (err)->
-        console.error(err)
-        err
+        $log.error('TransacTxsService Error: ', err)
+        $q.reject(err)
     )
 
   ###
@@ -72,8 +72,8 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
       (response)->
         transaction: response.data[resource]
       (err)->
-        console.error(err)
-        err
+        $log.error('TransacTxsService Error: ', err)
+        $q.reject(err)
     )
 
   ###
@@ -91,8 +91,8 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
         matches: response.data[resource] || []
         pagination: response.data.pagination
       (err)->
-        console.error(err)
-        err
+        $log.error('TransacTxsService Error: ', err)
+        $q.reject(err)
     )
 
   ###
@@ -116,8 +116,8 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
       (response)->
         transaction: response.data[resource]
       (err)->
-        console.error(err)
-        err
+        $log.error('TransacTxsService Error: ', err)
+        $q.reject(err)
     )
 
   ##
