@@ -1,12 +1,13 @@
-<div ng-if="!$ctrl.loading">
-  <div ng-hide="$ctrl.reconciling">
-    <!-- <transac-txs-controls></transac-txs-controls> -->
-    <transac-tx transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>
+<div ng-hide="$ctrl.reconciling" infinite-scroll="$ctrl.loadMoreTransactions()" infinite-scroll-immediate-check="false" infinite-scroll-disabled="$ctrl.loading">
+  <!-- <transac-txs-controls></transac-txs-controls> -->
+  <transac-tx transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>
+  <div ng-if="$ctrl.loading" class="loading">
+    <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>
   </div>
-  <div ng-if="$ctrl.reconciling">
-    <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>
+  <div ng-if="!$ctrl.loading" class="manual-load">
+    <button ng-click="$ctrl.loadMoreTransactions()">Load more</button>
   </div>
 </div>
-<div ng-if="$ctrl.loading">
-  <p>Loading Transactions...</p>
+<div ng-if="$ctrl.reconciling">
+  <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>
 </div>

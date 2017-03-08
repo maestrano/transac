@@ -26,12 +26,14 @@ angular.module('transac.transactions').service('TransacTxsService', ($http, Tran
   #   @param {string} [type] Type of transactions e.g 'pending', 'history'
   #   @returns {Promise<array>} List of Transactions.
   ###
-  @get = (type='pending')->
+  @get = (type='pending', params={})->
     orgUid = if _self.developer() then DEV_AUTH.orgUid else TransacUserService.getCurrentOrg().uid
     url = "https://api-connec-sit.maestrano.io/api/v2/#{orgUid}/transaction_logs/#{type}"
-    $http.get(url, _self.HTTP_CONFIG).then(
+    params = angular.merge({}, _self.HTTP_CONFIG, params)
+    $http.get(url, params).then(
       (response)->
         transactions: response.data.transactions
+        pagination: response.data.pagination
       (err)->
         console.error(err)
         err

@@ -4,16 +4,34 @@ angular.module('transac.transactions').component('transacTxs', {
     onReconciling: '&'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: (EventEmitter, TransacTxsService)->
+  controller: (EventEmitter, TransacTxsService, $scope)->
     ctrl = this
 
     ctrl.$onInit = ->
       ctrl.reconciling = false
       ctrl.loading = true
-      # TODO: move to store
-      TransacTxsService.get().then(
+      ctrl.pagination =
+        nbItems: 10
+        page: 1
+      TransacTxsService.get('pending', params: {$skip: 0, $top: ctrl.pagination.nbItems}).then(
         (response)->
           ctrl.transactions = response.transactions
+          ctrl.onTransactionsChange(
+            EventEmitter({ count: ctrl.transactions.length })
+          )
+        (error)->
+        # TODO: display error alert
+      )
+      .finally(-> ctrl.loading = false)
+
+    ctrl.loadMoreTransactions = ->
+      ctrl.loading = true
+      ctrl.pagination.page += 1
+      offset = (ctrl.pagination.page - 1) * ctrl.pagination.nbItems
+      params = $skip: offset, $top: ctrl.pagination.nbItems
+      TransacTxsService.get('pending', params: params).then(
+        (response)->
+          ctrl.transactions = ctrl.transactions.concat(response.transactions)
           ctrl.onTransactionsChange(
             EventEmitter({ count: ctrl.transactions.length })
           )

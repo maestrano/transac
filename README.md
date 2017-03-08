@@ -2,9 +2,6 @@
 
 ## Todo (ordered)
 
-- transaction icons
-- transactions & "potential duplicates" dates & "shared with apps" sub-titles
-- pagination
 - history view (no actions)
 - refresh transactions / history
 - search
