@@ -3,8 +3,9 @@
 ## Todo (ordered)
 
 - history view (no actions)
-- refresh transactions / history
 - search
+- refresh transactions / history
+- Get transaction title ellipsis working
 ---
 - merge view field selection
 - bulk transaction actions (no filters)

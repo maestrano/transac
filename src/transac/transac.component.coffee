@@ -8,30 +8,36 @@ angular.module('maestrano.transac').component('transac', {
   controller: (TransacUserService)->
     ctrl = this
 
-    loadUser = ->
-      TransacUserService.fetch().then(
-        (user)->
-          ctrl.transacReady = true
-          console.log(user)
-        (err)->
-          ctrl.transacReady = true
-          ctrl.transacLoadError = true
-      )
+    # Public
 
     ctrl.$onInit = ->
       ctrl.transacReady = false
       ctrl.isTopBarShown = true
-      ctrl.transactionsCount = 0
+      ctrl.pendingTxsCount = 0
+      ctrl.historyTxCount = 0
       loadUser()
 
-    ctrl.onTopBarSelectMenu = ({menu})->
-      console.log('selected menu: ', menu)
+    ctrl.onTxsComponentInit = ({api})->
+      ctrl.txsCmpApi = api
 
-    ctrl.updateTransactionsCount = ({count, topbar})->
-      ctrl.transactionsCount = count
+    ctrl.onTopBarSelectMenu = ({menu})->
+      ctrl.txsCmpApi.reloadTxs(menu.type)
+
+    ctrl.updateTransactionsCount = ({pendingTxsCount, historyTxsCount})->
+      ctrl.pendingTxsCount = pendingTxsCount
+      ctrl.historyTxsCount = historyTxsCount
 
     ctrl.toggleTopBar = ({isReconciling})->
       ctrl.isTopBarShown = !isReconciling
+
+    # Private
+
+    loadUser = ->
+      TransacUserService.fetch().then(null,
+        (err)->
+          ctrl.transacLoadError = true
+      )
+      .finally(-> ctrl.transacReady = true)
 
     return
 })
