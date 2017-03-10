@@ -38,7 +38,7 @@ angular.module('transac.transactions').component('transacTxs', {
 
     ctrl.loadMore = ->
       # Do not attempt to pagination further if there are no results.
-      return loadTxs() if ctrl.pagination.total <= 0
+      return loadTxs() if ctrl.isPaginationDisabled()
       ctrl.pagination.page += 1
       offset = (ctrl.pagination.page - 1) * ctrl.pagination.limit
       loadTxs($skip: offset, $top: ctrl.pagination.limit)
