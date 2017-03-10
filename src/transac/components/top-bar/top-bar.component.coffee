@@ -12,7 +12,7 @@ angular.module('transac.top-bar').component('transacTopBar', {
     pendingTxsCount: '<'
     # historyTxsCount: '<'
   },
-  templateUrl: 'common/top-bar',
+  templateUrl: 'components/top-bar',
   controller: (MENUS, EventEmitter)->
     ctrl = this;
 

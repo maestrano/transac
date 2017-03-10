@@ -4,5 +4,6 @@
 angular.module('transac.components',
   [
     'transac.user'
+    'transac.top-bar'
     'transac.transactions'
   ])
