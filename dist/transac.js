@@ -59,6 +59,16 @@
 
 
 /*
+ *   @desc Components for configuring, managing & displaying the current user state.
+ */
+
+(function() {
+  angular.module('transac.user', []);
+
+}).call(this);
+
+
+/*
  *   @desc Components for viewing & reconciling transactions, composing the Maestrano Transactions feature.
  */
 
@@ -68,20 +78,10 @@
       $event: payload
     };
   }).value('THROTTLE_MILLISECONDS', 1000).constant('DEV_AUTH', {
-    apiKey: '9f59b930-ded2-0134-88ae-0dc5706ed3c0',
-    apiSecret: 'YG4pnBBqY4zkVXuGcR1nwg',
-    orgUid: 'org-fbba'
+    apiKey: '',
+    apiSecret: '',
+    orgUid: ''
   });
-
-}).call(this);
-
-
-/*
- *   @desc Components for configuring, managing & displaying the current user state.
- */
-
-(function() {
-  angular.module('transac.user', []);
 
 }).call(this);
 
@@ -252,6 +252,76 @@ $templateCache.put('components/transactions/transaction-reconcile','<div class="
 $templateCache.put('components/transactions/transaction-matches','<div ng-repeat="match in ::$ctrl.matches" class="match">\n  <div class="match_caption">\n    <div class="match_caption_title">\n      <span>{{::$ctrl.title(match)}}</span>\n    </div>\n    <div class="match_caption_subtitle">\n      <span>{{::$ctrl.subtitle(match)}}</span>\n    </div>\n  </div>\n</div>\n');
 $templateCache.put('components/transactions/transaction-tile','<div class="tx-tile">\n  <div class="tx-tile_topbar row no-gutters" ng-class="{\'no-click\': !$ctrl.isOnSelectDefined()}" ng-click="$ctrl.onSelectTx()">\n    <div class="tx-tile_topbar_checkbox" ng-if="$ctrl.isOnSelectDefined()">\n      <input type="checkbox" ng-checked="$ctrl.checked">\n    </div>\n    <div class="tx-tile_topbar_text">\n      <h5>{{::$ctrl.title}}</h5>\n      <div class="tx-tile_topbar_text_subtitle">\n        <p>{{::$ctrl.subtitle}}</p>\n      </div>\n    </div>\n  </div>\n  <transac-tx-changes changes="::$ctrl.formattedTxAttrs"></transac-tx-changes>\n</div>\n');
 $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.reconciling" infinite-scroll="$ctrl.loadMore()" infinite-scroll-immediate-check="false" infinite-scroll-disabled="$ctrl.isPaginationDisabled()">\n  <!-- <transac-txs-controls></transac-txs-controls> -->\n  <transac-tx transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>\n  <div ng-if="$ctrl.loading" class="loading">\n    <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>\n  </div>\n  <div ng-if="!$ctrl.loading" class="manual-load">\n    <button ng-click="$ctrl.loadMore()">{{$ctrl.isPaginationDisabled() ? \'Retry\' : \'Scroll for more\'}}</button>\n  </div>\n</div>\n<div ng-if="$ctrl.reconciling">\n  <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>\n</div>\n');}]);
+
+/*
+ *   @desc Provider configuration & service business logic for the current user state.
+ */
+
+(function() {
+  angular.module('transac.user').provider('TransacUserService', function() {
+    var _$get, options, provider;
+    provider = this;
+    options = {
+      user: null,
+      organizations: null
+    };
+    provider.configure = function(data) {
+      return angular.extend(options, data);
+    };
+    _$get = function($q, $log) {
+      var service;
+      service = this;
+      service.user = {};
+
+      /*
+       *   @returns {Object} Current user model
+       */
+      service.get = function() {
+        return angular.copy(service.user);
+      };
+
+      /*
+       *   @returns {Object} Currently selected organization
+       */
+      service.getCurrentOrg = function() {
+        if (_.isEmpty(service.user)) {
+          return {};
+        }
+        return _.find(service.user.organizations, function(org) {
+          return org.id === service.user.currentOrgId;
+        });
+      };
+
+      /*
+       *   @desc Retrieves & update store with latest User data
+       *   @returns {Promise<Object>} A promise to the current user
+       */
+      service.fetch = function() {
+        var promises;
+        promises = _.map(options, function(callback, key) {
+          if (callback != null) {
+            return callback();
+          } else {
+            return $q.reject("transac error: no " + key + " callback configured.");
+          }
+        });
+        return $q.all(promises).then(function(response) {
+          service.user = angular.merge({}, response[0], response[1]);
+          return service.user;
+        }, function(err) {
+          $log.error(err);
+          return $q.reject(err);
+        });
+      };
+      return service;
+    };
+    _$get.$inject = ['$q', '$log'];
+    provider.$get = _$get;
+    return provider;
+  });
+
+}).call(this);
+
 
 /*
  *   @desc Contains business logic for Transactions & Matches.
@@ -513,76 +583,6 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
     };
     return this;
   }]);
-
-}).call(this);
-
-
-/*
- *   @desc Provider configuration & service business logic for the current user state.
- */
-
-(function() {
-  angular.module('transac.user').provider('TransacUserService', function() {
-    var _$get, options, provider;
-    provider = this;
-    options = {
-      user: null,
-      organizations: null
-    };
-    provider.configure = function(data) {
-      return angular.extend(options, data);
-    };
-    _$get = function($q, $log) {
-      var service;
-      service = this;
-      service.user = {};
-
-      /*
-       *   @returns {Object} Current user model
-       */
-      service.get = function() {
-        return angular.copy(service.user);
-      };
-
-      /*
-       *   @returns {Object} Currently selected organization
-       */
-      service.getCurrentOrg = function() {
-        if (_.isEmpty(service.user)) {
-          return {};
-        }
-        return _.find(service.user.organizations, function(org) {
-          return org.id === service.user.currentOrgId;
-        });
-      };
-
-      /*
-       *   @desc Retrieves & update store with latest User data
-       *   @returns {Promise<Object>} A promise to the current user
-       */
-      service.fetch = function() {
-        var promises;
-        promises = _.map(options, function(callback, key) {
-          if (callback != null) {
-            return callback();
-          } else {
-            return $q.reject("transac error: no " + key + " callback configured.");
-          }
-        });
-        return $q.all(promises).then(function(response) {
-          service.user = angular.merge({}, response[0], response[1]);
-          return service.user;
-        }, function(err) {
-          $log.error(err);
-          return $q.reject(err);
-        });
-      };
-      return service;
-    };
-    _$get.$inject = ['$q', '$log'];
-    provider.$get = _$get;
-    return provider;
-  });
 
 }).call(this);
 
