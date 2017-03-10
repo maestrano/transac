@@ -29,6 +29,8 @@ angular.module('transac.transactions').component('transacTxs', {
         page: 1
         total: 0
       ctrl.pagination.defaultParams = $skip: 0, $top: ctrl.pagination.limit
+      # TODO: refactor this cachedParams concept, it's a quickfix
+      ctrl.cacheParams = null
       loadTxs()
       # Provide parent component with an api
       if ctrl.onInit?
@@ -38,13 +40,14 @@ angular.module('transac.transactions').component('transacTxs', {
 
     ctrl.loadMore = ->
       # Do not attempt to pagination further if there are no results.
-      return loadTxs() if ctrl.isPaginationDisabled()
+      return loadTxs(ctrl.cacheParams) if ctrl.isPaginationDisabled()
       ctrl.pagination.page += 1
       offset = (ctrl.pagination.page - 1) * ctrl.pagination.limit
       loadTxs($skip: offset, $top: ctrl.pagination.limit)
 
-    ctrl.reload = (type=ctrl.txsType, params=null)->
+    ctrl.reload = (type=ctrl.txsType, params=null, cacheParams=false)->
       ctrl.txsType = type
+      ctrl.cachedParams = params if cacheParams
       # clear transactions from store
       ctrl.transactions.length = 0
       loadTxs(params, type)
@@ -103,12 +106,13 @@ angular.module('transac.transactions').component('transacTxs', {
 
     loadTxs = (params=null, type=ctrl.txsType)->
       ctrl.loading = true
-      params ||= ctrl.pagination.defaultParams
+      params ||= ctrl.cachedParams || ctrl.pagination.defaultParams
       # TODO: move to store
       TransacTxsService.get(type, params: params).then(
         (response)->
           ctrl.transactions = ctrl.transactions.concat(response.transactions)
           ctrl.pagination.total = response.pagination.total
+          ctrl.cacheParams = null
           onTransactionsChange()
         (error)->
           ctrl.pagination.total = 0

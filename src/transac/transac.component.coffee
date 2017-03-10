@@ -25,7 +25,7 @@ angular.module('maestrano.transac').component('transac', {
 
     ctrl.onTopBarSearch = ({query, selectedMenu})->
       params = if query then $filter: query else null
-      ctrl.txsCmpApi.reloadTxs(selectedMenu.type, params)
+      ctrl.txsCmpApi.reloadTxs(selectedMenu.type, params, true)
 
     ctrl.updateTransactionsCount = ({pendingTxsCount, historyTxsCount})->
       ctrl.pendingTxsCount = pendingTxsCount
