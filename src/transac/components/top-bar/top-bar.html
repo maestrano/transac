@@ -1,5 +1,11 @@
-<div class="menu">
-  <a href="" class="menu-tab" ng-class="{ 'active': menu.active }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">
-    <h5>{{::menu.title}} ({{$ctrl.getCount(menu)}})</h5>
-  </a>
+<div class="top-bar">
+  <div class="top-bar_menu">
+    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ 'active': menu.active }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">
+      <h5>{{::menu.title}} ({{$ctrl.getCount(menu)}})</h5>
+    </a>
+    <!-- $compiles transac-search-bar cmp here (see controller) -->
+  </div>
+  <button class="top-bar_toggle-search-btn" ng-click="$ctrl.toggleSearch($event)">
+    <i class="fa fa-2x fa-fw" ng-class="{ 'fa-search': !$ctrl.isEditingSearchBar, 'fa-times': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>
+  </button>
 </div>

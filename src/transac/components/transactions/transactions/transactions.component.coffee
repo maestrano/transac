@@ -43,11 +43,11 @@ angular.module('transac.transactions').component('transacTxs', {
       offset = (ctrl.pagination.page - 1) * ctrl.pagination.limit
       loadTxs($skip: offset, $top: ctrl.pagination.limit)
 
-    ctrl.reload = (type=ctrl.txsType)->
+    ctrl.reload = (type=ctrl.txsType, params=null)->
       ctrl.txsType = type
       # clear transactions from store
       ctrl.transactions.length = 0
-      loadTxs(null, type)
+      loadTxs(params, type)
 
     ctrl.isPaginationDisabled = ->
       ctrl.loading || ctrl.pagination.total <= 0

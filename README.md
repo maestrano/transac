@@ -2,11 +2,9 @@
 
 ## Todo (ordered)
 
-- history view (no actions)
-- search
+- fix transaction title ellipsis
+- history view (connect to API)
 - refresh transactions / history
-- Get transaction title ellipsis working
----
 - merge view field selection
 - bulk transaction actions (no filters)
 - toaster alerts

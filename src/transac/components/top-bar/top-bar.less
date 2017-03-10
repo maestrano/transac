@@ -5,20 +5,85 @@ transac-top-bar {
   box-shadow: @transac-top-bar-box-shadow;
   text-transform: uppercase;
 
-  .menu {
+  .top-bar {
     display: flex;
-    text-align: center;
+    flex-direction: row;
   }
 
-  .menu-tab {
+  .top-bar_menu {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+  }
+
+  .top-bar_menu_tab {
     width: 100%;
     color: @transac-top-bar-menu-item-color;
     text-decoration: none;
-    width: 100%;
+    text-align: center;
     padding: 3px 16px;
     cursor: pointer;
     &.active {
       border-bottom: @transac-top-bar-menu-item-active-border-bottom;
+    }
+  }
+
+  .top-bar_menu_flex-item {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .top-bar_toggle-search-btn {
+    .transac-action-button(black);
+    padding: 5px 10px;
+  }
+
+  transac-search-bar {
+    flex: .00001;
+    -webkit-animation: flexGrow 200ms ease forwards;
+    -o-animation: flexGrow 200ms ease forwards;
+    animation: flexGrow 200ms ease forwards;
+
+    &.remove-search-bar {
+      flex: 1;
+      -webkit-animation: flexShrink 200ms ease forwards;
+      -o-animation: flexShrink 200ms ease forwards;
+      animation: flexShrink 200ms ease forwards;
+    }
+  }
+
+  /*
+  **  Animations
+  */
+  @-webkit-keyframes flexGrow {
+    to {
+      flex: 1;
+    }
+  }
+  @-o-keyframes flexGrow {
+    to {
+      flex: 1;
+    }
+  }
+  @keyframes flexGrow {
+    to {
+      flex: 1;
+    }
+  }
+
+  @-webkit-keyframes flexShrink {
+    to {
+      flex: .00001;
+    }
+  }
+  @-o-keyframes flexShrink {
+    to {
+      flex: .00001;
+    }
+  }
+  @keyframes flexShrink {
+    to {
+      flex: .00001;
     }
   }
 }

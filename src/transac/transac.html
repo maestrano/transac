@@ -1,9 +1,8 @@
 <div ng-if="$ctrl.transacReady">
-  <transac-top-bar ng-show="$ctrl.isTopBarShown" on-select-menu="$ctrl.onTopBarSelectMenu($event)" pending-txs-count="$ctrl.pendingTxsCount" history-txs-count="$ctrl.historyTxsCount"></transac-top-bar>
+  <transac-top-bar ng-show="$ctrl.isTopBarShown" on-select-menu="$ctrl.onTopBarSelectMenu($event)" on-search="$ctrl.onTopBarSearch($event)" pending-txs-count="$ctrl.pendingTxsCount" history-txs-count="$ctrl.historyTxsCount"></transac-top-bar>
 
   <transac-txs on-init="$ctrl.onTxsComponentInit($event)" on-transactions-change="$ctrl.updateTransactionsCount($event)" on-reconciling="$ctrl.toggleTopBar($event)"></transac-txs>
 </div>
 <div ng-if="!$ctrl.transacReady">
   <p>Loading...</p>
 </div>
-
