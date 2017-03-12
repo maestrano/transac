@@ -53,6 +53,8 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.cachedParams = if cacheParams then params else null
       # clear transactions from store
       ctrl.transactions.length = 0
+      # reset pagination
+      ctrl.pagination.page = 1
       loadTxs(params, type)
 
     ctrl.isPaginationDisabled = ->
