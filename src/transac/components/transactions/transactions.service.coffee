@@ -11,14 +11,12 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @desc Invoke to configure basic auth (add keys in transaction.module.coffee), if no keys are provided, sso_session will be used.
   #   @returns {boolean} Whether dev api creds are configured or sso token is being used.
   ###
-  @developer = ->
-    return _self.developer unless _.isUndefined(_self._developer)
-    if DEV_AUTH.apiKey && DEV_AUTH.apiSecret && DEV_AUTH.orgUid
+  @getHttpConfig = ->
+    return _self.HTTP_CONFIG unless _.isEmpty(_self.HTTP_CONFIG)
+    if DEV_AUTH.apiKey && DEV_AUTH.apiSecret
       _self.HTTP_CONFIG = headers: { 'Authorization': 'Basic ' + window.btoa("#{DEV_AUTH.apiKey}:#{DEV_AUTH.apiSecret}") }
-      _self._developer = true
     else
       _self.HTTP_CONFIG = params: { sso_session: TransacUserService.get().sso_session }
-      _self._developer = false
 
   ###
   #   @desc Get pending or historical unreconcilled Transactions.
@@ -27,9 +25,9 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @returns {Promise<Object>} A promise to the list of Transactions and pagination data.
   ###
   @get = (type='pending', params={})->
-    orgUid = if _self.developer() then DEV_AUTH.orgUid else TransacUserService.getCurrentOrg().uid
+    orgUid = DEV_AUTH.orgUid || TransacUserService.getCurrentOrg().uid
     url = "https://api-connec-sit.maestrano.io/api/v2/#{orgUid}/transaction_logs/#{type}"
-    params = angular.merge({}, _self.HTTP_CONFIG, params)
+    params = angular.merge({}, _self.getHttpConfig(), params)
     $http.get(url, params).then(
       (response)->
         transactions: response.data.transactions
@@ -68,7 +66,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
     params =
       # mappings: _.map(mappings, (m)-> _.pick(m, acceptedParams))
       mappings: mappings
-    $http.put(url, params, _self.HTTP_CONFIG).then(
+    $http.put(url, params, _self.getHttpConfig()).then(
       (response)->
         transaction: response.data[resource]
       (err)->
@@ -85,7 +83,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @returns {Promise<Object>} A promise to the matching transactions & pagination data.
   ###
   @matches = (url, resource, params={})->
-    params = angular.merge({}, _self.HTTP_CONFIG, params)
+    params = angular.merge({}, _self.getHttpConfig(), params)
     $http.get(url, params).then(
       (response)->
         matches: response.data[resource] || []
@@ -112,7 +110,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @returns {Promise<Object>} A promise to updated Transaction.
   ###
   @merge = (url, resource, params={})->
-    $http.put(url, params, _self.HTTP_CONFIG).then(
+    $http.put(url, params, _self.getHttpConfig()).then(
       (response)->
         transaction: response.data[resource]
       (err)->
