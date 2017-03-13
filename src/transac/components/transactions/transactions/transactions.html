@@ -5,7 +5,12 @@
     <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>
   </div>
   <div ng-if="!$ctrl.loading" class="manual-load">
-    <button ng-click="$ctrl.loadMore()">{{$ctrl.isPaginationDisabled() ? 'Retry' : 'Scroll for more'}}</button>
+    <div ng-if="($ctrl.txsType == 'pending')">
+      <button ng-click="$ctrl.loadMore()">{{$ctrl.isPaginationDisabled() ? 'Retry' : 'Scroll for more'}}</button>
+    </div>
+    <div ng-if="($ctrl.txsType == 'history')">
+      <span>Coming Soon</span>
+    </div>
   </div>
 </div>
 <div ng-if="$ctrl.reconciling">
