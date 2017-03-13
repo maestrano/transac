@@ -35,24 +35,6 @@
 
 
 /*
- *   @desc Components for viewing & reconciling transactions, composing the Maestrano Transactions feature.
- */
-
-(function() {
-  angular.module('transac.transactions', ['transac.user', 'infinite-scroll']).value('EventEmitter', function(payload) {
-    return {
-      $event: payload
-    };
-  }).value('THROTTLE_MILLISECONDS', 1000).constant('DEV_AUTH', {
-    apiKey: '',
-    apiSecret: '',
-    orgUid: ''
-  });
-
-}).call(this);
-
-
-/*
  *   @desc Components for the Transac! library Top Bar Menu feature.
  */
 
@@ -71,6 +53,24 @@
     return {
       $event: payload
     };
+  });
+
+}).call(this);
+
+
+/*
+ *   @desc Components for viewing & reconciling transactions, composing the Maestrano Transactions feature.
+ */
+
+(function() {
+  angular.module('transac.transactions', ['transac.user', 'infinite-scroll']).value('EventEmitter', function(payload) {
+    return {
+      $event: payload
+    };
+  }).value('THROTTLE_MILLISECONDS', 1000).constant('DEV_AUTH', {
+    apiKey: '',
+    apiSecret: '',
+    orgUid: ''
   });
 
 }).call(this);
@@ -138,6 +138,104 @@
           return ctrl.transacLoadError = true;
         })["finally"](function() {
           return ctrl.transacReady = true;
+        });
+      };
+    }]
+  });
+
+}).call(this);
+
+
+/*
+ *   @desc "Tabs" style topbar menu component
+ *   @require transac-search-bar component ($compiled)
+ *   @binding {Function=} [onInitMenu] Callback fired $onInit, emitting the default selected menu
+ *   @binding {Function} [onSelectMenu] Callback fired when a menu tab is clicked, emitting the selected menu
+ *   @binding {number} [pendingTxsCount] number of pending transactions
+ *   @binding {number} [historyTxsCount] number of history transactions
+ */
+
+(function() {
+  angular.module('transac.top-bar').component('transacTopBar', {
+    bindings: {
+      onInitMenu: '&?',
+      onSelectMenu: '&',
+      onSearch: '&',
+      pendingTxsCount: '<'
+    },
+    templateUrl: 'components/top-bar',
+    controller: ["MENUS", "EventEmitter", "$compile", "$scope", function(MENUS, EventEmitter, $compile, $scope) {
+      var contractSearchBar, ctrl, expandSearchBar;
+      ctrl = this;
+      ctrl.$onInit = function() {
+        ctrl.isSearchBarShown = false;
+        ctrl.menus = angular.copy(MENUS);
+        ctrl.selectedMenu = _.find(ctrl.menus, 'active');
+        if (ctrl.onInitMenu != null) {
+          return ctrl.onInitMenu(EventEmitter({
+            menu: ctrl.selectedMenu
+          }));
+        }
+      };
+      ctrl.onMenuItemClick = function(menu) {
+        if (_.isEqual(menu, ctrl.selectedMenu)) {
+          return;
+        }
+        _.each(ctrl.menus, function(menu) {
+          menu.active = false;
+        });
+        menu.active = true;
+        ctrl.selectedMenu = menu;
+        return ctrl.onSelectMenu(EventEmitter({
+          menu: ctrl.selectedMenu
+        }));
+      };
+      ctrl.getCount = function(menu) {
+        return (menu.title && ctrl[menu.type + 'TxsCount']) || 0;
+      };
+      ctrl.toggleSearch = function($event) {
+        if (ctrl.isEditingSearchBar) {
+          return ctrl.searchBarApi.clearSearchText();
+        }
+        if (ctrl.isSearchBarShown) {
+          return contractSearchBar($event);
+        } else {
+          return expandSearchBar($event);
+        }
+      };
+      ctrl.onSearchBarInit = function(arg) {
+        var api;
+        api = arg.api;
+        return ctrl.searchBarApi = api;
+      };
+      ctrl.onSearchBarSubmit = function(args) {
+        args.selectedMenu = ctrl.selectedMenu;
+        return ctrl.onSearch(EventEmitter(args));
+      };
+      ctrl.onSearchBarChange = function(arg) {
+        var isEditing;
+        isEditing = arg.isEditing;
+        return ctrl.isEditingSearchBar = isEditing;
+      };
+      expandSearchBar = function($event) {
+        var $menu, searchBarCmp;
+        searchBarCmp = "<transac-search-bar\n  on-init=\"onSearchBarInit($event)\"\n  on-submit=\"onSearchBarSubmit($event)\"\n  on-change=\"onSearchBarChange($event)\">\n</transac-search-bar>";
+        $menu = angular.element($event.currentTarget.parentElement).find('.top-bar_menu');
+        angular.merge($scope, {
+          onSearchBarInit: ctrl.onSearchBarInit,
+          onSearchBarSubmit: ctrl.onSearchBarSubmit,
+          onSearchBarChange: ctrl.onSearchBarChange
+        });
+        $menu.append($compile(searchBarCmp)($scope));
+        ctrl.isSearchBarShown = true;
+      };
+      contractSearchBar = function($event) {
+        var $searchBar;
+        $searchBar = angular.element($event.currentTarget.parentElement).find('transac-search-bar');
+        $searchBar.addClass('remove-search-bar');
+        $searchBar.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function() {
+          $searchBar.remove();
+          return ctrl.isSearchBarShown = false;
         });
       };
     }]
@@ -407,113 +505,15 @@
 
 }).call(this);
 
-
-/*
- *   @desc "Tabs" style topbar menu component
- *   @require transac-search-bar component ($compiled)
- *   @binding {Function=} [onInitMenu] Callback fired $onInit, emitting the default selected menu
- *   @binding {Function} [onSelectMenu] Callback fired when a menu tab is clicked, emitting the selected menu
- *   @binding {number} [pendingTxsCount] number of pending transactions
- *   @binding {number} [historyTxsCount] number of history transactions
- */
-
-(function() {
-  angular.module('transac.top-bar').component('transacTopBar', {
-    bindings: {
-      onInitMenu: '&?',
-      onSelectMenu: '&',
-      onSearch: '&',
-      pendingTxsCount: '<'
-    },
-    templateUrl: 'components/top-bar',
-    controller: ["MENUS", "EventEmitter", "$compile", "$scope", function(MENUS, EventEmitter, $compile, $scope) {
-      var contractSearchBar, ctrl, expandSearchBar;
-      ctrl = this;
-      ctrl.$onInit = function() {
-        ctrl.isSearchBarShown = false;
-        ctrl.menus = angular.copy(MENUS);
-        ctrl.selectedMenu = _.find(ctrl.menus, 'active');
-        if (ctrl.onInitMenu != null) {
-          return ctrl.onInitMenu(EventEmitter({
-            menu: ctrl.selectedMenu
-          }));
-        }
-      };
-      ctrl.onMenuItemClick = function(menu) {
-        if (_.isEqual(menu, ctrl.selectedMenu)) {
-          return;
-        }
-        _.each(ctrl.menus, function(menu) {
-          menu.active = false;
-        });
-        menu.active = true;
-        ctrl.selectedMenu = menu;
-        return ctrl.onSelectMenu(EventEmitter({
-          menu: ctrl.selectedMenu
-        }));
-      };
-      ctrl.getCount = function(menu) {
-        return (menu.title && ctrl[menu.type + 'TxsCount']) || 0;
-      };
-      ctrl.toggleSearch = function($event) {
-        if (ctrl.isEditingSearchBar) {
-          return ctrl.searchBarApi.clearSearchText();
-        }
-        if (ctrl.isSearchBarShown) {
-          return contractSearchBar($event);
-        } else {
-          return expandSearchBar($event);
-        }
-      };
-      ctrl.onSearchBarInit = function(arg) {
-        var api;
-        api = arg.api;
-        return ctrl.searchBarApi = api;
-      };
-      ctrl.onSearchBarSubmit = function(args) {
-        args.selectedMenu = ctrl.selectedMenu;
-        return ctrl.onSearch(EventEmitter(args));
-      };
-      ctrl.onSearchBarChange = function(arg) {
-        var isEditing;
-        isEditing = arg.isEditing;
-        return ctrl.isEditingSearchBar = isEditing;
-      };
-      expandSearchBar = function($event) {
-        var $menu, searchBarCmp;
-        searchBarCmp = "<transac-search-bar\n  on-init=\"onSearchBarInit($event)\"\n  on-submit=\"onSearchBarSubmit($event)\"\n  on-change=\"onSearchBarChange($event)\">\n</transac-search-bar>";
-        $menu = angular.element($event.currentTarget.parentElement).find('.top-bar_menu');
-        angular.merge($scope, {
-          onSearchBarInit: ctrl.onSearchBarInit,
-          onSearchBarSubmit: ctrl.onSearchBarSubmit,
-          onSearchBarChange: ctrl.onSearchBarChange
-        });
-        $menu.append($compile(searchBarCmp)($scope));
-        ctrl.isSearchBarShown = true;
-      };
-      contractSearchBar = function($event) {
-        var $searchBar;
-        $searchBar = angular.element($event.currentTarget.parentElement).find('transac-search-bar');
-        $searchBar.addClass('remove-search-bar');
-        $searchBar.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function() {
-          $searchBar.remove();
-          return ctrl.isSearchBarShown = false;
-        });
-      };
-    }]
-  });
-
-}).call(this);
-
 angular.module('maestrano.transac').run(['$templateCache', function($templateCache) {$templateCache.put('transac','<div ng-if="$ctrl.transacReady">\n  <transac-top-bar ng-show="$ctrl.isTopBarShown" on-select-menu="$ctrl.onTopBarSelectMenu($event)" on-search="$ctrl.onTopBarSearch($event)" pending-txs-count="$ctrl.pendingTxsCount" history-txs-count="$ctrl.historyTxsCount"></transac-top-bar>\n\n  <transac-txs on-init="$ctrl.onTxsComponentInit($event)" on-transactions-change="$ctrl.updateTransactionsCount($event)" on-reconciling="$ctrl.toggleTopBar($event)"></transac-txs>\n</div>\n<div ng-if="!$ctrl.transacReady">\n  <p>Loading...</p>\n</div>\n');
 $templateCache.put('components/top-bar','<div class="top-bar">\n  <div class="top-bar_menu">\n    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ \'active\': menu.active }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">\n      <h5>{{::menu.title}} ({{$ctrl.getCount(menu)}})</h5>\n    </a>\n    <!-- $compiles transac-search-bar cmp here (see controller) -->\n  </div>\n  <button class="top-bar_toggle-search-btn" ng-click="$ctrl.toggleSearch($event)">\n    <i class="fa fa-2x fa-fw" ng-class="{ \'fa-search\': !$ctrl.isEditingSearchBar, \'fa-times\': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>\n  </button>\n</div>\n');
+$templateCache.put('components/top-bar/search-bar','<input type="text" placeholder="Search Transactions..." ng-model="$ctrl.search.text" ng-keypress="$ctrl.submitOnKeypress($event)" ng-change="$ctrl.onSearchChange()">\n');
 $templateCache.put('components/transactions/transaction','<div ng-class="{ \'selected\': $ctrl.isSelected }">\n  <div class="summary">\n    <a href="" class="summary_content" ng-click="$ctrl.selectOnClick()">\n      <div class="summary_content_icon">\n        <i class="fa {{$ctrl.icon()}} fa-2x" aria-hidden="true"></i>\n      </div>\n      <div class="summary_content_caption">\n        <div class="summary_content_caption_title">\n          <span>{{::$ctrl.title()}}</span>\n        </div>\n        <div class="summary_content_caption_subtitle">\n          <span>{{::$ctrl.subtitle()}}</span>\n        </div>\n      </div>\n      <div class="summary_content_warning">\n        <div ng-if="$ctrl.hasMatches()">\n          <i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>\n          <span>This record may be a duplicate</span>\n        </div>\n      </div>\n    </a>\n    <div class="summary_actions">\n      <button type="button" class="summary_actions_action--deny" ng-click="$ctrl.denyOnClick()">\n        <i class="fa fa-times fa-2x"></i>\n      </button>\n      <button type="button" class="summary_actions_action--approve" ng-click="$ctrl.approveOnClick(true)">\n        <i class="fa fa-check fa-2x"></i>\n      </button>\n    </div>\n  </div>\n  <div class="detail" ng-if="$ctrl.isSelected">\n    <div class="row">\n      <div class="col-md-6 detail_section no-gutters">\n        <transac-tx-changes changes="$ctrl.formattedChanges"></transac-tx-changes>\n      </div>\n      <div class="col-md-3 detail_section no-gutters">\n        <div class="detail_section_title">\n          <h5>Select apps to share with:</h5>\n        </div>\n        <div class="detail_section_app" ng-repeat="mapping in ::$ctrl.transaction.mappings" ng-click="$ctrl.selectAppOnClick($event, mapping)">\n          <span>{{::mapping.app_name}}</span>\n          <input type="checkbox" ng-checked="mapping.sharedWith">\n        </div>\n      </div>\n      <div class="col-md-3 detail_section no-gutters">\n        <div class="detail_section_action detail_section_action--approve" ng-click="$ctrl.approveOnClick()">\n          <span>Approve only this time</span>\n          <button type="button">\n            <i class="fa fa-check fa-2x"></i>\n          </button>\n        </div>\n        <div class="detail_section_action detail_section_action--deny" ng-click="$ctrl.denyOnClick(true)">\n          <span>Never share this record</span>\n          <button type="button">\n            <i class="fa fa-ban"></i>\n          </button>\n        </div>\n        <div class="detail_section_action detail_section_action--duplicate" ng-click="$ctrl.reconcileOnClick()" ng-if="$ctrl.hasMatches()">\n          <span>This record is a duplicate</span>\n          <button type="button">\n            <i class="fa fa-link fa-2x"></i>\n          </button>\n        </div>\n      </div>\n    </div>\n    <div ng-if="$ctrl.hasMatches()">\n      <div class="row detail_dup-line-break">\n        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>\n        <div class="detail_dup-line-break_title">\n          <div>\n            <i class="fa fa-exclamation fa-lg" aria-hidden="true"></i>\n            <span>Potential Duplicates</span>\n          </div>\n        </div>\n        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--right"></div>\n      </div>\n      <div class="row">\n        <div class="col-md-12 col-xs-12 detail_section detail_section_matches">\n          <transac-tx-matches matches="::$ctrl.matches"></transac-tx-matches>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n');
 $templateCache.put('components/transactions/transaction-changes','<div class="table-responsive">\n  <table class="table table-striped borderless">\n    <tr>\n      <th ng-if="$ctrl.onSelect">Tick</th>\n      <th>Field</th>\n      <th>Value</th>\n    </tr>\n    <tr ng-repeat="(key, value) in ::$ctrl.changes">\n      <td ng-if="$ctrl.onSelect"><input type="checkbox"></td>\n      <td>{{::key}}</td>\n      <td>{{::value}}</td>\n    </tr>\n  </table>\n</div>\n');
-$templateCache.put('components/transactions/transaction-reconcile','<div class="top-panel">\n  <button class="top-panel_action-btns" ng-click="$ctrl.back()">\n    <i class="fa fa-angle-double-left fa-2x"></i>\n  </button>\n  <div class="top-panel_title">\n    <span>Reconcile duplicate records</span>\n  </div>\n  <button class="top-panel_action-btns right-align" ng-if="$ctrl.isNextBtnShown()" ng-click="$ctrl.next()">\n    <i class="fa fa-angle-double-right fa-2x"></i>\n  </button>\n  <button class="top-panel_action-btns top-panel_action-btns--done right-align" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">\n    <i class="fa fa-check fa-2x"></i>\n  </button>\n</div>\n<div class="edit" ng-show="$ctrl.editing">\n  <div class="edit_tx">\n    <transac-tx-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" on-select="$ctrl.onSelect($event)"></transac-tx-tile>\n  </div>\n</div>\n<div class="review" ng-if="!$ctrl.editing">\n  <div class="review_tx">\n    <transac-tx-tile transaction="::$ctrl.selectedTx" title="::$ctrl.selectedTxTitle" subtitle="::$ctrl.selectedTxSubtitle"></transac-tx-tile>\n  </div>\n</div>\n');
 $templateCache.put('components/transactions/transaction-matches','<div ng-repeat="match in ::$ctrl.matches" class="match">\n  <div class="match_caption">\n    <div class="match_caption_title">\n      <span>{{::$ctrl.title(match)}}</span>\n    </div>\n    <div class="match_caption_subtitle">\n      <span>{{::$ctrl.subtitle(match)}}</span>\n    </div>\n  </div>\n</div>\n');
+$templateCache.put('components/transactions/transaction-reconcile','<div class="top-panel">\n  <button class="top-panel_action-btns" ng-click="$ctrl.back()">\n    <i class="fa fa-angle-double-left fa-2x"></i>\n  </button>\n  <div class="top-panel_title">\n    <span>Reconcile duplicate records</span>\n  </div>\n  <button class="top-panel_action-btns right-align" ng-if="$ctrl.isNextBtnShown()" ng-click="$ctrl.next()">\n    <i class="fa fa-angle-double-right fa-2x"></i>\n  </button>\n  <button class="top-panel_action-btns top-panel_action-btns--done right-align" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">\n    <i class="fa fa-check fa-2x"></i>\n  </button>\n</div>\n<div class="edit" ng-show="$ctrl.editing">\n  <div class="edit_tx">\n    <transac-tx-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" on-select="$ctrl.onSelect($event)"></transac-tx-tile>\n  </div>\n</div>\n<div class="review" ng-if="!$ctrl.editing">\n  <div class="review_tx">\n    <transac-tx-tile transaction="::$ctrl.selectedTx" title="::$ctrl.selectedTxTitle" subtitle="::$ctrl.selectedTxSubtitle"></transac-tx-tile>\n  </div>\n</div>\n');
 $templateCache.put('components/transactions/transaction-tile','<div class="tx-tile">\n  <div class="tx-tile_topbar row no-gutters" ng-class="{\'no-click\': !$ctrl.isOnSelectDefined()}" ng-click="$ctrl.onSelectTx()">\n    <div class="tx-tile_topbar_checkbox" ng-if="$ctrl.isOnSelectDefined()">\n      <input type="checkbox" ng-checked="$ctrl.checked">\n    </div>\n    <div class="tx-tile_topbar_text">\n      <h5>{{::$ctrl.title}}</h5>\n      <div class="tx-tile_topbar_text_subtitle">\n        <p>{{::$ctrl.subtitle}}</p>\n      </div>\n    </div>\n  </div>\n  <transac-tx-changes changes="::$ctrl.formattedTxAttrs"></transac-tx-changes>\n</div>\n');
-$templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.reconciling" infinite-scroll="$ctrl.loadMore()" infinite-scroll-immediate-check="false" infinite-scroll-disabled="$ctrl.isPaginationDisabled()">\n  <!-- <transac-txs-controls></transac-txs-controls> -->\n  <transac-tx transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>\n  <div ng-if="$ctrl.loading" class="loading">\n    <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>\n  </div>\n  <div ng-if="!$ctrl.loading" class="manual-load">\n    <button ng-click="$ctrl.loadMore()">{{$ctrl.isPaginationDisabled() ? \'Retry\' : \'Scroll for more\'}}</button>\n  </div>\n</div>\n<div ng-if="$ctrl.reconciling">\n  <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>\n</div>\n');
-$templateCache.put('components/top-bar/search-bar','<input type="text" placeholder="Search Transactions..." ng-model="$ctrl.search.text" ng-keypress="$ctrl.submitOnKeypress($event)" ng-change="$ctrl.onSearchChange()">\n');}]);
+$templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.reconciling" infinite-scroll="$ctrl.loadMore()" infinite-scroll-immediate-check="false" infinite-scroll-disabled="$ctrl.isPaginationDisabled()">\n  <!-- <transac-txs-controls></transac-txs-controls> -->\n  <transac-tx transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>\n  <div ng-if="$ctrl.loading" class="loading">\n    <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>\n  </div>\n  <div ng-if="!$ctrl.loading" class="manual-load">\n    <button ng-click="$ctrl.loadMore()">{{$ctrl.isPaginationDisabled() ? \'Retry\' : \'Scroll for more\'}}</button>\n  </div>\n</div>\n<div ng-if="$ctrl.reconciling">\n  <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>\n</div>\n');}]);
 
 /*
  *   @desc Provider configuration & service business logic for the current user state.
@@ -580,6 +580,76 @@ $templateCache.put('components/top-bar/search-bar','<input type="text" placehold
     _$get.$inject = ['$q', '$log'];
     provider.$get = _$get;
     return provider;
+  });
+
+}).call(this);
+
+
+/*
+ *   @desc Search bar component that builds a API query string, and emits change events.
+ *   @binding {Function} [onSubmit] Callback fired on keypress with keyCode 13 (enter)
+ *   @binding {Function=} [onChange] Callback fired on input ngChange
+ *   @binding {Function=} [onInit]  Callback fired on component initialize, emitting an api for exposing cmp methods to the parent component
+ */
+
+(function() {
+  angular.module('transac.top-bar').component('transacSearchBar', {
+    bindings: {
+      onSubmit: '&',
+      onChange: '&?',
+      onInit: '&?'
+    },
+    templateUrl: 'components/top-bar/search-bar',
+    controller: ["EventEmitter", "$scope", function(EventEmitter, $scope) {
+      var ctrl;
+      ctrl = this;
+      ctrl.$onInit = function() {
+        ctrl.search = {
+          text: ''
+        };
+        if (ctrl.onInit != null) {
+          return ctrl.onInit(EventEmitter({
+            api: {
+              clearSearchText: ctrl.clearSearchText
+            }
+          }));
+        }
+      };
+      ctrl.onSearchChange = function() {
+        if (ctrl.onChange != null) {
+          return ctrl.onChange(EventEmitter({
+            isEditing: !!ctrl.search.text.length
+          }));
+        }
+      };
+      ctrl.submitOnKeypress = function($event, force) {
+        var args;
+        if ($event == null) {
+          $event = {};
+        }
+        if (force == null) {
+          force = false;
+        }
+        if (!($event.keyCode === 13 || force)) {
+          return;
+        }
+        if (ctrl.search.text) {
+          args = {
+            query: "reference match /" + ctrl.search.text + "/"
+          };
+        } else {
+          args = {
+            query: null
+          };
+        }
+        return ctrl.onSubmit(EventEmitter(args));
+      };
+      ctrl.clearSearchText = function() {
+        ctrl.search.text = '';
+        ctrl.submitOnKeypress(null, true);
+        return ctrl.onSearchChange();
+      };
+    }]
   });
 
 }).call(this);
@@ -717,6 +787,41 @@ $templateCache.put('components/top-bar/search-bar','<input type="text" placehold
 
 
 /*
+ *   @desc Displays horizontal match list items.
+ *   @binding {Array<object>} [matches] List of match transactions
+ */
+
+(function() {
+  angular.module('transac.transactions').component('transacTxMatches', {
+    bindings: {
+      matches: '<'
+    },
+    templateUrl: 'components/transactions/transaction-matches',
+    controller: ["EventEmitter", "TransacTxsService", function(EventEmitter, TransacTxsService) {
+      var ctrl;
+      ctrl = this;
+      ctrl.$onInit = function() {};
+      ctrl.title = function(match) {
+        return TransacTxsService.formatMatchTitle(match);
+      };
+      ctrl.subtitle = function(match) {
+        var appName, date, matchTxLog;
+        matchTxLog = match.transaction_logs[0];
+        appName = _.get(matchTxLog, 'app_name');
+        date = TransacTxsService.formatDisplayDate(_.get(matchTxLog, 'created_at'));
+        if (appName) {
+          return date + ", from " + appName;
+        } else {
+          return date;
+        }
+      };
+    }]
+  });
+
+}).call(this);
+
+
+/*
  *   @desc Displays tx and tx matches side-by-side, responsibile for tx and tx attribute selection, emitting which tx / tx attributes should be merged.
  *   @require transac-tx-tile component.
  *   @binding {Object} [transaction] A formatted transaction (match transaction object structure).
@@ -793,41 +898,6 @@ $templateCache.put('components/top-bar/search-bar','<input type="text" placehold
           return ctrl.onReconciled(EventEmitter(null));
         } else {
           return ctrl.editing = true;
-        }
-      };
-    }]
-  });
-
-}).call(this);
-
-
-/*
- *   @desc Displays horizontal match list items.
- *   @binding {Array<object>} [matches] List of match transactions
- */
-
-(function() {
-  angular.module('transac.transactions').component('transacTxMatches', {
-    bindings: {
-      matches: '<'
-    },
-    templateUrl: 'components/transactions/transaction-matches',
-    controller: ["EventEmitter", "TransacTxsService", function(EventEmitter, TransacTxsService) {
-      var ctrl;
-      ctrl = this;
-      ctrl.$onInit = function() {};
-      ctrl.title = function(match) {
-        return TransacTxsService.formatMatchTitle(match);
-      };
-      ctrl.subtitle = function(match) {
-        var appName, date, matchTxLog;
-        matchTxLog = match.transaction_logs[0];
-        appName = _.get(matchTxLog, 'app_name');
-        date = TransacTxsService.formatDisplayDate(_.get(matchTxLog, 'created_at'));
-        if (appName) {
-          return date + ", from " + appName;
-        } else {
-          return date;
         }
       };
     }]
@@ -1060,76 +1130,6 @@ $templateCache.put('components/top-bar/search-bar','<input type="text" placehold
           obj[ctrl.txsType + "TxsCount"] = txsCount,
           obj
         )));
-      };
-    }]
-  });
-
-}).call(this);
-
-
-/*
- *   @desc Search bar component that builds a API query string, and emits change events.
- *   @binding {Function} [onSubmit] Callback fired on keypress with keyCode 13 (enter)
- *   @binding {Function=} [onChange] Callback fired on input ngChange
- *   @binding {Function=} [onInit]  Callback fired on component initialize, emitting an api for exposing cmp methods to the parent component
- */
-
-(function() {
-  angular.module('transac.top-bar').component('transacSearchBar', {
-    bindings: {
-      onSubmit: '&',
-      onChange: '&?',
-      onInit: '&?'
-    },
-    templateUrl: 'components/top-bar/search-bar',
-    controller: ["EventEmitter", "$scope", function(EventEmitter, $scope) {
-      var ctrl;
-      ctrl = this;
-      ctrl.$onInit = function() {
-        ctrl.search = {
-          text: ''
-        };
-        if (ctrl.onInit != null) {
-          return ctrl.onInit(EventEmitter({
-            api: {
-              clearSearchText: ctrl.clearSearchText
-            }
-          }));
-        }
-      };
-      ctrl.onSearchChange = function() {
-        if (ctrl.onChange != null) {
-          return ctrl.onChange(EventEmitter({
-            isEditing: !!ctrl.search.text.length
-          }));
-        }
-      };
-      ctrl.submitOnKeypress = function($event, force) {
-        var args;
-        if ($event == null) {
-          $event = {};
-        }
-        if (force == null) {
-          force = false;
-        }
-        if (!($event.keyCode === 13 || force)) {
-          return;
-        }
-        if (ctrl.search.text) {
-          args = {
-            query: "reference match /" + ctrl.search.text + "/"
-          };
-        } else {
-          args = {
-            query: null
-          };
-        }
-        return ctrl.onSubmit(EventEmitter(args));
-      };
-      ctrl.clearSearchText = function() {
-        ctrl.search.text = '';
-        ctrl.submitOnKeypress(null, true);
-        return ctrl.onSearchChange();
       };
     }]
   });

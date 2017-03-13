@@ -217,10 +217,6 @@ transac-search-bar {
   }
 }
 
-transac-tx-changes {
-
-}
-
 transac-tx {
   display: block;
   background-color: @transac-tx-background-color;
@@ -259,6 +255,7 @@ transac-tx {
   .summary_content_caption {
     display: flex;
     flex-direction: column;
+    flex-grow: 2;
   }
 
   .summary_content_caption_title {
@@ -271,7 +268,8 @@ transac-tx {
 
   .summary_content_warning {
     display: flex;
-    flex-grow: 0;
+    flex-grow: 1;
+    flex-direction: row-reverse;
     color: @transac-tx-duplicate-warning-color;
     span { font-size: 13px; }
   }
@@ -380,6 +378,10 @@ transac-tx {
     min-height: 70px;
     max-height: 120px;
   }
+
+}
+
+transac-tx-changes {
 
 }
 
