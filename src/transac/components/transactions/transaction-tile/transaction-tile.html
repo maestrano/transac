@@ -1,7 +1,7 @@
 <div class="tx-tile">
   <div class="tx-tile_topbar row no-gutters" ng-class="{'no-click': !$ctrl.isOnSelectDefined()}" ng-click="$ctrl.onSelectTx()">
     <div class="tx-tile_topbar_checkbox" ng-if="$ctrl.isOnSelectDefined()">
-      <input type="checkbox" ng-checked="$ctrl.checked">
+      <input type="checkbox" ng-checked="$ctrl.checked" disabled>
     </div>
     <div class="tx-tile_topbar_text">
       <h5>{{::$ctrl.title}}</h5>

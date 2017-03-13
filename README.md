@@ -2,7 +2,6 @@
 
 ## Todo (ordered)
 
-- Merge selection bug
 - Respond to organization change
 - Merge screen 'grey out' unselected transactions
 - More obvious merge screen buttons
