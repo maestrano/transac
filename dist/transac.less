@@ -474,6 +474,28 @@ transac-tx-reconcile {
 
 }
 
+transac-txs {
+  display: block;
+  background-color: white;
+  box-shadow: 0px 1px 8px -4px;
+
+  .loading,
+  .manual-load {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .manual-load {
+    button {
+      .transac-action-button(black);
+      max-width: 200px;
+      &:hover {
+        background-color: @transac-grey;
+      }
+    }
+  }
+}
+
 transac-tx-tile {
   box-shadow: @transac-tx-tile-box-shadow;
   border: 1px solid @transac-grey;
@@ -510,28 +532,6 @@ transac-tx-tile {
     p {
       .transac-subtitle();
       .transac-ellipsis();
-    }
-  }
-}
-
-transac-txs {
-  display: block;
-  background-color: white;
-  box-shadow: 0px 1px 8px -4px;
-
-  .loading,
-  .manual-load {
-    text-align: center;
-    padding: 20px;
-  }
-
-  .manual-load {
-    button {
-      .transac-action-button(black);
-      max-width: 200px;
-      &:hover {
-        background-color: @transac-grey;
-      }
     }
   }
 }
