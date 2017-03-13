@@ -15,7 +15,7 @@ angular.module('transac.transactions').component('transacTxs', {
     onReconciling: '&?'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: (EventEmitter, TransacTxsService)->
+  controller: ($q, EventEmitter, TransacTxsService)->
     ctrl = this
 
     # Public
@@ -71,8 +71,10 @@ angular.module('transac.transactions').component('transacTxs', {
           # TODO: move to store
           ctrl.transactions = _.reject(ctrl.transactions, (tx)-> tx.transaction_log.id == transaction.transaction_log.id)
           onTransactionsChange(ctrl.pagination.total -= 1)
+          $q.when(success: true)
         (err)->
           # TODO: display error alert
+          $q.when(success: false)
       )
 
     ctrl.onReconcileTransactions = ({transaction, matches, apps})->

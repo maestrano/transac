@@ -4,6 +4,10 @@ transac-tx {
 
   .transac-list-on-hover(@transac-tx-hover-background-color);
 
+  &.deleting {
+    display: none;
+  }
+
   .selected {
     box-shadow: 0px 5px 10px -4px;
     border-bottom: 1px solid @transac-lightgrey;

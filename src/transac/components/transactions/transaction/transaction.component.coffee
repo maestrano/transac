@@ -12,7 +12,7 @@ angular.module('transac.transactions').component('transacTx', {
     onReconcile: '&'
   }
   templateUrl: 'components/transactions/transaction'
-  controller: (EventEmitter, TransacTxsService)->
+  controller: ($element, $timeout, EventEmitter, TransacTxsService)->
     ctrl = this
 
     # Action Tx Mapping Recipies
@@ -65,6 +65,9 @@ angular.module('transac.transactions').component('transacTx', {
       ctrl.isSelected = !ctrl.isSelected
 
     ctrl.approveOnClick = (auto=false)->
+      el = $element
+      # Hide the transaction to improve responsive feeling of the action
+      el.addClass('deleting')
       _.each(ctrl.transaction.mappings, (m)->
         m.commit = m.sharedWith
         # note: Connec! automatically sets auto_commit to false if commit is false
@@ -73,9 +76,16 @@ angular.module('transac.transactions').component('transacTx', {
       )
       ctrl.onCommit(
         EventEmitter({ transaction: ctrl.transaction })
+      ).then((res)->
+        $timeout(->
+          el.removeClass('deleting') unless res.success
+        , 300)
       )
 
     ctrl.denyOnClick = (auto=false)->
+      el = $element
+      # Hide the transaction to improve responsive feeling of the action
+      el.addClass('deleting')
       _.each(ctrl.transaction.mappings, (m)->
         m.commit = !m.sharedWith
         # note: Connec! automatically sets push_disable to false if commit is true
@@ -84,6 +94,10 @@ angular.module('transac.transactions').component('transacTx', {
       )
       ctrl.onCommit(
         EventEmitter({ transaction: ctrl.transaction })
+      ).then((res)->
+        $timeout(->
+          el.removeClass('deleting') unless res.success
+        , 300)
       )
 
     ctrl.reconcileOnClick = ()->
