@@ -47,7 +47,7 @@ angular.module('transac.user').provider('TransacUserService', ()->
       return $q.all(promises).then(
         (response) ->
           service.user = angular.merge({}, response[0], response[1])
-          return service.user
+          return service.get()
         (err) ->
           $log.error(err)
           return $q.reject(err)
