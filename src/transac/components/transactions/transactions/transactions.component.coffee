@@ -15,27 +15,19 @@ angular.module('transac.transactions').component('transacTxs', {
     onReconciling: '&?'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: ($q, EventEmitter, TransacTxsService)->
+  controller: ($q, EventEmitter, TransacTxsService, TransacTxsActions, TransacTxsStore)->
     ctrl = this
 
     # Public
 
     ctrl.$onInit = ->
-      ctrl.transactions = []
       ctrl.txsType ||= 'pending'
       ctrl.reconciling = false
-      ctrl.pagination =
-        limit: 10
-        page: 1
-        total: 0
-      ctrl.pagination.defaultParams = $skip: 0, $top: ctrl.pagination.limit
-      # TODO: refactor this cachedParams concept, it's a quickfix
-      ctrl.cacheParams = null
+      initState()
       loadTxs()
       # Provide parent component with an api
       if ctrl.onInit?
-        ctrl.api =
-          reloadTxs: ctrl.reload
+        ctrl.api = reloadTxs: ctrl.reload
         ctrl.onInit(EventEmitter(api: ctrl.api))
 
     ctrl.loadMore = ->
@@ -113,19 +105,26 @@ angular.module('transac.transactions').component('transacTxs', {
 
     # Private
 
+    initState = ->
+      ctrl.transactions = TransacTxsStore.getState().transactions
+      ctrl.pagination = TransacTxsStore.getState().pagination
+      ctrl.cacheParams = TransacTxsStore.getState().cachedParams
+      TransacTxsStore.subscribe().then(null, null, (state)->
+        console.log('Notify! ', angular.copy(state))
+        ctrl.transactions = state.transactions
+        ctrl.pagination = state.pagination
+        ctrl.cachedParams = state.cachedParams
+      )
+
     loadTxs = (params=null, type=ctrl.txsType)->
       ctrl.loading = true
-      params ||= ctrl.cachedParams || ctrl.pagination.defaultParams
-      # TODO: move to store
-      TransacTxsService.get(type, params: params).then(
-        (response)->
-          ctrl.transactions = ctrl.transactions.concat(response.transactions)
-          ctrl.pagination.total = response.pagination.total
-          ctrl.cacheParams = null
+      # params ||= ctrl.cachedParams || ctrl.pagination.defaultParams
+      TransacTxsActions.initTransactions(params, type).then(
+        (result)->
+          console.log('initTransactions success!')
           onTransactionsChange()
         (error)->
-          ctrl.pagination.total = 0
-        # TODO: display error alert
+          # display alert
       )
       .finally(-> ctrl.loading = false)
 
