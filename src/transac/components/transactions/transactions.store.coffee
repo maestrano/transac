@@ -11,6 +11,7 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
       defaultParams: $skip: 0, $top: 10
     # TODO: refactor this cachedParams concept, it's a quickfix
     cachedParams: null
+    loading: false
 
   callbacks = {}
   callbacks.dispatched = $q.defer()
@@ -18,14 +19,17 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
   @subscribe = ->
     callbacks.dispatched.promise
 
-  @dispatch = (action)->
-    switch action.type
-      when 'ADD_TXS'
-        state.transactions = state.transactions.concat(action.payload)
-        console.log('adding txs', action.payload.length)
-      when 'SET_PGN_TOTAL'
-        state.pagination.total = action.payload
-        console.log('setting pgn total', action.payload)
+  @dispatch = (action, payload)->
+    switch action
+      when 'addTxs'
+        state.transactions = state.transactions.concat(payload)
+        console.log('adding txs', payload.length)
+      when 'setPgnTotal'
+        state.pagination.total = payload
+        console.log('setting pgn total', payload)
+      when 'loadingTxs'
+        state.loading = payload
+        console.log('is loading txs', payload)
     notify()
     _self.getState()
 

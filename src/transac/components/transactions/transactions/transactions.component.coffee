@@ -109,24 +109,22 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.transactions = TransacTxsStore.getState().transactions
       ctrl.pagination = TransacTxsStore.getState().pagination
       ctrl.cacheParams = TransacTxsStore.getState().cachedParams
+      ctrl.loading = TransacTxsStore.getState().loading
       TransacTxsStore.subscribe().then(null, null, (state)->
         console.log('Notify! ', angular.copy(state))
         ctrl.transactions = state.transactions
         ctrl.pagination = state.pagination
         ctrl.cachedParams = state.cachedParams
+        ctrl.loading = state.loading
+        onTransactionsChange()
       )
 
     loadTxs = (params=null, type=ctrl.txsType)->
-      ctrl.loading = true
       # params ||= ctrl.cachedParams || ctrl.pagination.defaultParams
-      TransacTxsActions.initTransactions(params, type).then(
-        (result)->
-          console.log('initTransactions success!')
-          onTransactionsChange()
+      TransacTxsActions.initTransactions(type, params).then(null,
         (error)->
-          # display alert
+          # TODO: display alert
       )
-      .finally(-> ctrl.loading = false)
 
     onTransactionsChange = (txsCount=ctrl.pagination.total)->
       return if _.isUndefined(ctrl.onTransactionsChange)
