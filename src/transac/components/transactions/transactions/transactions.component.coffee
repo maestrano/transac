@@ -33,11 +33,7 @@ angular.module('transac.transactions').component('transacTxs', {
     ctrl.loadMore = ->
       # Do not attempt to pagination further if there are no results.
       return loadTxs(ctrl.cachedParams) if ctrl.isPaginationDisabled()
-      ctrl.pagination.page += 1
-      offset = (ctrl.pagination.page - 1) * ctrl.pagination.limit
-      params = $skip: offset, $top: ctrl.pagination.limit
-      angular.merge(params, ctrl.cachedParams) if ctrl.cachedParams
-      loadTxs(params)
+      TransacTxsActions.paginateTxs(ctrl.txsType)
 
     ctrl.reload = (type=ctrl.txsType, params=null, cachedParams=false)->
       ctrl.txsType = type
@@ -121,10 +117,7 @@ angular.module('transac.transactions').component('transacTxs', {
 
     loadTxs = (params=null, type=ctrl.txsType)->
       # params ||= ctrl.cachedParams || ctrl.pagination.defaultParams
-      TransacTxsActions.loadTxs(type, params).then(null,
-        (error)->
-          # TODO: display alert
-      )
+      TransacTxsActions.loadTxs(type, params)
 
     onTransactionsChange = (txsCount=ctrl.pagination.total)->
       return if _.isUndefined(ctrl.onTransactionsChange)

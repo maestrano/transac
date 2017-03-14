@@ -24,12 +24,15 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
       when 'addTxs'
         state.transactions = state.transactions.concat(payload)
         console.log('adding txs', payload.length)
-      when 'setPgnTotal'
-        state.pagination.total = payload
-        console.log('setting pgn total', payload)
       when 'loadingTxs'
         state.loading = payload
         console.log('is loading txs', payload)
+      when 'setPgnTotal'
+        state.pagination.total = payload
+        console.log('setting pgn total', payload)
+      when 'nextPgnPage'
+        state.pagination.page += payload
+        console.log('setting next page', state.pagination.page)
     notify()
     _self.getState()
 
