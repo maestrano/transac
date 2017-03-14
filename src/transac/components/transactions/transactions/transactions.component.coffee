@@ -32,17 +32,17 @@ angular.module('transac.transactions').component('transacTxs', {
 
     ctrl.loadMore = ->
       # Do not attempt to pagination further if there are no results.
-      return loadTxs(ctrl.cacheParams) if ctrl.isPaginationDisabled()
+      return loadTxs(ctrl.cachedParams) if ctrl.isPaginationDisabled()
       ctrl.pagination.page += 1
       offset = (ctrl.pagination.page - 1) * ctrl.pagination.limit
       params = $skip: offset, $top: ctrl.pagination.limit
       angular.merge(params, ctrl.cachedParams) if ctrl.cachedParams
       loadTxs(params)
 
-    ctrl.reload = (type=ctrl.txsType, params=null, cacheParams=false)->
+    ctrl.reload = (type=ctrl.txsType, params=null, cachedParams=false)->
       ctrl.txsType = type
       # Set or clear cachedParams
-      ctrl.cachedParams = if cacheParams then params else null
+      ctrl.cachedParams = if cachedParams then params else null
       # clear transactions from store
       ctrl.transactions.length = 0
       # reset pagination
@@ -108,7 +108,7 @@ angular.module('transac.transactions').component('transacTxs', {
     initState = ->
       ctrl.transactions = TransacTxsStore.getState().transactions
       ctrl.pagination = TransacTxsStore.getState().pagination
-      ctrl.cacheParams = TransacTxsStore.getState().cachedParams
+      ctrl.cachedParams = TransacTxsStore.getState().cachedParams
       ctrl.loading = TransacTxsStore.getState().loading
       TransacTxsStore.subscribe().then(null, null, (state)->
         console.log('Notify! ', angular.copy(state))
@@ -121,7 +121,7 @@ angular.module('transac.transactions').component('transacTxs', {
 
     loadTxs = (params=null, type=ctrl.txsType)->
       # params ||= ctrl.cachedParams || ctrl.pagination.defaultParams
-      TransacTxsActions.initTransactions(type, params).then(null,
+      TransacTxsActions.loadTxs(type, params).then(null,
         (error)->
           # TODO: display alert
       )

@@ -2,7 +2,7 @@ angular.module('transac.transactions').service('TransacTxsActions', ($q, Transac
 
   _self = @
 
-  @initTransactions = (type, params)->
+  @loadTxs = (type, params)->
     TransacTxsStore.dispatch('loadingTxs', true)
     params ||= TransacTxsStore.getState().pagination.defaultParams
     TransacTxsService.get(type, params: params).then(
