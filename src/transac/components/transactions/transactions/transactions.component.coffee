@@ -24,15 +24,16 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.txsType ||= 'pending'
       ctrl.reconciling = false
       initState()
-      loadTxs()
+      TransacTxsActions.loadTxs(ctrl.txsType).then(()->
+        onTransactionsChange()
+      )
       # Provide parent component with an api
       if ctrl.onInit?
         ctrl.api = reloadTxs: ctrl.reload
         ctrl.onInit(EventEmitter(api: ctrl.api))
 
     ctrl.loadMore = ->
-      # Do not attempt to pagination further if there are no results.
-      return loadTxs(ctrl.cachedParams) if ctrl.isPaginationDisabled()
+      return TransacTxsActions.loadTxs(ctrl.txsType, ctrl.cachedParams) if ctrl.isPaginationDisabled()
       TransacTxsActions.paginateTxs(ctrl.txsType)
 
     ctrl.reload = (type=ctrl.txsType, params, cacheParams=false)->
@@ -106,19 +107,13 @@ angular.module('transac.transactions').component('transacTxs', {
         ctrl.pagination = state.pagination
         ctrl.cachedParams = state.cachedParams
         ctrl.loading = state.loading
-        onTransactionsChange()
       )
-
-    loadTxs = (params=null, type=ctrl.txsType)->
-      # params ||= ctrl.cachedParams || ctrl.pagination.defaultParams
-      TransacTxsActions.loadTxs(type, params)
 
     onTransactionsChange = (txsCount=ctrl.pagination.total)->
       return if _.isUndefined(ctrl.onTransactionsChange)
       ctrl.onTransactionsChange(
         EventEmitter({"#{ctrl.txsType}TxsCount": txsCount})
       )
-
 
     return
 })

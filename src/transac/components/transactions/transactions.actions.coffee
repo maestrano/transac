@@ -21,6 +21,7 @@ angular.module('transac.transactions').service('TransacTxsActions', ($q, Transac
     )
 
   @paginateTxs = (type)->
+    TransacTxsStore.dispatch('loadingTxs', true)
     state = TransacTxsStore.dispatch('nextPgnPage')
     offset = (state.pagination.page - 1) * state.pagination.limit
     params = $skip: offset, $top: state.pagination.limit
@@ -28,6 +29,7 @@ angular.module('transac.transactions').service('TransacTxsActions', ($q, Transac
     _self.loadTxs(type, params)
 
   @reloadTxs = (type, params=null, cacheParams=false)->
+    TransacTxsStore.dispatch('loadingTxs', true)
     TransacTxsStore.dispatch('cacheParams', (cacheParams && params || null))
     TransacTxsStore.dispatch('removeAllTxs')
     TransacTxsStore.dispatch('resetPgnPage')
