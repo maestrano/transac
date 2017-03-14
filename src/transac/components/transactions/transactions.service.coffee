@@ -30,8 +30,12 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
     params = angular.merge({}, _self.getHttpConfig(), params)
     $http.get(url, params).then(
       (response)->
-        transactions: response.data.transactions
-        pagination: response.data.pagination
+        unless response.status == 200 && response.data?
+          $log.error('TransacTxsService Error - no data found: ', response)
+          $q.reject(response)
+        else
+          transactions: response.data.transactions || []
+          pagination: response.data.pagination || {}
       (err)->
         $log.error('TransacTxsService Error: ', err)
         $q.reject(err)
