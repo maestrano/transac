@@ -58,7 +58,7 @@ angular.module('transac.transactions').component('transacTxs', {
       loadTxs(params, type)
 
     ctrl.isPaginationDisabled = ->
-      ctrl.loading || ctrl.pagination.total <= 0
+      ctrl.loading || !ctrl.pagination.total
 
     ctrl.onTransactionCommit = ({transaction})->
       TransacTxsService.commit(
