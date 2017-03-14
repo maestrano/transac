@@ -19,11 +19,14 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
   @subscribe = ->
     callbacks.dispatched.promise
 
-  @dispatch = (action, payload)->
+  @dispatch = (action, payload=null)->
     switch action
       when 'addTxs'
         state.transactions = state.transactions.concat(payload)
         console.log('adding txs', payload.length)
+      when 'removeAllTxs'
+        state.transactions.length = 0
+        console.log('removing all txs', state.transactions.length)
       when 'loadingTxs'
         state.loading = payload
         console.log('is loading txs', payload)
@@ -31,8 +34,14 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
         state.pagination.total = payload
         console.log('setting pgn total', payload)
       when 'nextPgnPage'
-        state.pagination.page += payload
-        console.log('setting next page', state.pagination.page)
+        state.pagination.page += 1
+        console.log('setting png next page', state.pagination.page)
+      when 'resetPgnPage'
+        state.pagination.page = 1
+        console.log('reseting pgn page', state.pagination.page)
+      when 'cacheParams'
+        state.cachedParams = payload
+        console.log('caching params', payload)
     notify()
     _self.getState()
 

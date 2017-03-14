@@ -21,10 +21,16 @@ angular.module('transac.transactions').service('TransacTxsActions', ($q, Transac
     )
 
   @paginateTxs = (type)->
-    state = TransacTxsStore.dispatch('nextPgnPage', 1)
+    state = TransacTxsStore.dispatch('nextPgnPage')
     offset = (state.pagination.page - 1) * state.pagination.limit
     params = $skip: offset, $top: state.pagination.limit
     angular.merge(params, state.cachedParams) if state.cachedParams
+    _self.loadTxs(type, params)
+
+  @reloadTxs = (type, params=null, cacheParams=false)->
+    TransacTxsStore.dispatch('cacheParams', (cacheParams && params || null))
+    TransacTxsStore.dispatch('removeAllTxs')
+    TransacTxsStore.dispatch('resetPgnPage')
     _self.loadTxs(type, params)
 
   return @
