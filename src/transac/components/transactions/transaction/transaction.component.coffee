@@ -65,38 +65,38 @@ angular.module('transac.transactions').component('transacTx', {
       ctrl.isSelected = !ctrl.isSelected
 
     ctrl.approveOnClick = (auto=false)->
-      el = $element
-      # Hide the transaction to improve responsive feeling of the action
-      el.addClass('deleting')
+      # Animate the commiting action
+      $element.addClass('commiting')
+      # Set the mappings for each app
       _.each(ctrl.transaction.mappings, (m)->
         m.commit = m.sharedWith
         # note: Connec! automatically sets auto_commit to false if commit is false
         m.auto_commit = auto
         return
       )
-      ctrl.onCommit(
-        EventEmitter({ transaction: ctrl.transaction })
-      ).then((res)->
+      # Commit the transaction
+      ctrl.onCommit(EventEmitter(transaction: ctrl.transaction)).then((res)->
+        # Reshow / animate the transaction if commit was unsuccessful
         $timeout(->
-          el.removeClass('deleting') unless res.success
+          $element.removeClass('commiting') unless res.success
         , 300)
       )
 
     ctrl.denyOnClick = (auto=false)->
-      el = $element
-      # Hide the transaction to improve responsive feeling of the action
-      el.addClass('deleting')
-      _.each(ctrl.transaction.mappings, (m)->
+      # Animate the commiting action
+      $element.addClass('commiting')
+      # Set the mappings for each app
+      _.each(ctrl.transaction.commitingings, (m)->
         m.commit = !m.sharedWith
         # note: Connec! automatically sets push_disable to false if commit is true
         m.push_disabled = auto
         return
       )
-      ctrl.onCommit(
-        EventEmitter({ transaction: ctrl.transaction })
-      ).then((res)->
+      # Commit the transaction
+      ctrl.onCommit(EventEmitter(transaction: ctrl.transaction)).then((res)->
+        # Reshow / animate the transaction if commit was unsuccessful
         $timeout(->
-          el.removeClass('deleting') unless res.success
+          $element.removeClass('commiting') unless res.success
         , 300)
       )
 

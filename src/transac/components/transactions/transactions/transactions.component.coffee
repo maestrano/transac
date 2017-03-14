@@ -105,8 +105,10 @@ angular.module('transac.transactions').component('transacTxs', {
             tx.transaction_log.id == transaction.transaction_log.id
           )
           onTransactionsChange(ctrl.pagination.total -= 1)
+          $q.when(success: true)
         (err)->
           # TODO: display error alert
+          $q.when(success: false)
       )
 
     # Private
