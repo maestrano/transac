@@ -28,9 +28,7 @@ angular.module('transac.transactions').component('transacTxs', {
         onTransactionsChange()
       )
       # Provide parent component with an api
-      if ctrl.onInit?
-        ctrl.api = reloadTxs: ctrl.reload
-        ctrl.onInit(EventEmitter(api: ctrl.api))
+      ctrl.onInit(EventEmitter(api: reloadTxs: ctrl.reload)) if ctrl.onInit?
 
     ctrl.loadMore = ->
       return TransacTxsActions.loadTxs(ctrl.txsType, ctrl.cachedParams) if ctrl.isPaginationDisabled()
@@ -102,7 +100,6 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.cachedParams = TransacTxsStore.getState().cachedParams
       ctrl.loading = TransacTxsStore.getState().loading
       TransacTxsStore.subscribe().then(null, null, (state)->
-        console.log('Notify! ', angular.copy(state))
         ctrl.transactions = state.transactions
         ctrl.pagination = state.pagination
         ctrl.cachedParams = state.cachedParams

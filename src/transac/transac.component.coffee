@@ -39,6 +39,8 @@ angular.module('maestrano.transac').component('transac', {
     loadUser = ->
       TransacUserService.fetch().then(null,
         (err)->
+          # TODO: display alert
+          # TODO: display error message
           ctrl.transacLoadError = true
       )
       .finally(-> ctrl.transacReady = true)
