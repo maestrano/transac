@@ -19,7 +19,7 @@
 @transac-top-bar-menu-item-color: rgba(0,0,0,0.54);
 @transac-top-bar-border: 1px solid @transac-lightgrey;
 @transac-top-bar-box-shadow: @transac-whiteframe;
-@transac-top-bar-menu-item-active-border-bottom: 2px solid black;
+@transac-top-bar-menu-item-active-line-color: black;
 
 // transaction component
 @transac-tx-height: 60px;
@@ -141,10 +141,25 @@ transac-top-bar {
     color: @transac-top-bar-menu-item-color;
     text-decoration: none;
     text-align: center;
-    padding: 3px 16px;
+    padding-top: 4px;
     cursor: pointer;
+    &.loading {
+      cursor: not-allowed;
+    }
     &.active {
-      border-bottom: @transac-top-bar-menu-item-active-border-bottom;
+      .top-bar_menu_tab-line {
+        width: 100%;
+        height: 2px;
+        background-color: @transac-top-bar-menu-item-active-line-color;
+      }
+    }
+    &.active.loading {
+      .top-bar_menu_tab-line {
+        webkit-animation: flickerAnimation 1s infinite;
+        moz-animation: flickerAnimation 1s infinite;
+        o-animation: flickerAnimation 1s infinite;
+        animation: flickerAnimation 1s infinite;
+      }
     }
   }
 
@@ -180,6 +195,11 @@ transac-top-bar {
       flex: 1;
     }
   }
+  @-moz-keyframes flexGrow {
+    to {
+      flex: 1;
+    }
+  }
   @-o-keyframes flexGrow {
     to {
       flex: 1;
@@ -196,6 +216,11 @@ transac-top-bar {
       flex: .00001;
     }
   }
+  @-moz-keyframes flexShrink {
+    to {
+      flex: .00001;
+    }
+  }
   @-o-keyframes flexShrink {
     to {
       flex: .00001;
@@ -205,6 +230,27 @@ transac-top-bar {
     to {
       flex: .00001;
     }
+  }
+
+  @-webkit-keyframes flickerAnimation{
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  @-moz-keyframes flickerAnimation{
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  @-o-keyframes flickerAnimation{
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  @keyframes flickerAnimation {
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
   }
 }
 
@@ -534,8 +580,9 @@ transac-txs {
   }
 
   .manual-load {
+    color: darken(@transac-grey, 15%);
     button {
-      .transac-action-button(black);
+      .transac-action-button(@transac-darkgrey);
       max-width: 200px;
       &:hover {
         background-color: @transac-grey;
