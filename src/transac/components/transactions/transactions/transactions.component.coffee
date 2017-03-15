@@ -24,7 +24,9 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.txsType ||= 'pending'
       ctrl.reconciling = false
       initState()
-      TransacTxsDispatcher.loadTxs(ctrl.txsType)
+      TransacTxsDispatcher.loadTxs(ctrl.txsType).then(->
+        emitTxsStateChange()
+      )
       # Provide parent component with an api
       ctrl.onInit(EventEmitter(api: reloadTxs: ctrl.reload)) if ctrl.onInit?
 
@@ -51,6 +53,8 @@ angular.module('transac.transactions').component('transacTxs', {
         (err)->
           # TODO: display error alert
           $q.when(success: false, message: err.message)
+        (res)->
+          emitTxsStateChange()
       )
 
     ctrl.onReconcileTransactions = ({transaction, matches, apps})->
@@ -84,16 +88,16 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.cachedParams = TransacTxsStore.getState().cachedParams
       ctrl.loading = TransacTxsStore.getState().loading
       TransacTxsStore.subscribe().then(null, null, (state)->
-        # Redefine state
         ctrl.transactions = state.transactions
         ctrl.pagination = state.pagination
         ctrl.cachedParams = state.cachedParams
         ctrl.loading = state.loading
-        # Emit state changes to parent components
-        ctrl.onTransactionsChange(
-          EventEmitter("#{ctrl.txsType}TxsCount": ctrl.pagination.total)
-        ) unless _.isUndefined(ctrl.onTransactionsChange)
       )
+
+    emitTxsStateChange = ->
+      ctrl.onTransactionsChange(
+        EventEmitter("#{ctrl.txsType}TxsCount": ctrl.pagination.total)
+      ) unless _.isUndefined(ctrl.onTransactionsChange)
 
     return
 })

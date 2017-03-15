@@ -1,7 +1,7 @@
 ###
 #   @desc Service responsible for dispatching messages to retrieve data and/or alter the Transactions state in methods that represent actions made from the view layer.
 ###
-angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, TransacTxsStore, TransacTxsService)->
+angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $timeout, TransacTxsStore, TransacTxsService)->
 
   _self = @
 
@@ -61,16 +61,20 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, Tran
   #   @returns {Promise<Object>} whether the commit was successful or not
   ###
   @commitTx = (url, resource, mappings)->
+    deferred = $q.defer()
     TransacTxsStore.dispatch('minusPgnTotal', 1)
+    $timeout((-> deferred.notify(true)), 0)
     TransacTxsService.commit(url, resource, mappings).then(
       (res)->
         TransacTxsStore.dispatch('removeTx', res.transaction.id)
-        $q.when(success: true)
+        deferred.resolve(success: true)
       (err)->
         # Restore pagination total if commit fails
         TransacTxsStore.dispatch('plusPgnTotal', 1)
-        $q.reject(message: 'Commit transaction failed')
+        $timeout((-> deferred.notify(true)), 0)
+        deferred.reject(message: 'Commit transaction failed')
     )
+    deferred.promise
 
   ###
   #   @desc Merge a transaction's duplicates & update pagination total
