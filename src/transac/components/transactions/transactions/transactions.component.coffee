@@ -5,12 +5,14 @@
 #   @require infinite-scroll directive (external)
 #   @binding {Function=} [onTransactionsChange] Callback fired on change to stored txs model
 #   @binding {Function=} [onReconciling] Callback fired on reconcile tx with matches (dups)
+#   @binding {Function=} [onLoadingChange] Callback fired when txs loading state is changed
 ###
 angular.module('transac.transactions').component('transacTxs', {
   bindings: {
     txsType: '<?'
     onTransactionsChange: '&?'
     onReconciling: '&?'
+    onLoadingChange: '&?'
   }
   templateUrl: 'components/transactions/transactions'
   controller: ($q, EventEmitter, TransacTxsDispatcher, TransacTxsStore)->
@@ -23,7 +25,7 @@ angular.module('transac.transactions').component('transacTxs', {
       initTxsState()
       TransacTxsStore.dispatch('setTxsType', ctrl.txsType) if ctrl.txsType?
       TransacTxsDispatcher.loadTxs(ctrl.txsType).then(->
-        emitTxsStateChange()
+        onTxsChange()
       )
 
     ctrl.loadMore = ->
@@ -55,7 +57,7 @@ angular.module('transac.transactions').component('transacTxs', {
           # TODO: display error alert
           $q.when(success: false, message: err.message)
         (res)->
-          emitTxsStateChange()
+          onTxsChange()
       )
 
     ctrl.onReconcileTransactions = ({transaction, matches, apps})->
@@ -90,14 +92,17 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.cachedParams = TransacTxsStore.getState().cachedParams
       ctrl.loading = TransacTxsStore.getState().loading
       TransacTxsStore.subscribe().then(null, null, (state)->
+        # Redefine state
         ctrl.txsType = state.txsType
         ctrl.transactions = state.transactions
         ctrl.pagination = state.pagination
         ctrl.cachedParams = state.cachedParams
         ctrl.loading = state.loading
+        # Emit state changes to parent cmps
+        ctrl.onLoadingChange(EventEmitter(loading: ctrl.loading))
       )
 
-    emitTxsStateChange = ->
+    onTxsChange = ->
       ctrl.onTransactionsChange(
         EventEmitter("#{ctrl.txsType}TxsCount": ctrl.pagination.total)
       ) unless _.isUndefined(ctrl.onTransactionsChange)

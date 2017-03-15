@@ -1,7 +1,8 @@
 <div class="top-bar">
   <div class="top-bar_menu">
-    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ 'active': menu.active }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">
+    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ 'active': menu.active, 'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">
       <h5>{{::menu.title}} ({{$ctrl.getCount(menu)}})</h5>
+      <div class="top-bar_menu_tab-line"></div>
     </a>
     <!-- $compiles transac-search-bar cmp here (see controller) -->
   </div>

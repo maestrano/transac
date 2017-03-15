@@ -31,6 +31,9 @@ angular.module('maestrano.transac').component('transac', {
     ctrl.toggleTopBar = ({isReconciling})->
       ctrl.isTopBarShown = !isReconciling
 
+    ctrl.updateTxsLoadingStatus = ({loading})->
+      ctrl.isTxsLoading = loading
+
     # Private
 
     loadUser = ->

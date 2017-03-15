@@ -5,6 +5,7 @@
 #   @binding {Function} [onSelectMenu] Callback fired when a menu tab is clicked, emitting the selected menu
 #   @binding {number} [pendingTxsCount] number of pending transactions
 #   @binding {number} [historyTxsCount] number of history transactions
+#   @binding {boolean} [isMenuLoading] Disables clicks & animates menu loader when true
 ###
 angular.module('transac.top-bar').component('transacTopBar', {
   bindings: {
@@ -13,6 +14,7 @@ angular.module('transac.top-bar').component('transacTopBar', {
     onSearch: '&'
     pendingTxsCount: '<'
     # historyTxsCount: '<'
+    isMenuLoading: '<?'
   },
   templateUrl: 'components/top-bar',
   controller: (MENUS, EventEmitter, $compile, $scope)->
@@ -28,6 +30,7 @@ angular.module('transac.top-bar').component('transacTopBar', {
       ctrl.onInitMenu(EventEmitter(menu: ctrl.selectedMenu)) if ctrl.onInitMenu?
 
     ctrl.onMenuItemClick = (menu)->
+      return if ctrl.isMenuLoading
       return if _.isEqual(menu, ctrl.selectedMenu)
       _.each(ctrl.menus, (menu) ->
         menu.active = false
