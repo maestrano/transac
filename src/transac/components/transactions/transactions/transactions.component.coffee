@@ -39,26 +39,25 @@ angular.module('transac.transactions').component('transacTxs', {
       TransacTxsActions.reloadTxs(type, params, cacheParams)
 
     ctrl.isPaginationDisabled = ->
-      ctrl.loading || !ctrl.pagination.total
+      ctrl.loading || !ctrl.pagination.total || ctrl.reconciling
 
     ctrl.onTransactionCommit = ({transaction})->
-      TransacTxsService.commit(
+      TransacTxsActions.commitTx(
         transaction.links.commit
         transaction.transaction_log.resource_type
         transaction.mappings
       ).then(
-        (response)->
+        (res)->
           # TODO: display success alert
-          # TODO: move to store
-          ctrl.transactions = _.reject(ctrl.transactions, (tx)-> tx.transaction_log.id == transaction.transaction_log.id)
-          onTransactionsChange(ctrl.pagination.total -= 1)
-          $q.when(success: true)
+          onTransactionsChange()
+          $q.when(success: res.success)
         (err)->
           # TODO: display error alert
-          $q.when(success: false)
+          $q.when(success: false, message: err.message)
       )
 
     ctrl.onReconcileTransactions = ({transaction, matches, apps})->
+      # data bound to tx-reconcile component
       ctrl.reconcileData =
         transaction: transaction
         matches: matches
@@ -67,29 +66,17 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.onReconciling(EventEmitter(isReconciling: true)) if ctrl.onReconciling
 
     ctrl.onTransactionReconciled = (args)->
-      ctrl.reconcileData = null
-      ctrl.reconciling = false
-      ctrl.onReconciling(EventEmitter(isReconciling: false)) if ctrl.onReconciling
-      return unless args?
-      # Restore full transaction object
-      transaction = _.find(ctrl.transactions, (tx) -> tx.transaction_log.id == args.txId)
-      return unless transaction? # TODO: display error alert
-      TransacTxsService.merge(
-        transaction.links.merge
-        transaction.transaction_log.resource_type
-        args.mergeParams
-      ).then(
-        (response)->
-          # TODO: display success alert
-          # TODO: move to store
-          ctrl.transactions = _.reject(ctrl.transactions, (tx)->
-            tx.transaction_log.id == transaction.transaction_log.id
-          )
-          onTransactionsChange(ctrl.pagination.total -= 1)
-          $q.when(success: true)
+      TransacTxsActions.mergeTxs(args).then(
+        (res)->
+          TransacTxsActions.reloadTxs(ctrl.type)
+          $q.when(success: res.success)
         (err)->
           # TODO: display error alert
-          $q.when(success: false)
+          $q.when(success: false, message: err.message)
+      ).finally(->
+        ctrl.reconcileData = null
+        ctrl.reconciling = false
+        ctrl.onReconciling(EventEmitter(isReconciling: false)) if ctrl.onReconciling
       )
 
     # Private

@@ -36,12 +36,16 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
     switch action
       when 'addTxs'
         state.transactions = state.transactions.concat(payload)
+      when 'removeTx'
+        _.remove(state.transactions, (tx)-> tx.transaction_log.id == payload)
       when 'removeAllTxs'
         state.transactions.length = 0
       when 'loadingTxs'
         state.loading = payload
       when 'setPgnTotal'
         state.pagination.total = payload
+      when 'minusPgnTotal'
+        state.pagination.total -= payload
       when 'nextPgnPage'
         state.pagination.page += 1
       when 'resetPgnPage'

@@ -20,10 +20,10 @@ angular.module('transac.transactions').service('TransacTxsActions', ($q, Transac
         TransacTxsStore.dispatch('setPgnTotal', response.pagination.total)
         TransacTxsStore.dispatch('clearCachedParams')
         $q.when(success: true)
-      (error)->
+      (err)->
         TransacTxsStore.dispatch('setPgnTotal', 0)
         # TODO: display alert
-        $q.reject(success: false, message: 'an error message')
+        $q.reject(message: 'Load transactions failed')
     ).finally(->
       TransacTxsStore.dispatch('loadingTxs', false)
     )
@@ -54,6 +54,53 @@ angular.module('transac.transactions').service('TransacTxsActions', ($q, Transac
     TransacTxsStore.dispatch('removeAllTxs')
     TransacTxsStore.dispatch('resetPgnPage')
     _self.loadTxs(type, params)
+
+  ###
+  #   @desc Commit a transaction & update pagination total
+  #   @params See service method comments
+  #   @returns {Promise<Object>} whether the commit was successful or not
+  ###
+  @commitTx = (url, resource, mappings)->
+    TransacTxsService.commit(url, resource, mappings).then(
+      (res)->
+        TransacTxsStore.dispatch('removeTx', res.transaction.id)
+        TransacTxsStore.dispatch('minusPgnTotal', 1)
+        $q.when(success: true)
+      (err)->
+        $q.reject(message: 'Commit transaction failed')
+    )
+
+  ###
+  #   @desc Merge a transaction's duplicates & update pagination total
+  #   @param {Object} [args] Arguments for the merge action
+  #   @param {Object} [args.txId] Transaction id
+  #   @param {Object} [args.mergeParams] Body params for the merge PUT request
+  #   @returns {Promise<Object>} whether the commit was successful or not
+  ###
+  @mergeTxs = (args)->
+    deferred = $q.defer()
+    # No merge has been published, cancel merge
+    return deferred.reject(message: 'Cancelled merge') unless args?
+
+    tx = _.find(TransacTxsStore.getState().transactions, (t) ->
+      t.transaction_log.id == args.txId
+    )
+    return deferred.reject(message: 'No transaction found - merge failed') unless tx?
+
+    TransacTxsStore.dispatch('loadingTxs')
+
+    TransacTxsService.merge(
+      tx.links.merge
+      tx.transaction_log.resource_type
+      args.mergeParams
+    ).then(
+      (res)->
+        TransacTxsStore.dispatch('resetPgnPage')
+        deferred.resolve(success: true)
+      (err)->
+        deferred.reject(message: 'Merge transaction failed')
+    )
+    deferred.promise
 
   return @
 )
