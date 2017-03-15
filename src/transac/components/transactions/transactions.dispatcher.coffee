@@ -18,7 +18,6 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
       (response)->
         TransacTxsStore.dispatch('addTxs', response.transactions)
         TransacTxsStore.dispatch('setPgnTotal', response.pagination.total)
-        TransacTxsStore.dispatch('clearCachedParams')
         $q.when(success: true)
       (err)->
         TransacTxsStore.dispatch('setPgnTotal', 0)
