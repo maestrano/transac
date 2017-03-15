@@ -5,12 +5,10 @@
 #   @require infinite-scroll directive (external)
 #   @binding {Function=} [onTransactionsChange] Callback fired on change to stored txs model
 #   @binding {Function=} [onReconciling] Callback fired on reconcile tx with matches (dups)
-#   @binding {Function=} [onInit] Callback fired on component initialize, emitting an api for exposing cmp methods to the parent component
 ###
 angular.module('transac.transactions').component('transacTxs', {
   bindings: {
     txsType: '<?'
-    onInit: '&?'
     onTransactionsChange: '&?'
     onReconciling: '&?'
   }
@@ -27,16 +25,10 @@ angular.module('transac.transactions').component('transacTxs', {
       TransacTxsDispatcher.loadTxs(ctrl.txsType).then(->
         emitTxsStateChange()
       )
-      # Provide parent component with an api
-      ctrl.onInit(EventEmitter(api: reloadTxs: ctrl.reload)) if ctrl.onInit?
 
     ctrl.loadMore = ->
       return TransacTxsDispatcher.loadTxs(ctrl.txsType, ctrl.cachedParams) if ctrl.isPaginationDisabled()
       TransacTxsDispatcher.paginateTxs(ctrl.txsType)
-
-    ctrl.reload = (type=ctrl.txsType, params, cacheParams=false)->
-      ctrl.txsType = type
-      TransacTxsDispatcher.reloadTxs(type, params, cacheParams)
 
     ctrl.isPaginationDisabled = ->
       ctrl.loading || !ctrl.pagination.total || ctrl.reconciling

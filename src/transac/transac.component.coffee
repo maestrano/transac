@@ -5,7 +5,7 @@ angular.module('maestrano.transac').component('transac', {
   bindings: {
   },
   templateUrl: 'transac',
-  controller: (TransacUserService)->
+  controller: (TransacUserService, TransacTxsDispatcher)->
     ctrl = this
 
     # Public
@@ -17,15 +17,12 @@ angular.module('maestrano.transac').component('transac', {
       ctrl.historyTxCount = 0
       loadUser()
 
-    ctrl.onTxsComponentInit = ({api})->
-      ctrl.txsCmpApi = api
-
     ctrl.onTopBarSelectMenu = ({menu})->
-      ctrl.txsCmpApi.reloadTxs(menu.type)
+      TransacTxsDispatcher.reloadTxs(menu.type)
 
     ctrl.onTopBarSearch = ({query, selectedMenu})->
       params = if query then $filter: query else null
-      ctrl.txsCmpApi.reloadTxs(selectedMenu.type, params, true)
+      TransacTxsDispatcher.reloadTxs(selectedMenu.type, params, true)
 
     ctrl.updateTransactionsCount = ({pendingTxsCount, historyTxsCount})->
       ctrl.pendingTxsCount = pendingTxsCount
