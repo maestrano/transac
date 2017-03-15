@@ -8,10 +8,10 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
   state =
     transactions: []
     pagination:
-      limit: 10
+      limit: 20
       page: 1
       total: 0
-      defaultParams: $skip: 0, $top: 10
+      defaultParams: $skip: 0, $top: 20
     # TODO: refactor this cachedParams concept, it's a quickfix
     cachedParams: null
     loading: false
