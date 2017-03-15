@@ -7,7 +7,8 @@
   <div ng-if="!$ctrl.loading" class="manual-load">
     <div ng-if="($ctrl.txsType == 'pending')">
       <button ng-click="$ctrl.loadMore()" ng-if="!$ctrl.isPaginationDisabled()">Scroll for more</button>
-      <button ng-click="$ctrl.reload($ctrl.txsType, null, true)" ng-if="$ctrl.">Retry</button>
+      <button ng-click="$ctrl.reload()" ng-if="$ctrl.isLoadFailed()">Retry</button>
+      <p ng-if="$ctrl.isFiltering()">All results</p>
     </div>
     <div ng-if="($ctrl.txsType == 'history')">
       <span>Coming Soon</span>

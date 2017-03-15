@@ -30,8 +30,17 @@ angular.module('transac.transactions').component('transacTxs', {
       return TransacTxsDispatcher.loadTxs(ctrl.txsType, ctrl.cachedParams) if ctrl.isPaginationDisabled()
       TransacTxsDispatcher.paginateTxs(ctrl.txsType)
 
+    ctrl.reload = ()->
+      TransacTxsDispatcher.reloadTxs(ctrl.txsType, ctrl.cachedParams, true)
+
     ctrl.isPaginationDisabled = ->
-      ctrl.loading || !ctrl.pagination.total || ctrl.reconciling
+      ctrl.loading || !ctrl.pagination.total || ctrl.reconciling || ctrl.isFiltering()
+
+    ctrl.isFiltering = ->
+      ctrl.cachedParams && ctrl.cachedParams.$filter
+
+    ctrl.isLoadFailed = ->
+      ctrl.isPaginationDisabled() && !ctrl.isFiltering()
 
     ctrl.onTransactionCommit = ({transaction})->
       TransacTxsDispatcher.commitTx(
