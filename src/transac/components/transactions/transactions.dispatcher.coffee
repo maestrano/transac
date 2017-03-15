@@ -13,6 +13,7 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
   ###
   @loadTxs = (type, params=null)->
     TransacTxsStore.dispatch('loadingTxs', true) unless TransacTxsStore.getState().loading
+    TransacTxsStore.dispatch('setTxsType', type)
     params ||= TransacTxsStore.getState().pagination.defaultParams
     TransacTxsService.get(type, params: params).then(
       (response)->

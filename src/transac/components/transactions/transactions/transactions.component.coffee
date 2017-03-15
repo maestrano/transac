@@ -19,9 +19,9 @@ angular.module('transac.transactions').component('transacTxs', {
     # Public
 
     ctrl.$onInit = ->
-      ctrl.txsType ||= 'pending'
       ctrl.reconciling = false
-      initState()
+      initTxsState()
+      TransacTxsStore.dispatch('setTxsType', ctrl.txsType) if ctrl.txsType?
       TransacTxsDispatcher.loadTxs(ctrl.txsType).then(->
         emitTxsStateChange()
       )
@@ -74,12 +74,14 @@ angular.module('transac.transactions').component('transacTxs', {
 
     # Private
 
-    initState = ->
+    initTxsState = ->
+      ctrl.txsType = TransacTxsStore.getState().txsType
       ctrl.transactions = TransacTxsStore.getState().transactions
       ctrl.pagination = TransacTxsStore.getState().pagination
       ctrl.cachedParams = TransacTxsStore.getState().cachedParams
       ctrl.loading = TransacTxsStore.getState().loading
       TransacTxsStore.subscribe().then(null, null, (state)->
+        ctrl.txsType = state.txsType
         ctrl.transactions = state.transactions
         ctrl.pagination = state.pagination
         ctrl.cachedParams = state.cachedParams

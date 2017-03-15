@@ -6,6 +6,7 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
   _self = @
 
   state =
+    txsType: 'pending'
     transactions: []
     pagination:
       limit: 20
@@ -34,6 +35,8 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
   ###
   @dispatch = (action, payload=null)->
     switch action
+      when 'setTxsType'
+        state.txsType = payload
       when 'addTxs'
         state.transactions = state.transactions.concat(payload)
       when 'removeTx'

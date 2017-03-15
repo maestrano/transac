@@ -6,7 +6,8 @@
   </div>
   <div ng-if="!$ctrl.loading" class="manual-load">
     <div ng-if="($ctrl.txsType == 'pending')">
-      <button ng-click="$ctrl.loadMore()">{{$ctrl.isPaginationDisabled() ? 'Retry' : 'Scroll for more'}}</button>
+      <button ng-click="$ctrl.loadMore()" ng-if="!$ctrl.isPaginationDisabled()">Scroll for more</button>
+      <button ng-click="$ctrl.reload($ctrl.txsType, null, true)" ng-if="$ctrl.">Retry</button>
     </div>
     <div ng-if="($ctrl.txsType == 'history')">
       <span>Coming Soon</span>
