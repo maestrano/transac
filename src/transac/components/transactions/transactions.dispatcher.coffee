@@ -86,26 +86,28 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
   @mergeTxs = (args)->
     deferred = $q.defer()
     # No merge has been published, cancel merge
-    return deferred.reject(message: 'Cancelled merge') unless args?
+    unless args?
+      deferred.reject(message: 'Cancelled merge')
+    else
+      tx = _.find(TransacTxsStore.getState().transactions, (t) ->
+        t.transaction_log.id == args.txId
+      )
+      unless tx?
+        deferred.reject(message: 'No transaction found - merge failed') unless tx?
+      else
+        TransacTxsStore.dispatch('loadingTxs')
 
-    tx = _.find(TransacTxsStore.getState().transactions, (t) ->
-      t.transaction_log.id == args.txId
-    )
-    return deferred.reject(message: 'No transaction found - merge failed') unless tx?
-
-    TransacTxsStore.dispatch('loadingTxs')
-
-    TransacTxsService.merge(
-      tx.links.merge
-      tx.transaction_log.resource_type
-      args.mergeParams
-    ).then(
-      (res)->
-        TransacTxsStore.dispatch('resetPgnPage')
-        deferred.resolve(success: true)
-      (err)->
-        deferred.reject(message: 'Merge transaction failed')
-    )
+        TransacTxsService.merge(
+          tx.links.merge
+          tx.transaction_log.resource_type
+          args.mergeParams
+        ).then(
+          (res)->
+            TransacTxsStore.dispatch('resetPgnPage')
+            deferred.resolve(success: true)
+          (err)->
+            deferred.reject(message: 'Merge transaction failed')
+        )
     deferred.promise
 
   return @
