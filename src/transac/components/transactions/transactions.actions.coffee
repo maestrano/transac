@@ -61,12 +61,14 @@ angular.module('transac.transactions').service('TransacTxsActions', ($q, Transac
   #   @returns {Promise<Object>} whether the commit was successful or not
   ###
   @commitTx = (url, resource, mappings)->
+    TransacTxsStore.dispatch('minusPgnTotal', 1)
     TransacTxsService.commit(url, resource, mappings).then(
       (res)->
         TransacTxsStore.dispatch('removeTx', res.transaction.id)
-        TransacTxsStore.dispatch('minusPgnTotal', 1)
         $q.when(success: true)
       (err)->
+        # Restore pagination total if commit fails
+        TransacTxsStore.dispatch('plusPgnTotal', 1)
         $q.reject(message: 'Commit transaction failed')
     )
 

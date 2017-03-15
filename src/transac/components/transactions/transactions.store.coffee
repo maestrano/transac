@@ -46,6 +46,8 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
         state.pagination.total = payload
       when 'minusPgnTotal'
         state.pagination.total -= payload
+      when 'plusPgnTotal'
+        state.pagination.total += payload
       when 'nextPgnPage'
         state.pagination.page += 1
       when 'resetPgnPage'
