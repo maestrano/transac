@@ -1,7 +1,7 @@
 ###
 #   @desc Service responsible for dispatching messages to retrieve data and/or alter the Transactions state in methods that represent actions made from the view layer.
 ###
-angular.module('transac.transactions').service('TransacTxsActions', ($q, TransacTxsStore, TransacTxsService)->
+angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, TransacTxsStore, TransacTxsService)->
 
   _self = @
 

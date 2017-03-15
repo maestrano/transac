@@ -15,7 +15,7 @@ angular.module('transac.transactions').component('transacTxs', {
     onReconciling: '&?'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: ($q, EventEmitter, TransacTxsActions, TransacTxsStore)->
+  controller: ($q, EventEmitter, TransacTxsDispatcher, TransacTxsStore)->
     ctrl = this
 
     # Public
@@ -24,23 +24,23 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.txsType ||= 'pending'
       ctrl.reconciling = false
       initState()
-      TransacTxsActions.loadTxs(ctrl.txsType)
+      TransacTxsDispatcher.loadTxs(ctrl.txsType)
       # Provide parent component with an api
       ctrl.onInit(EventEmitter(api: reloadTxs: ctrl.reload)) if ctrl.onInit?
 
     ctrl.loadMore = ->
-      return TransacTxsActions.loadTxs(ctrl.txsType, ctrl.cachedParams) if ctrl.isPaginationDisabled()
-      TransacTxsActions.paginateTxs(ctrl.txsType)
+      return TransacTxsDispatcher.loadTxs(ctrl.txsType, ctrl.cachedParams) if ctrl.isPaginationDisabled()
+      TransacTxsDispatcher.paginateTxs(ctrl.txsType)
 
     ctrl.reload = (type=ctrl.txsType, params, cacheParams=false)->
       ctrl.txsType = type
-      TransacTxsActions.reloadTxs(type, params, cacheParams)
+      TransacTxsDispatcher.reloadTxs(type, params, cacheParams)
 
     ctrl.isPaginationDisabled = ->
       ctrl.loading || !ctrl.pagination.total || ctrl.reconciling
 
     ctrl.onTransactionCommit = ({transaction})->
-      TransacTxsActions.commitTx(
+      TransacTxsDispatcher.commitTx(
         transaction.links.commit
         transaction.transaction_log.resource_type
         transaction.mappings
@@ -63,9 +63,9 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.onReconciling(EventEmitter(isReconciling: true)) if ctrl.onReconciling
 
     ctrl.onTransactionReconciled = (args)->
-      TransacTxsActions.mergeTxs(args).then(
+      TransacTxsDispatcher.mergeTxs(args).then(
         (res)->
-          TransacTxsActions.reloadTxs(ctrl.type)
+          TransacTxsDispatcher.reloadTxs(ctrl.type)
           $q.when(success: res.success)
         (err)->
           # TODO: display error alert
