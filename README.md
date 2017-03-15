@@ -4,12 +4,10 @@
 
 - Merge screen 'grey out' unselected transactions
 - More obvious merge screen buttons
-
----
-
-- toaster alerts
-- transaction filters
 - fix transaction title ellipsis
+- transaction filters
+- toaster alerts
+- Jump to transaction on merge screen back
 - history view (connect to API)
 - refresh transactions / history
 - merge view field selection

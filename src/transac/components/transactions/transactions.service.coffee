@@ -138,9 +138,13 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
     formatted_resource = _.capitalize(_.words(resource).join(' '))
     title = switch resource
       when 'credit_notes'
-        "#{_.get(transaction.changes, 'transaction_number')} (#{_.get(transaction.changes, 'type')})"
+        "#{_.get(transaction.transaction_log, 'reference', 'No reference found')} (#{_.get(transaction.changes, 'type', '-')})"
+      when "invoices"
+        "#{_.get(transaction.transaction_log, 'reference', 'No reference found')} (#{_.get(transaction.changes, 'type', '-')})"
+      when 'purchase_orders'
+        "#{_.get(transaction.transaction_log, 'reference', 'No reference found')} (#{_.get(transaction.changes, 'type', '-')})"
       else
-        _.get(transaction.changes, 'name', 'No name found')
+        _.get(transaction.transaction_log, 'reference', 'No reference found')
 
     "#{action} #{formatted_resource}: #{title}"
 
@@ -150,6 +154,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @returns {string} A formatted matching tx title.
   ###
   @formatMatchTitle = (match)->
+    mostRecentTxLog = match.transaction_logs[match.transaction_logs.length - 1]
     title = switch match.resource_type
       when 'organizations'
         # Determine type of organization (e.g customer, supplier)
@@ -159,8 +164,10 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
         key = _.compact(key)[0]
         type = key.split('_').slice(-1)
         "#{type}: #{match.name}"
+      when 'invoices'
+        "#{_.get(mostRecentTxLog, 'reference', 'No reference found')} (#{_.get(match, 'type', '-')})"
       else
-        _.get(match, 'name', 'No name found')
+        _.get(mostRecentTxLog, 'reference', 'No reference found')
     title
 
   ###
@@ -171,19 +178,33 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @TODO: Define all accepted attributes for each possible resource type (and possibly move these attr lists out into a constant).
   ###
   @formatAttributes = (txAttrs, resource)->
-    acceptedAttrs = switch resource
+    acceptedTxAttrs = switch resource
       when 'organizations'
-        ['name', 'status', 'address', 'email', 'phone', 'referred_leads', 'website']
+        plain: ['name', 'status', 'address', 'email', 'phone', 'referred_leads', 'website']
+        dates: []
       when 'tax_codes'
-        ['name', 'reference', 'sale_tax_rate', 'sale_taxes', 'status', 'tax_type']
+        plain: ['name', 'reference', 'sale_tax_rate', 'sale_taxes', 'status', 'tax_type']
+        dates: []
       when 'accounts'
-        ['name', 'reference', 'code', 'currency', 'description', 'status']
+        plain: ['name', 'reference', 'code', 'currency', 'description', 'status']
+        dates: []
+      when 'items'
+        plain: ['code', 'description', 'is_inventoried', 'name', 'purchase_price', 'sale_price', 'status']
+        dates: []
+      when 'purchase_orders'
+        plain: ['amount', 'lines', 'status', 'title', 'transaction_number', 'type']
+        dates: ['transaction_date']
+      when 'invoices'
+        plain: ['amount', 'balance', 'deposit', 'lines', 'status', 'tax_calculation', 'title', 'transaction_number', 'type']
+        dates: ['transaction_date', 'due_date']
       else
         # Default to all fields
-        []
-    acceptedTxAttrs = _.pick(txAttrs, acceptedAttrs)
+        plain: []
+
+    acceptedTxDates = ['updated_at', 'created_at'].concat(acceptedTxAttrs.dates)
+    acceptedTxAttrs = _.pick(txAttrs, acceptedTxAttrs.plain)
     acceptedTxAttrs = if _.isEmpty(acceptedTxAttrs) then txAttrs else acceptedTxAttrs
-    _.each(['updated_at', 'created_at'], (key)->
+    _.each(acceptedTxDates, (key)->
       acceptedTxAttrs[key] = _self.formatDisplayDate(_.get(txAttrs, key))
       return
     )
