@@ -2,7 +2,6 @@
 
 ## Todo (ordered)
 
-- Respond to organization change
 - Merge screen 'grey out' unselected transactions
 - More obvious merge screen buttons
 

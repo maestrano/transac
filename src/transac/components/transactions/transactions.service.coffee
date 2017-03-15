@@ -1,5 +1,5 @@
 ###
-#   @desc Contains business logic for Transactions & Matches.
+#   @desc Backend Service for Transactions & Matches.
 ###
 angular.module('transac.transactions').service('TransacTxsService', ($log, $http, $q, $window, TransacUserService, DEV_AUTH)->
 
@@ -124,6 +124,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
 
   ##
   ## Txs Display Formatting Methods
+  ## TODO: where should these methods live?
   ##
 
   ###

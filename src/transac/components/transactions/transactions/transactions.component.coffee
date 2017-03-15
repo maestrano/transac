@@ -15,69 +15,49 @@ angular.module('transac.transactions').component('transacTxs', {
     onReconciling: '&?'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: ($q, EventEmitter, TransacTxsService)->
+  controller: ($q, EventEmitter, TransacTxsService, TransacTxsActions, TransacTxsStore)->
     ctrl = this
 
     # Public
 
     ctrl.$onInit = ->
-      ctrl.transactions = []
       ctrl.txsType ||= 'pending'
       ctrl.reconciling = false
-      ctrl.pagination =
-        limit: 10
-        page: 1
-        total: 0
-      ctrl.pagination.defaultParams = $skip: 0, $top: ctrl.pagination.limit
-      # TODO: refactor this cachedParams concept, it's a quickfix
-      ctrl.cacheParams = null
-      loadTxs()
+      initState()
+      TransacTxsActions.loadTxs(ctrl.txsType).then(()->
+        onTransactionsChange()
+      )
       # Provide parent component with an api
-      if ctrl.onInit?
-        ctrl.api =
-          reloadTxs: ctrl.reload
-        ctrl.onInit(EventEmitter(api: ctrl.api))
+      ctrl.onInit(EventEmitter(api: reloadTxs: ctrl.reload)) if ctrl.onInit?
 
     ctrl.loadMore = ->
-      # Do not attempt to pagination further if there are no results.
-      return loadTxs(ctrl.cacheParams) if ctrl.isPaginationDisabled()
-      ctrl.pagination.page += 1
-      offset = (ctrl.pagination.page - 1) * ctrl.pagination.limit
-      params = $skip: offset, $top: ctrl.pagination.limit
-      angular.merge(params, ctrl.cachedParams) if ctrl.cachedParams
-      loadTxs(params)
+      return TransacTxsActions.loadTxs(ctrl.txsType, ctrl.cachedParams) if ctrl.isPaginationDisabled()
+      TransacTxsActions.paginateTxs(ctrl.txsType)
 
-    ctrl.reload = (type=ctrl.txsType, params=null, cacheParams=false)->
+    ctrl.reload = (type=ctrl.txsType, params, cacheParams=false)->
       ctrl.txsType = type
-      # Set or clear cachedParams
-      ctrl.cachedParams = if cacheParams then params else null
-      # clear transactions from store
-      ctrl.transactions.length = 0
-      # reset pagination
-      ctrl.pagination.page = 1
-      loadTxs(params, type)
+      TransacTxsActions.reloadTxs(type, params, cacheParams)
 
     ctrl.isPaginationDisabled = ->
-      ctrl.loading || !ctrl.pagination.total
+      ctrl.loading || !ctrl.pagination.total || ctrl.reconciling
 
     ctrl.onTransactionCommit = ({transaction})->
-      TransacTxsService.commit(
+      TransacTxsActions.commitTx(
         transaction.links.commit
         transaction.transaction_log.resource_type
         transaction.mappings
       ).then(
-        (response)->
+        (res)->
           # TODO: display success alert
-          # TODO: move to store
-          ctrl.transactions = _.reject(ctrl.transactions, (tx)-> tx.transaction_log.id == transaction.transaction_log.id)
-          onTransactionsChange(ctrl.pagination.total -= 1)
-          $q.when(success: true)
+          onTransactionsChange()
+          $q.when(success: res.success)
         (err)->
           # TODO: display error alert
-          $q.when(success: false)
+          $q.when(success: false, message: err.message)
       )
 
     ctrl.onReconcileTransactions = ({transaction, matches, apps})->
+      # data bound to tx-reconcile component
       ctrl.reconcileData =
         transaction: transaction
         matches: matches
@@ -86,55 +66,38 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.onReconciling(EventEmitter(isReconciling: true)) if ctrl.onReconciling
 
     ctrl.onTransactionReconciled = (args)->
-      ctrl.reconcileData = null
-      ctrl.reconciling = false
-      ctrl.onReconciling(EventEmitter(isReconciling: false)) if ctrl.onReconciling
-      return unless args?
-      # Restore full transaction object
-      transaction = _.find(ctrl.transactions, (tx) -> tx.transaction_log.id == args.txId)
-      return unless transaction? # TODO: display error alert
-      TransacTxsService.merge(
-        transaction.links.merge
-        transaction.transaction_log.resource_type
-        args.mergeParams
-      ).then(
-        (response)->
-          # TODO: display success alert
-          # TODO: move to store
-          ctrl.transactions = _.reject(ctrl.transactions, (tx)->
-            tx.transaction_log.id == transaction.transaction_log.id
-          )
-          onTransactionsChange(ctrl.pagination.total -= 1)
-          $q.when(success: true)
+      TransacTxsActions.mergeTxs(args).then(
+        (res)->
+          TransacTxsActions.reloadTxs(ctrl.type)
+          $q.when(success: res.success)
         (err)->
           # TODO: display error alert
-          $q.when(success: false)
+          $q.when(success: false, message: err.message)
+      ).finally(->
+        ctrl.reconcileData = null
+        ctrl.reconciling = false
+        ctrl.onReconciling(EventEmitter(isReconciling: false)) if ctrl.onReconciling
       )
 
     # Private
 
-    loadTxs = (params=null, type=ctrl.txsType)->
-      ctrl.loading = true
-      params ||= ctrl.cachedParams || ctrl.pagination.defaultParams
-      # TODO: move to store
-      TransacTxsService.get(type, params: params).then(
-        (response)->
-          ctrl.transactions = ctrl.transactions.concat(response.transactions)
-          ctrl.pagination.total = response.pagination.total
-          ctrl.cacheParams = null
-          onTransactionsChange()
-        (error)->
-          ctrl.pagination.total = 0
-        # TODO: display error alert
+    initState = ->
+      ctrl.transactions = TransacTxsStore.getState().transactions
+      ctrl.pagination = TransacTxsStore.getState().pagination
+      ctrl.cachedParams = TransacTxsStore.getState().cachedParams
+      ctrl.loading = TransacTxsStore.getState().loading
+      TransacTxsStore.subscribe().then(null, null, (state)->
+        ctrl.transactions = state.transactions
+        ctrl.pagination = state.pagination
+        ctrl.cachedParams = state.cachedParams
+        ctrl.loading = state.loading
       )
-      .finally(-> ctrl.loading = false)
 
     onTransactionsChange = (txsCount=ctrl.pagination.total)->
       return if _.isUndefined(ctrl.onTransactionsChange)
       ctrl.onTransactionsChange(
         EventEmitter({"#{ctrl.txsType}TxsCount": txsCount})
       )
-
 
     return
 })
