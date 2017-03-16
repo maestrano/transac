@@ -2,7 +2,6 @@
 
 ## Todo (ordered)
 
-- Make merge tx tiles fixed height
 - Add button click animations
 - More obvious merge screen buttons
 - fix transaction title ellipsis
