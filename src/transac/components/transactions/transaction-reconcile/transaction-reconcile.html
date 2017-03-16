@@ -14,11 +14,11 @@
 </div>
 <div class="edit" ng-show="$ctrl.editing">
   <div class="edit_tx">
-    <transac-tx-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" on-select="$ctrl.onSelect($event)"></transac-tx-tile>
+    <transac-tx-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" deselected="$ctrl.isTxDeselected(tx)" on-select="$ctrl.onSelect($event)"></transac-tx-tile>
   </div>
 </div>
 <div class="review" ng-if="!$ctrl.editing">
   <div class="review_tx">
-    <transac-tx-tile transaction="::$ctrl.selectedTx" title="::$ctrl.selectedTxTitle" subtitle="::$ctrl.selectedTxSubtitle"></transac-tx-tile>
+    <transac-tx-tile transaction="::$ctrl.selectedTx" checked="true" title="::$ctrl.selectedTxTitle" subtitle="::$ctrl.selectedTxSubtitle"></transac-tx-tile>
   </div>
 </div>

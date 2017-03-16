@@ -2,12 +2,14 @@
 
 ## Todo (ordered)
 
-- Merge screen 'grey out' unselected transactions
+- Make merge tx tiles fixed height
+- Add button click animations
 - More obvious merge screen buttons
 - fix transaction title ellipsis
 - transaction filters
 - toaster alerts
 - Jump to transaction on merge screen back
+- align merge view transaction attributes for easier comparison
 - history view (connect to API)
 - refresh transactions / history
 - merge view field selection

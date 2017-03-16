@@ -13,6 +13,7 @@ angular.module('transac.transactions').component('transacTxTile', {
     title: '<?'
     subtitle: '<?'
     checked: '<?'
+    deselected: '<?'
     onSelect: '&?'
   },
   templateUrl: 'components/transactions/transaction-tile',

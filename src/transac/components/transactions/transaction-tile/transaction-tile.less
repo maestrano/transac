@@ -1,14 +1,26 @@
 transac-tx-tile {
-  box-shadow: @transac-tx-tile-box-shadow;
-  border: 1px solid @transac-grey;
 
   .tx-tile {
     width: 100%;
+    box-shadow: @transac-tx-tile-box-shadow;
+    border: 1px solid @transac-grey;
+    &.selected {
+      .tx-tile_topbar {
+        background-color: @transac-tx-tile-topbar-selected-background-color;
+      }
+    }
+    &.deselected {
+      color: @transac-tx-tile-deselected-color;
+      // captures subtitle (app name)
+      p { color: @transac-tx-tile-deselected-color }
+    }
   }
 
   .tx-tile_topbar {
     height: 60px;
     border-bottom: 1px solid @transac-grey;
+    position: relative;
+
     &.no-click {
       cursor: default;
     }

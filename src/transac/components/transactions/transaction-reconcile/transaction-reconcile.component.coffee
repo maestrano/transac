@@ -40,11 +40,14 @@ angular.module('transac.transactions').component('transacTxReconcile', {
     ctrl.isTxChecked = (tx)->
       ctrl.txsSelectionMap[tx.id]
 
-    ctrl.isSelectedTxSelected = ->
+    ctrl.hasSelectedTx = ->
       !_.isEmpty(ctrl.selectedTx)
 
+    ctrl.isTxDeselected = (tx)->
+      ctrl.hasSelectedTx() && !ctrl.isTxChecked(tx)
+
     ctrl.isNextBtnShown = ->
-      ctrl.editing && ctrl.isSelectedTxSelected()
+      ctrl.editing && ctrl.hasSelectedTx()
 
     ctrl.next = ->
       return unless ctrl.isNextBtnShown()
