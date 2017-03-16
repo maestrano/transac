@@ -1,16 +1,19 @@
 <div class="top-panel">
-  <button class="top-panel_action-btns" ng-click="$ctrl.back()">
-    <i class="fa fa-angle-double-left fa-2x"></i>
-  </button>
+  <div class="top-panel-btn top-panel_btn--back" ng-click="$ctrl.back()">
+    <div class="action-button"><i class="fa fa-angle-double-left fa-2x"></i></div>
+    <span class="action-label">Back</span>
+  </div>
   <div class="top-panel_title">
     <span>Reconcile duplicate records</span>
   </div>
-  <button class="top-panel_action-btns right-align" ng-if="$ctrl.isNextBtnShown()" ng-click="$ctrl.next()">
-    <i class="fa fa-angle-double-right fa-2x"></i>
-  </button>
-  <button class="top-panel_action-btns top-panel_action-btns--done right-align" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">
-    <i class="fa fa-check fa-2x"></i>
-  </button>
+  <div class="top-panel-btn top-panel_btn--next top-panel_btn--align-right" ng-if="$ctrl.isNextBtnShown()" ng-click="$ctrl.next()">
+    <span class="action-label">Next</span>
+    <div class="action-button"><i class="fa fa-angle-double-right fa-2x"></i></div>
+  </div>
+  <div class="top-panel-btn top-panel_btn--done top-panel_btn--align-right" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">
+    <span class="action-label">Publish</span>
+    <div class="action-button"><i class="fa fa-check fa-2x"></i></div>
+  </div>
 </div>
 <div class="edit" ng-show="$ctrl.editing">
   <div class="edit_tx">

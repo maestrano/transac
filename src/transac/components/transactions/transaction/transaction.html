@@ -43,23 +43,23 @@
         </div>
       </div>
       <div class="col-md-3 detail_section no-gutters">
-        <div class="detail_section_action detail_section_action--approve" ng-click="$ctrl.approveOnClick()">
-          <span>Approve only this time</span>
-          <button type="button">
-            <i class="fa fa-check fa-2x"></i>
-          </button>
+        <div class="detail_section_action">
+          <div class="detail_section_action_approve" ng-click="$ctrl.approveOnClick()">
+            <span class="action-label">Approve only this time</span>
+            <div class="action-button"><i class="fa fa-check fa-2x"></i></div>
+          </div>
         </div>
-        <div class="detail_section_action detail_section_action--deny" ng-click="$ctrl.denyOnClick(true)">
-          <span>Never share this record</span>
-          <button type="button">
-            <i class="fa fa-ban"></i>
-          </button>
+        <div class="detail_section_action">
+          <div class="detail_section_action_deny" ng-click="$ctrl.denyOnClick(true)">
+            <span class="action-label">Never share this record</span>
+            <div class="action-button"><i class="fa fa-ban fa-2x"></i></div>
+          </div>
         </div>
-        <div class="detail_section_action detail_section_action--duplicate" ng-click="$ctrl.reconcileOnClick()" ng-if="$ctrl.hasMatches()">
-          <span>This record is a duplicate</span>
-          <button type="button">
-            <i class="fa fa-link fa-2x"></i>
-          </button>
+        <div class="detail_section_action" ng-if="$ctrl.hasMatches()">
+          <div class="detail_section_action_duplicate" ng-click="$ctrl.reconcileOnClick()">
+            <span class="action-label">This record is a duplicate</span>
+            <div class="action-button"><i class="fa fa-link fa-2x"></i></div>
+          </div>
         </div>
       </div>
     </div>

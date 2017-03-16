@@ -15,17 +15,25 @@ transac-tx-reconcile {
     padding-top: 20px;
   }
 
-  .top-panel_action-btns {
-    position: absolute;
-    .transac-action-button(@transac-darkgrey, 10px);
-    &.right-align {
-      top: 0;
-      right: 0;
+  .top-panel_btn--back {
+    .transac-action-button-labeled--label-right(@transac-darkgrey);
+  }
+
+  .top-panel_btn--next {
+    .transac-action-button-labeled--label-left(@transac-darkgrey);
+  }
+
+  .top-panel_btn--done {
+    .transac-action-button-labeled--label-left(@transac-green, @transac-green);
+    span {
+      font-weight: bold;
     }
   }
 
-  .top-panel_action-btns--done {
-    .transac-action-button(@transac-green, 10px);
+  .top-panel_btn--align-right {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   .edit_tx {

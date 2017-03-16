@@ -125,38 +125,24 @@ transac-tx {
     }
   }
 
+  .detail_section_action_approve {
+    .transac-action-button-labeled--label-left(@transac-tx-approve-color);
+  }
+
+  .detail_section_action_deny {
+    .transac-action-button-labeled--label-left(@transac-tx-deny-color);
+  }
+
+  .detail_section_action_duplicate {
+    .transac-action-button-labeled--label-left(@transac-tx-duplicate-color);
+  }
+
   .detail_section_action {
     display: flex;
-    align-items: center;
-    span {
-      text-align: right;
-      display: flex;
-      flex-grow: 1;
-      flex-direction: row-reverse;
-      margin-right: 5px;
-      .transac-subtitle();
-    }
-  }
-
-  .detail_section_action--approve {
-    margin-top: 10px;
-    button {
-      .transac-action-button(@transac-tx-approve-color);
-    }
-  }
-
-  .detail_section_action--deny {
-    button {
-      .transac-action-button(@transac-tx-deny-color);
-    }
-    .fa-ban {
-      font-size: 23px;
-    }
-  }
-
-  .detail_section_action--duplicate {
-    button {
-      .transac-action-button(@transac-tx-duplicate-color);
+    justify-content: flex-end;
+    margin: 5px;
+    div.action-button {
+      padding: 0 0 0 10px;
     }
   }
 
