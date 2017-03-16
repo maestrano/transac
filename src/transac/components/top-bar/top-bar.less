@@ -35,10 +35,10 @@ transac-top-bar {
     }
     &.active.loading {
       .top-bar_menu_tab-line {
-        webkit-animation: flickerAnimation 1s infinite;
-        moz-animation: flickerAnimation 1s infinite;
-        o-animation: flickerAnimation 1s infinite;
-        animation: flickerAnimation 1s infinite;
+        webkit-animation: flickerOpacity 1s infinite;
+        moz-animation: flickerOpacity 1s infinite;
+        o-animation: flickerOpacity 1s infinite;
+        animation: flickerOpacity 1s infinite;
       }
     }
   }
@@ -65,71 +65,5 @@ transac-top-bar {
       -o-animation: flexShrink 200ms ease forwards;
       animation: flexShrink 200ms ease forwards;
     }
-  }
-
-  /*
-  **  Animations
-  */
-  @-webkit-keyframes flexGrow {
-    to {
-      flex: 1;
-    }
-  }
-  @-moz-keyframes flexGrow {
-    to {
-      flex: 1;
-    }
-  }
-  @-o-keyframes flexGrow {
-    to {
-      flex: 1;
-    }
-  }
-  @keyframes flexGrow {
-    to {
-      flex: 1;
-    }
-  }
-
-  @-webkit-keyframes flexShrink {
-    to {
-      flex: .00001;
-    }
-  }
-  @-moz-keyframes flexShrink {
-    to {
-      flex: .00001;
-    }
-  }
-  @-o-keyframes flexShrink {
-    to {
-      flex: .00001;
-    }
-  }
-  @keyframes flexShrink {
-    to {
-      flex: .00001;
-    }
-  }
-
-  @-webkit-keyframes flickerAnimation{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-  }
-  @-moz-keyframes flickerAnimation{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-  }
-  @-o-keyframes flickerAnimation{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-  }
-  @keyframes flickerAnimation {
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
   }
 }

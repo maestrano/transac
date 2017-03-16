@@ -4,9 +4,9 @@
 
 - Add button click animations
 - More obvious merge screen buttons
-- fix transaction title ellipsis
 - transaction filters
 - toaster alerts
+- fix transaction title ellipsis
 - Jump to transaction on merge screen back
 - align merge view transaction attributes for easier comparison
 - history view (connect to API)
