@@ -24,8 +24,9 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.reconciling = false
       initTxsState()
       TransacTxsStore.dispatch('setTxsType', ctrl.txsType) if ctrl.txsType?
-      TransacTxsDispatcher.loadTxs(ctrl.txsType).then(->
-        onTxsChange()
+      TransacTxsDispatcher.loadTxs(ctrl.txsType).then(
+        ->
+          onTxsChange()
       )
 
     ctrl.loadMore = ->
@@ -36,13 +37,16 @@ angular.module('transac.transactions').component('transacTxs', {
       TransacTxsDispatcher.reloadTxs(ctrl.txsType, ctrl.cachedParams, true)
 
     ctrl.isPaginationDisabled = ->
-      ctrl.loading || !ctrl.pagination.total || ctrl.reconciling || ctrl.isFiltering()
+      ctrl.loading || ctrl.reconciling || ctrl.noTxsFound() || ctrl.allTxsFound()
 
-    ctrl.isFiltering = ->
+    ctrl.isFilteringTxs = ->
       ctrl.cachedParams && ctrl.cachedParams.$filter
 
-    ctrl.isLoadFailed = ->
-      ctrl.isPaginationDisabled() && !ctrl.isFiltering()
+    ctrl.allTxsFound = ->
+      !ctrl.loading && ctrl.transactions.length && (ctrl.transactions.length == ctrl.pagination.total)
+
+    ctrl.noTxsFound = ->
+      !ctrl.loading && !ctrl.transactions.length && !ctrl.pagination.total
 
     ctrl.onTransactionCommit = ({transaction})->
       TransacTxsDispatcher.commitTx(
