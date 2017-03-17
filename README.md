@@ -4,7 +4,6 @@
 
 - transaction filters
 - toaster alerts
-- fix transaction title ellipsis
 - Jump to transaction on merge screen back
 - align merge view transaction attributes for easier comparison
 - history view (connect to API)
