@@ -181,7 +181,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @returns {Object} Formatted transaction attributes by resource type.
   #   @TODO: Define all accepted attributes for each possible resource type (and possibly move these attr lists out into a constant).
   ###
-  @formatAttributes = (txAttrs, resource)->
+  @formatAttributes = (txAttrs={}, resource)->
     acceptedTxAttrs = switch resource
       when 'organizations'
         plain: ['name', 'status', 'address', 'email', 'phone', 'referred_leads', 'website']
@@ -209,7 +209,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
     acceptedTxAttrs = _.pick(txAttrs, acceptedTxAttrs.plain)
     acceptedTxAttrs = if _.isEmpty(acceptedTxAttrs) then txAttrs else acceptedTxAttrs
     _.each(acceptedTxDates, (key)->
-      acceptedTxAttrs[key] = _self.formatDisplayDate(_.get(txAttrs, key))
+      acceptedTxAttrs[key] = _self.formatDisplayDate(_.get(acceptedTxAttrs, key))
       return
     )
     _self.flattenObject(acceptedTxAttrs)
