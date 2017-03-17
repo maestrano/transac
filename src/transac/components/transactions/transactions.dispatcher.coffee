@@ -7,21 +7,26 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
 
   ###
   #   @desc Load transactions & set pagination total
-  #   @param {string} [type] Type of transaction
-  #   @param {Object} [params=] pagination & filter parameters for the request
+  #   @param {Object} [options=]
+  #   @param {string} [options.url=] A custom url for the request (a pagination url)
+  #   @param {string} [options.type=] Type of transactions e.g 'pending', 'history'
+  #   @param {Object} [options.params=] Pagination & filter params for the request
+  #   @param {boolean} [options.excludeParams=] Prevent option.params being passed onto TransacTxsService
   #   @returns {Promise<Object>} whether the load was successful or not
   ###
-  @loadTxs = (type, params=null)->
+  @loadTxs = (options={})->
     TransacTxsStore.dispatch('loadingTxs', true) unless TransacTxsStore.getState().loading
-    TransacTxsStore.dispatch('setTxsType', type)
-    params ||= TransacTxsStore.getState().pagination.defaultParams
-    TransacTxsService.get(type, params: params).then(
+    TransacTxsStore.dispatch('setTxsType', options.type) if options.type
+    unless options.excludeParams
+      currentPgnState = TransacTxsStore.getState().pagination
+      pgnParams = $skip: currentPgnState.skip, $top: currentPgnState.top
+      options.params = angular.merge({}, pgnParams, options.params)
+    TransacTxsService.get(options).then(
       (response)->
         TransacTxsStore.dispatch('addTxs', response.transactions)
-        TransacTxsStore.dispatch('setPgnTotal', response.pagination.total)
+        TransacTxsStore.dispatch('setPgn', response.pagination)
         $q.when(success: true)
       (err)->
-        TransacTxsStore.dispatch('setPgnTotal', 0)
         # TODO: display alert
         $q.reject(message: 'Load transactions failed')
     ).finally(->
@@ -30,30 +35,24 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
 
   ###
   #   @desc Paginates Transactions
-  #   @param {string} [type] Type of transaction
+  #   @param {string} [url] for retrieving paginated transactions
   #   @returns {Promise<Object>} whether the load more txs was successful or not
   ###
-  @paginateTxs = (type)->
+  @paginateTxs = (url)->
     TransacTxsStore.dispatch('loadingTxs', true)
-    state = TransacTxsStore.dispatch('nextPgnPage')
-    offset = (state.pagination.page - 1) * state.pagination.limit
-    params = $skip: offset, $top: state.pagination.limit
-    angular.merge(params, state.cachedParams) if state.cachedParams
-    _self.loadTxs(type, params)
+    _self.loadTxs(url: url, excludeParams: true)
 
   ###
   #   @desc Load transactions & set pagination total
   #   @param {string} [type] Type of transaction
   #   @param {Object} [params=] pagination & filter parameters for the request
-  #   @param {boolean} [cacheParams=] whether to cache the params in store. This is used to re-apply previous parameters on the next requests.
   #   @returns {Promise<Object>} whether the load was successful or not
   ###
-  @reloadTxs = (type, params=null, cacheParams=false)->
+  @reloadTxs = (type, params=null)->
     TransacTxsStore.dispatch('loadingTxs', true)
-    TransacTxsStore.dispatch('cacheParams', (cacheParams && params || null))
     TransacTxsStore.dispatch('removeAllTxs')
-    TransacTxsStore.dispatch('resetPgnPage')
-    _self.loadTxs(type, params)
+    TransacTxsStore.dispatch('resetPgnSkip')
+    _self.loadTxs(type: type, params: params)
 
   ###
   #   @desc Commit a transaction & update pagination total
@@ -103,7 +102,6 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
           args.mergeParams
         ).then(
           (res)->
-            TransacTxsStore.dispatch('resetPgnPage')
             deferred.resolve(success: true)
           (err)->
             deferred.reject(message: 'Merge transaction failed')

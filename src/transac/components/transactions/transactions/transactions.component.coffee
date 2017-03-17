@@ -23,18 +23,14 @@ angular.module('transac.transactions').component('transacTxs', {
     ctrl.$onInit = ->
       ctrl.reconciling = false
       initTxsState()
-      TransacTxsStore.dispatch('setTxsType', ctrl.txsType) if ctrl.txsType?
-      TransacTxsDispatcher.loadTxs(ctrl.txsType).then(
+      TransacTxsDispatcher.loadTxs(type: ctrl.txsType).then(
         ->
           onTxsChange()
       )
 
     ctrl.loadMore = ->
-      return TransacTxsDispatcher.loadTxs(ctrl.txsType, ctrl.cachedParams) if ctrl.isPaginationDisabled()
-      TransacTxsDispatcher.paginateTxs(ctrl.txsType)
-
-    ctrl.reload = ()->
-      TransacTxsDispatcher.reloadTxs(ctrl.txsType, ctrl.cachedParams, true)
+      return if ctrl.isPaginationDisabled()
+      TransacTxsDispatcher.paginateTxs(ctrl.pagination.next)
 
     ctrl.isPaginationDisabled = ->
       ctrl.loading || ctrl.reconciling || ctrl.noTxsFound() || ctrl.allTxsFound()

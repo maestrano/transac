@@ -9,12 +9,9 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
     txsType: 'pending'
     transactions: []
     pagination:
-      limit: 20
-      page: 1
+      top: 20
+      skip: 0
       total: 0
-      defaultParams: $skip: 0, $top: 20
-    # TODO: refactor this cachedParams concept, it's a quickfix
-    cachedParams: null
     loading: false
 
   callbacks = {}
@@ -45,20 +42,14 @@ angular.module('transac.transactions').service('TransacTxsStore', ($q)->
         state.transactions.length = 0
       when 'loadingTxs'
         state.loading = payload
-      when 'setPgnTotal'
-        state.pagination.total = payload
+      when 'setPgn'
+        angular.merge(state.pagination, payload)
+      when 'resetPgnSkip'
+        state.pagination.skip = 0
       when 'minusPgnTotal'
         state.pagination.total -= payload
       when 'plusPgnTotal'
         state.pagination.total += payload
-      when 'nextPgnPage'
-        state.pagination.page += 1
-      when 'resetPgnPage'
-        state.pagination.page = 1
-      when 'cacheParams'
-        state.cachedParams = payload
-      when 'clearCachedParams'
-        state.cachedParams = null
     notify()
     _self.getState()
 

@@ -21,13 +21,17 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   ###
   #   @desc Get pending or historical unreconcilled Transactions.
   #   @http GET /api/v2/org-fbcy/transaction_logs/{pending|history}
-  #   @param {string} [type] Type of transactions e.g 'pending', 'history'
+  #   @param {Object} [options=]
+  #   @param {Object} [options.url=] A custom url for the request (a pagination url)
+  #   @param {string} [options.type=] Type of transactions e.g 'pending', 'history'
+  #   @param {Object} [options.params=] Parameters for the GET request.
   #   @returns {Promise<Object>} A promise to the list of Transactions and pagination data.
   ###
-  @get = (type='pending', params={})->
+  @get = (options={})->
+    type = options.type || 'pending'
     orgUid = DEV_AUTH.orgUid || TransacUserService.getCurrentOrg().uid
-    url = "https://api-connec-sit.maestrano.io/api/v2/#{orgUid}/transaction_logs/#{type}"
-    params = angular.merge({}, _self.getHttpConfig(), params)
+    url = options.url || "https://api-connec-sit.maestrano.io/api/v2/#{orgUid}/transaction_logs/#{type}"
+    params = angular.merge({}, _self.getHttpConfig(), options)
     $http.get(url, params).then(
       (response)->
         unless response.status == 200 && response.data?
