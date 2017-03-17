@@ -9,6 +9,7 @@
 
 // standard styles
 @transac-whiteframe: 0px 1px 8px -4px;
+@transac-whiteframe-2: 0px 1px 10px -4px;
 
 //
 // Component variables
@@ -33,12 +34,80 @@
 
 // transaction-tile component
 @transac-tx-tile-box-shadow: @transac-whiteframe;
+@transac-tx-tile-topbar-selected-background-color: rgba(100, 246, 100, 0.3);
+@transac-tx-tile-deselected-color: rgba(128, 128, 128, 0.5);
 
 /*
 ** Transac! Global Classes
 */
 
 
+
+/*
+**  Animations
+*/
+@-webkit-keyframes flexGrow {
+  to {
+    flex: 1;
+  }
+}
+@-moz-keyframes flexGrow {
+  to {
+    flex: 1;
+  }
+}
+@-o-keyframes flexGrow {
+  to {
+    flex: 1;
+  }
+}
+@keyframes flexGrow {
+  to {
+    flex: 1;
+  }
+}
+
+@-webkit-keyframes flexShrink {
+  to {
+    flex: .00001;
+  }
+}
+@-moz-keyframes flexShrink {
+  to {
+    flex: .00001;
+  }
+}
+@-o-keyframes flexShrink {
+  to {
+    flex: .00001;
+  }
+}
+@keyframes flexShrink {
+  to {
+    flex: .00001;
+  }
+}
+
+@-webkit-keyframes flickerOpacity{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-moz-keyframes flickerOpacity{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-o-keyframes flickerOpacity{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@keyframes flickerOpacity {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
 
 /*
 ** Bootstrap overrides / class customisations
@@ -68,6 +137,7 @@
   }
 }
 
+// Should be mixed into a <button>
 .transac-action-button(@color: @transac-blue, @margin: 1px) {
   color: @color;
   border: none;
@@ -77,6 +147,48 @@
   background-color: inherit;
   &:hover {
     color: lighten(@color, 15%);
+  }
+}
+
+// Should be mixed into a <div ng-click>
+.transac-action-button-labeled--label-right(@btn-color: @transac-blue, @label-color: lighten(@transac-darkgrey, 15%)) {
+  position: absolute;
+  display: flex;
+  div.action-button {
+    .transac-action-button(@btn-color, 10px);
+    // Adjustments for <span> label
+    padding: 10px 12px 10px 18px;
+    margin: 10px 0 10px 10px;
+  }
+  span.action-label {
+    display: flex;
+    align-items: center;
+    padding-right: 25px;
+    .transac-subtitle(13px, @label-color)
+  }
+  &:hover {
+    div.action-button { color: lighten(@btn-color, 15%); }
+    span.action-label { color: lighten(@label-color, 15%); }
+  }
+}
+
+.transac-action-button-labeled--label-left(@btn-color: @transac-blue, @label-color: lighten(@transac-darkgrey, 15%)) {
+  display: flex;
+  div.action-button {
+    .transac-action-button(@btn-color, 10px);
+    // Adjustments for <span> label
+    padding: 10px 18px 10px 12px;
+    margin: 10px 10px 10px 0px;
+  }
+  span.action-label {
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    .transac-subtitle(13px, @label-color)
+  }
+  &:hover {
+    div.action-button { color: lighten(@btn-color, 15%); }
+    span.action-label { color: lighten(@label-color, 15%); }
   }
 }
 
@@ -155,10 +267,10 @@ transac-top-bar {
     }
     &.active.loading {
       .top-bar_menu_tab-line {
-        webkit-animation: flickerAnimation 1s infinite;
-        moz-animation: flickerAnimation 1s infinite;
-        o-animation: flickerAnimation 1s infinite;
-        animation: flickerAnimation 1s infinite;
+        webkit-animation: flickerOpacity 1s infinite;
+        moz-animation: flickerOpacity 1s infinite;
+        o-animation: flickerOpacity 1s infinite;
+        animation: flickerOpacity 1s infinite;
       }
     }
   }
@@ -185,72 +297,6 @@ transac-top-bar {
       -o-animation: flexShrink 200ms ease forwards;
       animation: flexShrink 200ms ease forwards;
     }
-  }
-
-  /*
-  **  Animations
-  */
-  @-webkit-keyframes flexGrow {
-    to {
-      flex: 1;
-    }
-  }
-  @-moz-keyframes flexGrow {
-    to {
-      flex: 1;
-    }
-  }
-  @-o-keyframes flexGrow {
-    to {
-      flex: 1;
-    }
-  }
-  @keyframes flexGrow {
-    to {
-      flex: 1;
-    }
-  }
-
-  @-webkit-keyframes flexShrink {
-    to {
-      flex: .00001;
-    }
-  }
-  @-moz-keyframes flexShrink {
-    to {
-      flex: .00001;
-    }
-  }
-  @-o-keyframes flexShrink {
-    to {
-      flex: .00001;
-    }
-  }
-  @keyframes flexShrink {
-    to {
-      flex: .00001;
-    }
-  }
-
-  @-webkit-keyframes flickerAnimation{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-  }
-  @-moz-keyframes flickerAnimation{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-  }
-  @-o-keyframes flickerAnimation{
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
-  }
-  @keyframes flickerAnimation {
-    0%   { opacity:1; }
-    50%  { opacity:0; }
-    100% { opacity:1; }
   }
 }
 
@@ -286,14 +332,11 @@ transac-tx {
   .summary {
     height: @transac-tx-height;
     width: 100%;
-    display: flex;
   }
 
   .summary_content {
     height: 100%;
     display: flex;
-    flex-grow: 30;
-    align-items: center;
     padding: 0px 10px;
     color: inherit;
     text-decoration: none;
@@ -301,26 +344,36 @@ transac-tx {
 
   .summary_content_icon {
     padding: 0 10px;
+    display: flex;
+    align-items: center;
   }
 
   .summary_content_caption {
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    flex-grow: 2;
+    flex: 2;
+    justify-content: center;
   }
 
   .summary_content_caption_title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     .transac-title();
   }
 
   .summary_content_caption_subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     .transac-subtitle();
   }
 
   .summary_content_warning {
     display: flex;
-    flex-grow: 1;
     flex-direction: row-reverse;
+    align-items: center;
     color: @transac-tx-duplicate-warning-color;
     span { font-size: 13px; }
   }
@@ -328,7 +381,7 @@ transac-tx {
   .summary_actions {
     display: flex;
     flex-direction: row-reverse;
-    flex-grow: 2;
+    align-items: center;
   }
 
   .summary_actions_action--approve {
@@ -390,38 +443,24 @@ transac-tx {
     }
   }
 
+  .detail_section_action_approve {
+    .transac-action-button-labeled--label-left(@transac-tx-approve-color);
+  }
+
+  .detail_section_action_deny {
+    .transac-action-button-labeled--label-left(@transac-tx-deny-color);
+  }
+
+  .detail_section_action_duplicate {
+    .transac-action-button-labeled--label-left(@transac-tx-duplicate-color);
+  }
+
   .detail_section_action {
     display: flex;
-    align-items: center;
-    span {
-      text-align: right;
-      display: flex;
-      flex-grow: 1;
-      flex-direction: row-reverse;
-      margin-right: 5px;
-      .transac-subtitle();
-    }
-  }
-
-  .detail_section_action--approve {
-    margin-top: 10px;
-    button {
-      .transac-action-button(@transac-tx-approve-color);
-    }
-  }
-
-  .detail_section_action--deny {
-    button {
-      .transac-action-button(@transac-tx-deny-color);
-    }
-    .fa-ban {
-      font-size: 23px;
-    }
-  }
-
-  .detail_section_action--duplicate {
-    button {
-      .transac-action-button(@transac-tx-duplicate-color);
+    justify-content: flex-end;
+    margin: 5px;
+    div.action-button {
+      padding: 0 0 0 10px;
     }
   }
 
@@ -434,6 +473,13 @@ transac-tx {
 
 transac-tx-changes {
 
+  .table-responsive {
+    height: 500px;
+
+    table {
+      margin-bottom: 0;
+    }
+  }
 }
 
 transac-tx-matches {
@@ -442,6 +488,7 @@ transac-tx-matches {
   .match_caption {
     display: flex;
     align-items: center;
+    padding: 6px 0;
   }
 
   .match_caption_title {
@@ -475,17 +522,25 @@ transac-tx-reconcile {
     padding-top: 20px;
   }
 
-  .top-panel_action-btns {
-    position: absolute;
-    .transac-action-button(@transac-darkgrey, 10px);
-    &.right-align {
-      top: 0;
-      right: 0;
+  .top-panel_btn--back {
+    .transac-action-button-labeled--label-right(@transac-darkgrey);
+  }
+
+  .top-panel_btn--next {
+    .transac-action-button-labeled--label-left(@transac-darkgrey);
+  }
+
+  .top-panel_btn--done {
+    .transac-action-button-labeled--label-left(@transac-green, @transac-green);
+    span {
+      font-weight: bold;
     }
   }
 
-  .top-panel_action-btns--done {
-    .transac-action-button(@transac-green, 10px);
+  .top-panel_btn--align-right {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   .edit_tx {
@@ -526,16 +581,28 @@ transac-tx-reconcile {
 }
 
 transac-tx-tile {
-  box-shadow: @transac-tx-tile-box-shadow;
-  border: 1px solid @transac-grey;
 
   .tx-tile {
     width: 100%;
+    box-shadow: @transac-tx-tile-box-shadow;
+    border: 1px solid @transac-grey;
+    &.selected {
+      .tx-tile_topbar {
+        background-color: @transac-tx-tile-topbar-selected-background-color;
+      }
+    }
+    &.deselected {
+      color: @transac-tx-tile-deselected-color;
+      // captures subtitle (app name)
+      p { color: @transac-tx-tile-deselected-color }
+    }
   }
 
   .tx-tile_topbar {
     height: 60px;
     border-bottom: 1px solid @transac-grey;
+    position: relative;
+
     &.no-click {
       cursor: default;
     }
