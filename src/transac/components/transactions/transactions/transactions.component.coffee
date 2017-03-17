@@ -3,6 +3,7 @@
 #   @require transac-tx component
 #   @require transac-tx-reconcile component
 #   @require infinite-scroll directive (external)
+#   @binding {Function=} [onInit] Callback fired $onInit, emitting upward an api.
 #   @binding {Function=} [onTransactionsChange] Callback fired on change to stored txs model
 #   @binding {Function=} [onReconciling] Callback fired on reconcile tx with matches (dups)
 #   @binding {Function=} [onLoadingChange] Callback fired when txs loading state is changed
@@ -10,6 +11,7 @@
 angular.module('transac.transactions').component('transacTxs', {
   bindings: {
     txsType: '<?'
+    onInit: '&?'
     onTransactionsChange: '&?'
     onReconciling: '&?'
     onLoadingChange: '&?'
@@ -22,6 +24,7 @@ angular.module('transac.transactions').component('transacTxs', {
 
     ctrl.$onInit = ->
       ctrl.reconciling = false
+      ctrl.onInit(EventEmitter(api: searchTxs: onSearchQuery)) if ctrl.onInit?
       initTxsState()
       TransacTxsDispatcher.loadTxs(type: ctrl.txsType).then(
         ->
@@ -102,6 +105,13 @@ angular.module('transac.transactions').component('transacTxs', {
         ctrl.onLoadingChange(EventEmitter(loading: ctrl.loading))
       )
 
+    onSearchQuery = (type, params)->
+      TransacTxsDispatcher.reloadTxs(type, params).then(
+        ->
+          onTxsChange()
+      )
+
+    # For controlled emitting of the pagination total (as opposed to triggering on state change)
     onTxsChange = ->
       ctrl.onTransactionsChange(
         EventEmitter("#{ctrl.txsType}TxsCount": ctrl.pagination.total)

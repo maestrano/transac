@@ -17,12 +17,15 @@ angular.module('maestrano.transac').component('transac', {
       ctrl.historyTxCount = 0
       loadUser()
 
+    ctrl.onTxsCmpInit = ({api})->
+      ctrl.txsCmpApi = api
+
     ctrl.onTopBarSelectMenu = ({menu})->
       TransacTxsDispatcher.reloadTxs(menu.type)
 
     ctrl.onTopBarSearch = ({query, selectedMenu})->
       params = if query then $filter: query else null
-      TransacTxsDispatcher.reloadTxs(selectedMenu.type, params, true)
+      ctrl.txsCmpApi.searchTxs(selectedMenu.type, params, true)
 
     ctrl.updateTransactionsCount = ({pendingTxsCount, historyTxsCount})->
       ctrl.pendingTxsCount = pendingTxsCount
