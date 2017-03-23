@@ -12,6 +12,7 @@ angular.module('transac.top-bar').component('transacTopBar', {
     onInitMenu: '&?'
     onSelectMenu: '&'
     onSearch: '&'
+    onFilter: '&'
     pendingTxsCount: '<'
     # historyTxsCount: '<'
     isMenuLoading: '<?'
@@ -56,6 +57,10 @@ angular.module('transac.top-bar').component('transacTopBar', {
 
     ctrl.onSearchBarChange = ({isEditing})->
       ctrl.isEditingSearchBar = isEditing
+
+    ctrl.onFiltersSubmit = (args)->
+      args.selectedMenu = ctrl.selectedMenu
+      ctrl.onFilter(EventEmitter(args))
 
     # Private
 

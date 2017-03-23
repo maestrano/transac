@@ -1,4 +1,5 @@
 <div class="top-bar">
+  <transac-filters-selector on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>
   <div class="top-bar_menu">
     <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ 'active': menu.active, 'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">
       <h5>{{::menu.title}} ({{$ctrl.getCount(menu)}})</h5>

@@ -41,16 +41,18 @@ transac-top-bar {
         animation: flickerOpacity 1s infinite;
       }
     }
+    &:hover {
+      color: lighten(@transac-top-bar-menu-item-color, 30%);
+    }
   }
 
   .top-bar_menu_flex-item {
-    flex: 2;
+    flex: 1.5;
     overflow: hidden;
   }
 
   .top-bar_toggle-search-btn {
-    .transac-action-button(black);
-    padding: 5px 10px;
+    .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
   }
 
   transac-search-bar {

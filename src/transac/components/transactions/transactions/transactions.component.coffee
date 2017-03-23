@@ -24,7 +24,7 @@ angular.module('transac.transactions').component('transacTxs', {
 
     ctrl.$onInit = ->
       ctrl.reconciling = false
-      ctrl.onInit(EventEmitter(api: searchTxs: onSearchQuery)) if ctrl.onInit?
+      ctrl.onInit(EventEmitter(api: filterTxs: onFilterTxs)) if ctrl.onInit?
       initTxsState()
       TransacTxsDispatcher.loadTxs(type: ctrl.txsType).then(
         ->
@@ -105,7 +105,7 @@ angular.module('transac.transactions').component('transacTxs', {
         ctrl.onLoadingChange(EventEmitter(loading: ctrl.loading))
       )
 
-    onSearchQuery = (type, params)->
+    onFilterTxs = (type, params)->
       TransacTxsDispatcher.reloadTxs(type, params).then(
         ->
           onTxsChange()
