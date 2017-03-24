@@ -18,7 +18,7 @@ angular.module('transac.top-bar').component('transacTopBar', {
     isMenuLoading: '<?'
   },
   templateUrl: 'components/top-bar',
-  controller: (MENUS, EventEmitter, $compile, $scope)->
+  controller: ($compile, $scope, EventEmitter, MENUS)->
     ctrl = this;
 
     # Public
@@ -29,6 +29,10 @@ angular.module('transac.top-bar').component('transacTopBar', {
       ctrl.selectedMenu = _.find(ctrl.menus, 'active')
       # Emit default active menu on init
       ctrl.onInitMenu(EventEmitter(menu: ctrl.selectedMenu)) if ctrl.onInitMenu?
+
+    ctrl.$onChanges = (changes)->
+      # update $scope.isMenuLoading for the $compiled search-bar cmp scope
+      $scope.isMenuLoading = changes.isMenuLoading.currentValue
 
     ctrl.onMenuItemClick = (menu)->
       return if ctrl.isMenuLoading
@@ -69,15 +73,18 @@ angular.module('transac.top-bar').component('transacTopBar', {
         <transac-search-bar
           on-init="onSearchBarInit($event)"
           on-submit="onSearchBarSubmit($event)"
-          on-change="onSearchBarChange($event)">
+          on-change="onSearchBarChange($event)"
+          is-disabled="isMenuLoading">
         </transac-search-bar>
       """
       $menu = angular.element($event.currentTarget.parentElement).find('.top-bar_menu')
       # Add relevant ctrl locals onto $compile $scope ($compile requires a $scope object).
+      # note: this does not get re-updated when data flows back through the cmp ctrl. Manually re-add it to $scope in the ctrl.$onChanges lifecycle hook.
       angular.merge($scope,
         onSearchBarInit: ctrl.onSearchBarInit
         onSearchBarSubmit: ctrl.onSearchBarSubmit
         onSearchBarChange: ctrl.onSearchBarChange
+        isMenuLoading: ctrl.isMenuLoading
       )
       $menu.append($compile(searchBarCmp)($scope))
       ctrl.isSearchBarShown = true

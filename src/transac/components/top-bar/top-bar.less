@@ -53,6 +53,9 @@ transac-top-bar {
 
   .top-bar_toggle-search-btn {
     .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
+    &.loading {
+      cursor: not-allowed;
+    }
   }
 
   transac-search-bar {

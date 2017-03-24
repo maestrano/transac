@@ -7,7 +7,7 @@
     </a>
     <!-- $compiles transac-search-bar cmp here (see controller) -->
   </div>
-  <button class="top-bar_toggle-search-btn" ng-click="$ctrl.toggleSearch($event)">
+  <button class="top-bar_toggle-search-btn" ng-class="{ 'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.toggleSearch($event)" ng-disabled="$ctrl.isMenuLoading">
     <i class="fa fa-2x fa-fw" ng-class="{ 'fa-search': !$ctrl.isEditingSearchBar, 'fa-times': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>
   </button>
 </div>

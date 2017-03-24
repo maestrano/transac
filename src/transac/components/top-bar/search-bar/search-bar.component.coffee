@@ -9,6 +9,7 @@ angular.module('transac.top-bar').component('transacSearchBar', {
     onSubmit: '&'
     onChange: '&?'
     onInit: '&?'
+    isDisabled: '<?'
   }
   templateUrl: 'components/top-bar/search-bar'
   controller: (EventEmitter, $scope)->
@@ -23,6 +24,7 @@ angular.module('transac.top-bar').component('transacSearchBar', {
       ctrl.onChange(EventEmitter(isEditing: !!ctrl.search.text.length)) if ctrl.onChange?
 
     ctrl.submitOnKeypress = ($event={}, force=false)->
+      return if ctrl.isDisabled
       return unless $event.keyCode == 13 || force
       if ctrl.search.text
         args = query: "reference match /#{ctrl.search.text}/"
