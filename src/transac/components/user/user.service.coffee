@@ -46,11 +46,12 @@ angular.module('transac.user').provider('TransacUserService', ()->
       )
       return $q.all(promises).then(
         (response) ->
+          # Merge user & organizations objects
           service.user = angular.merge({}, response[0], response[1])
           return service.get()
         (err) ->
           $log.error(err)
-          return $q.reject(err)
+          return $q.reject(message: text: "Failed to load User for Transac!", type: 'error')
     )
 
     return service

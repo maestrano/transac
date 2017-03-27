@@ -37,8 +37,6 @@ angular.module('transac.transactions').component('transacTx', {
       ).then(
         (response)->
           ctrl.matches = response.matches
-        (err)->
-          # TODO: display error alert
       )
 
     ctrl.title = ()->
@@ -75,10 +73,12 @@ angular.module('transac.transactions').component('transacTx', {
         return
       )
       # Commit the transaction
-      ctrl.onCommit(EventEmitter(transaction: ctrl.transaction)).then((res)->
+      ctrl.onCommit(
+        EventEmitter(transaction: ctrl.transaction, action: 'approve', auto: auto)
+      ).then(null, (res)->
         # Reshow / animate the transaction if commit was unsuccessful
         $timeout(->
-          $element.removeClass('commiting') unless res.success
+          $element.removeClass('commiting')
         , 300)
       )
 
@@ -93,10 +93,12 @@ angular.module('transac.transactions').component('transacTx', {
         return
       )
       # Commit the transaction
-      ctrl.onCommit(EventEmitter(transaction: ctrl.transaction)).then((res)->
+      ctrl.onCommit(
+        EventEmitter(transaction: ctrl.transaction, action: 'refuse', auto: auto)
+      ).then(null, (res)->
         # Reshow / animate the transaction if commit was unsuccessful
         $timeout(->
-          $element.removeClass('commiting') unless res.success
+          $element.removeClass('commiting')
         , 300)
       )
 

@@ -2,7 +2,7 @@
 
 ## Todo (ordered)
 
-- toaster alerts
+- fix transaction summary <a> nesting ng-click issue
 - history view (connect to API)
 - Jump to transaction on merge screen back
 - align merge view transaction attributes for easier comparison?

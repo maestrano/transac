@@ -1,7 +1,7 @@
 ###
 #   @desc Service responsible for dispatching messages to retrieve data and/or alter the Transactions state in methods that represent actions made from the view layer.
 ###
-angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $timeout, TransacTxsStore, TransacTxsService)->
+angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $timeout, TransacTxsStore, TransacTxsService, TransacAlertsService)->
 
   _self = @
 
@@ -25,10 +25,11 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
       (response)->
         TransacTxsStore.dispatch('addTxs', response.transactions)
         TransacTxsStore.dispatch('setPgn', response.pagination)
-        $q.when(success: true)
-      (err)->
-        # TODO: display alert
-        $q.reject(message: 'Load transactions failed')
+        true
+      ()->
+        msg = 'Failed to load transactions'
+        TransacAlertsService.send('error', msg, 'Error')
+        $q.reject(message: text: msg, type: 'error')
     ).finally(->
       TransacTxsStore.dispatch('loadingTxs', false)
     )
@@ -66,12 +67,12 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
     TransacTxsService.commit(url, resource, mappings).then(
       (res)->
         TransacTxsStore.dispatch('removeTx', res.transaction.id)
-        deferred.resolve(success: true)
-      (err)->
+        deferred.resolve(data: res, message: text: 'Commit transaction success', type: 'success')
+      ()->
         # Restore pagination total if commit fails
         TransacTxsStore.dispatch('plusPgnTotal', 1)
         $timeout((-> deferred.notify(true)), 0)
-        deferred.reject(message: 'Commit transaction failed')
+        deferred.reject(message: text: 'Commit transaction failed', type: 'error')
     )
     deferred.promise
 
@@ -86,13 +87,13 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
     deferred = $q.defer()
     # No merge has been published, cancel merge
     unless args?
-      deferred.reject(message: 'Cancelled merge')
+      deferred.reject(message: text: 'Merge cancelled', type: 'info')
     else
       tx = _.find(TransacTxsStore.getState().transactions, (t) ->
         t.transaction_log.id == args.txId
       )
       unless tx?
-        deferred.reject(message: 'No transaction found - merge failed') unless tx?
+        deferred.reject(message: text: 'No transaction found, merge failed', type: 'error') unless tx?
       else
         TransacTxsStore.dispatch('loadingTxs')
 
@@ -102,9 +103,9 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
           args.mergeParams
         ).then(
           (res)->
-            deferred.resolve(success: true)
-          (err)->
-            deferred.reject(message: 'Merge transaction failed')
+            deferred.resolve(message: text: "#{tx.transaction_log.reference} merged successfully", type: 'success')
+          ()->
+            deferred.reject(message: text: "#{tx.transaction_log.reference} failed to merge", type: 'error')
         )
     deferred.promise
 

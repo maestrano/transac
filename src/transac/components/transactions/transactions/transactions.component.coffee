@@ -17,7 +17,7 @@ angular.module('transac.transactions').component('transacTxs', {
     onLoadingChange: '&?'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: ($q, EventEmitter, TransacTxsDispatcher, TransacTxsStore)->
+  controller: ($q, EventEmitter, TransacTxsDispatcher, TransacTxsStore, TransacAlertsService)->
     ctrl = this
 
     # Public
@@ -47,19 +47,18 @@ angular.module('transac.transactions').component('transacTxs', {
     ctrl.noTxsFound = ->
       !ctrl.loading && !ctrl.transactions.length && !ctrl.pagination.total
 
-    ctrl.onTransactionCommit = ({transaction})->
+    ctrl.onTransactionCommit = ({transaction, action, auto})->
       TransacTxsDispatcher.commitTx(
         transaction.links.commit
         transaction.transaction_log.resource_type
         transaction.mappings
-      ).then(
-        (res)->
-          # TODO: display success alert
-          $q.when(success: res.success)
+      ).then(null,
         (err)->
-          # TODO: display error alert
-          $q.when(success: false, message: err.message)
-        (res)->
+          TransacAlertsService.send(err.message.type, "Failed to #{action} sharing of #{transaction.transaction_log.reference}")
+          $q.reject(err)
+        ()->
+          phrase = if auto then "#{action}d ongoing sharing for" else "#{action}d sharing for"
+          TransacAlertsService.send('success', "#{phrase} #{transaction.transaction_log.reference}")
           onTxsChange()
       )
 
@@ -75,11 +74,12 @@ angular.module('transac.transactions').component('transacTxs', {
     ctrl.onTransactionReconciled = (args)->
       TransacTxsDispatcher.mergeTxs(args).then(
         (res)->
+          TransacAlertsService.send(res.message.type, res.message.text)
           TransacTxsDispatcher.reloadTxs(ctrl.type)
-          $q.when(success: res.success)
+          res
         (err)->
-          # TODO: display error alert
-          $q.when(success: false, message: err.message)
+          TransacAlertsService.send(err.message.type, err.message.text)
+          $q.reject(err)
       ).finally(->
         ctrl.reconcileData = null
         ctrl.reconciling = false

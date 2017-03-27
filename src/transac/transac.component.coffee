@@ -5,7 +5,7 @@ angular.module('maestrano.transac').component('transac', {
   bindings: {
   },
   templateUrl: 'transac',
-  controller: (TransacUserService, TransacTxsDispatcher)->
+  controller: (TransacUserService, TransacTxsDispatcher, TransacAlertsService)->
     ctrl = this
 
     # Public
@@ -45,7 +45,7 @@ angular.module('maestrano.transac').component('transac', {
     loadUser = ->
       TransacUserService.fetch().then(null,
         (err)->
-          # TODO: display alert
+          TransacAlertsService.send(err.message.type, err.message.text)
           # TODO: display error message
           ctrl.transacLoadError = true
       )

@@ -4,6 +4,7 @@
 angular.module('transac.transactions',
   [
     'transac.user'
+    'transac.alerts'
     # external
     'infinite-scroll'
   ])
