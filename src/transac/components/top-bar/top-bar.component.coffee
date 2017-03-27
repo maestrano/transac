@@ -32,7 +32,7 @@ angular.module('transac.top-bar').component('transacTopBar', {
 
     ctrl.$onChanges = (changes)->
       # update $scope.isMenuLoading for the $compiled search-bar cmp scope
-      $scope.isMenuLoading = changes.isMenuLoading.currentValue
+      $scope.isMenuLoading = changes.isMenuLoading.currentValue if changes.isMenuLoading?
 
     ctrl.onMenuItemClick = (menu)->
       return if ctrl.isMenuLoading
