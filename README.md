@@ -5,10 +5,11 @@
 - fix transaction summary <a> nesting ng-click issue
 - history view (connect to API)
 - Jump to transaction on merge screen back
-- align merge view transaction attributes for easier comparison?
 - merge view field selection
+- align merge view transaction attributes for easier comparison?
 - refresh transactions / history
-- bulk transaction actions
+- tooltips 
 - mobile responsive touch-ups
+- bulk transaction actions
 - Add button click animations
 - Improve merge view UI

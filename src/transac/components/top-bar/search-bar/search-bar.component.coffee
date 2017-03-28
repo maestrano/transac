@@ -3,6 +3,7 @@
 #   @binding {Function} [onSubmit] Callback fired on keypress with keyCode 13 (enter)
 #   @binding {Function=} [onChange] Callback fired on input ngChange
 #   @binding {Function=} [onInit]  Callback fired on component initialize, emitting an api for exposing cmp methods to the parent component
+#   @binding {boolean=} [isDisabled] prevents onSubmit being fired
 ###
 angular.module('transac.top-bar').component('transacSearchBar', {
   bindings: {
@@ -27,10 +28,10 @@ angular.module('transac.top-bar').component('transacSearchBar', {
       return if ctrl.isDisabled
       return unless $event.keyCode == 13 || force
       if ctrl.search.text
-        args = query: "reference match /#{ctrl.search.text}/"
+        query = "reference match /#{ctrl.search.text}/"
       else
-        args = query: null
-      ctrl.onSubmit(EventEmitter(args))
+        query = ""
+      ctrl.onSubmit(EventEmitter(query: query))
 
     ctrl.clearSearchText = ->
       ctrl.search.text = ''

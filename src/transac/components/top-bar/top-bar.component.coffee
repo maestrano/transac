@@ -1,34 +1,33 @@
 ###
 #   @desc "Tabs" style topbar menu component
 #   @require transac-search-bar component ($compiled)
-#   @binding {Function=} [onInitMenu] Callback fired $onInit, emitting the default selected menu
+#   @binding {Function=} [onInit] Callback fired $onInit, emitting the default selected menu
 #   @binding {Function} [onSelectMenu] Callback fired when a menu tab is clicked, emitting the selected menu
-#   @binding {number} [pendingTxsCount] number of pending transactions
-#   @binding {number} [historyTxsCount] number of history transactions
+#   @binding {Object} [menusItemsCount] values for menus items count indicator
+#   @binding {number} [menusItemsCount.pending] number of pending menu items
+#   @binding {number} [menusItemsCount.historical] number of historical menu items
 #   @binding {boolean} [isMenuLoading] Disables clicks & animates menu loader when true
 ###
 angular.module('transac.top-bar').component('transacTopBar', {
   bindings: {
-    onInitMenu: '&?'
-    onSelectMenu: '&'
-    onSearch: '&'
+    onInit: '&?'
     onFilter: '&'
-    pendingTxsCount: '<'
-    # historyTxsCount: '<'
+    menusItemsCount: '<?'
     isMenuLoading: '<?'
   },
   templateUrl: 'components/top-bar',
-  controller: ($compile, $scope, EventEmitter, MENUS)->
+  controller: ($compile, $scope, EventEmitter, TransacTopBarStore, TransacTopBarDispatcher)->
     ctrl = this;
 
     # Public
 
     ctrl.$onInit = ()->
       ctrl.isSearchBarShown = false
-      ctrl.menus = angular.copy(MENUS)
-      ctrl.selectedMenu = _.find(ctrl.menus, 'active')
+      initTopBarState()
       # Emit default active menu on init
-      ctrl.onInitMenu(EventEmitter(menu: ctrl.selectedMenu)) if ctrl.onInitMenu?
+      ctrl.onInit(
+        EventEmitter(api: selectedMenu: ctrl.selectedMenu, updateMenusItemsCount: updateMenusItemsCount)
+      ) if ctrl.onInit?
 
     ctrl.$onChanges = (changes)->
       # update $scope.isMenuLoading for the $compiled search-bar cmp scope
@@ -37,16 +36,8 @@ angular.module('transac.top-bar').component('transacTopBar', {
     ctrl.onMenuItemClick = (menu)->
       return if ctrl.isMenuLoading
       return if _.isEqual(menu, ctrl.selectedMenu)
-      _.each(ctrl.menus, (menu) ->
-        menu.active = false
-        return
-      )
-      menu.active = true
-      ctrl.selectedMenu = menu
-      ctrl.onSelectMenu(EventEmitter(menu: ctrl.selectedMenu))
-
-    ctrl.getCount = (menu)->
-      (menu.title && ctrl[menu.type + 'TxsCount']) || 0
+      selectedMenu = TransacTopBarDispatcher.selectMenu(menu)
+      ctrl.onFilter(EventEmitter(selectedMenu: selectedMenu, filters: ctrl.filters))
 
     ctrl.toggleSearch = ($event)->
       return ctrl.searchBarApi.clearSearchText() if ctrl.isEditingSearchBar
@@ -55,18 +46,37 @@ angular.module('transac.top-bar').component('transacTopBar', {
     ctrl.onSearchBarInit = ({api})->
       ctrl.searchBarApi = api
 
-    ctrl.onSearchBarSubmit = (args)->
-      args.selectedMenu = ctrl.selectedMenu
-      ctrl.onSearch(EventEmitter(args))
+    ctrl.onSearchBarSubmit = ({query})->
+      filters = TransacTopBarDispatcher.updateSearchFilter(query)
+      # Emit the currently applied filters, and selected menu
+      ctrl.onFilter(EventEmitter(selectedMenu: ctrl.selectedMenu, filters: filters))
 
     ctrl.onSearchBarChange = ({isEditing})->
       ctrl.isEditingSearchBar = isEditing
 
-    ctrl.onFiltersSubmit = (args)->
-      args.selectedMenu = ctrl.selectedMenu
-      ctrl.onFilter(EventEmitter(args))
+    ctrl.applyFilterOnSelect = ({selectedFilter})->
+      TransacTopBarDispatcher.applyFilter(selectedFilter)
+
+    ctrl.onFiltersSubmit = ->
+      ctrl.onFilter(EventEmitter(selectedMenu: ctrl.selectedMenu, filters: ctrl.filters))
 
     # Private
+
+    initTopBarState = ->
+      ctrl.menus = TransacTopBarStore.getState().menus
+      ctrl.filters = TransacTopBarStore.getState().filters
+      ctrl.filtersMenu = TransacTopBarStore.getState().filtersMenu
+      ctrl.selectedMenu = TransacTopBarStore.getState().selectedMenu
+      TransacTopBarStore.subscribe().then(null, null, (state)->
+        # Redefine state
+        ctrl.menus = state.menus
+        ctrl.filters = state.filters
+        ctrl.filtersMenu = state.filtersMenu
+        ctrl.selectedMenu = state.selectedMenu
+      )
+
+    updateMenusItemsCount = (menusItemsCount)->
+      TransacTopBarDispatcher.updateMenusItemsCount(menusItemsCount)
 
     expandSearchBar = ($event)->
       searchBarCmp = """

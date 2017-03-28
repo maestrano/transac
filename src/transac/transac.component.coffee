@@ -13,26 +13,21 @@ angular.module('maestrano.transac').component('transac', {
     ctrl.$onInit = ->
       ctrl.transacReady = false
       ctrl.isTopBarShown = true
-      ctrl.pendingTxsCount = 0
-      ctrl.historyTxCount = 0
+      ctrl.filters = null
       loadUser()
 
     ctrl.onTxsCmpInit = ({api})->
       ctrl.txsCmpApi = api
 
-    ctrl.onTopBarSelectMenu = ({menu})->
-      TransacTxsDispatcher.reloadTxs(menu.type)
+    ctrl.onTopBarCmpInit = ({api})->
+      ctrl.topBarCmpApi = api
 
-    ctrl.onTopBarSearch = ({query, selectedMenu})->
-      params = if query then $filter: query else null
-      ctrl.txsCmpApi.filterTxs(selectedMenu.type, params)
+    ctrl.onTopBarFilter = ({selectedMenu, filters})->
+      ctrl.filters = filters
+      ctrl.txsCmpApi.filterTxs(selectedMenu.type, filters)
 
-    ctrl.onTopBarFilter = ({params, selectedMenu})->
-      ctrl.txsCmpApi.filterTxs(selectedMenu.type, params)
-
-    ctrl.updateTransactionsCount = ({pendingTxsCount, historyTxsCount})->
-      ctrl.pendingTxsCount = pendingTxsCount
-      ctrl.historyTxsCount = historyTxsCount
+    ctrl.updateTransactionsCount = (paginationTotals)->
+      ctrl.topBarCmpApi.updateMenusItemsCount(paginationTotals)
 
     ctrl.toggleTopBar = ({isReconciling})->
       ctrl.isTopBarShown = !isReconciling

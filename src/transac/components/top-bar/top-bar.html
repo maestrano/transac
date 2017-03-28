@@ -1,8 +1,8 @@
 <div class="top-bar">
-  <transac-filters-selector on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>
+  <transac-filters-selector filters-menu="$ctrl.filtersMenu" on-select="$ctrl.applyFilterOnSelect($event)" on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>
   <div class="top-bar_menu">
     <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ 'active': menu.active, 'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">
-      <h5>{{::menu.title}} ({{$ctrl.getCount(menu)}})</h5>
+      <h5>{{::menu.title}} ({{menu.itemsCount}})</h5>
       <div class="top-bar_menu_tab-line"></div>
     </a>
     <!-- $compiles transac-search-bar cmp here (see controller) -->
