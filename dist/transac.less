@@ -22,6 +22,9 @@
 @transac-top-bar-box-shadow: @transac-whiteframe;
 @transac-top-bar-menu-item-active-line-color: black;
 
+// top-bar filters-selector
+@transac-filters-selector-selected-background-color: rgb(213, 216, 255);
+
 // transaction component
 @transac-tx-height: 60px;
 @transac-tx-background-color: white;
@@ -138,13 +141,14 @@
 }
 
 // Should be mixed into a <button>
-.transac-action-button(@color: @transac-blue, @margin: 1px) {
+.transac-action-button(@color: @transac-blue, @margin: 1px, @padding: 10px 18px) {
   color: @color;
   border: none;
-  padding: 10px 18px;
+  padding: @padding;
   margin: @margin;
   max-width: 60px;
   background-color: inherit;
+  border-radius: 0;
   &:hover {
     color: lighten(@color, 15%);
   }
@@ -273,16 +277,21 @@ transac-top-bar {
         animation: flickerOpacity 1s infinite;
       }
     }
+    &:hover {
+      color: lighten(@transac-top-bar-menu-item-color, 30%);
+    }
   }
 
   .top-bar_menu_flex-item {
-    flex: 2;
+    flex: 1.5;
     overflow: hidden;
   }
 
   .top-bar_toggle-search-btn {
-    .transac-action-button(black);
-    padding: 5px 10px;
+    .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
+    &.loading {
+      cursor: not-allowed;
+    }
   }
 
   transac-search-bar {
@@ -300,12 +309,49 @@ transac-top-bar {
   }
 }
 
+transac-filters-selector {
+  .filters-selector {
+    min-height: 100%;
+  }
+
+  #filters-selector_selector-btn {
+    .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
+    box-shadow: none;
+  }
+
+  .filters-selector_selector-dropdown li > a {
+    color: @transac-top-bar-menu-item-color;
+  }
+
+  .filters-selector_selector-dropdown > li > a {
+    &:focus {
+      color: @transac-top-bar-menu-item-color;;
+      background-color: inherit;
+    }
+    &.selected {
+      color: darken(@transac-top-bar-menu-item-color, 30%);
+      background-color: @transac-filters-selector-selected-background-color;
+    }
+  }
+}
+
 transac-search-bar {
   input {
     width: 100%;
     height: 100%;
     border: none;
     padding: 0px 10px;
+  }
+}
+
+transac-tx-changes {
+
+  .table-responsive {
+    height: 500px;
+
+    table {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -317,7 +363,7 @@ transac-tx {
 
   &.commiting {
     display: none;
-    // TODO: work on an enjoying animation for this action
+    // TODO: work on an enjoyable animation for this action
   }
 
   .selected {
@@ -469,17 +515,6 @@ transac-tx {
     max-height: 120px;
   }
 
-}
-
-transac-tx-changes {
-
-  .table-responsive {
-    height: 500px;
-
-    table {
-      margin-bottom: 0;
-    }
-  }
 }
 
 transac-tx-matches {

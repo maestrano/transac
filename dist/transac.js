@@ -29,30 +29,35 @@
  */
 
 (function() {
-  angular.module('transac.components', ['transac.user', 'transac.top-bar', 'transac.transactions']);
+  angular.module('transac.components', ['transac.user', 'transac.alerts', 'transac.top-bar', 'transac.transactions']);
 
 }).call(this);
 
 
 /*
- *   @desc Components for the Transac! library Top Bar Menu feature.
+ *   @desc Components for providing Alert messaging for the application, via toastr notifications.
  */
 
 (function() {
-  angular.module('transac.top-bar', []).constant('MENUS', [
-    {
-      title: 'Transactions',
-      type: 'pending',
-      active: true
-    }, {
-      title: 'History',
-      type: 'history',
-      active: false
+  angular.module('transac.alerts', ['toastr', 'ngAnimate']).config([
+    'toastrConfig', function(toastrConfig) {
+      return angular.merge(toastrConfig, {
+        timeOut: 1500,
+        positionClass: 'toast-top-right',
+        preventDuplicates: false,
+        progressBar: true
+      });
     }
-  ]).value('EventEmitter', function(payload) {
-    return {
-      $event: payload
-    };
+  ]).constant('TOASTR_OPTS', {
+    success: {
+      timeOut: 800
+    },
+    info: {
+      timeOut: 800
+    },
+    error: {
+      timeOut: 1500
+    }
   });
 
 }).call(this);
@@ -69,11 +74,104 @@
 
 
 /*
+ *   @desc Components for the Transac! library Top Bar Menu feature.
+ */
+
+(function() {
+  angular.module('transac.top-bar', []).constant('MENUS', [
+    {
+      title: 'Transactions',
+      type: 'pending',
+      active: true,
+      itemsCount: 0
+    }, {
+      title: 'History',
+      type: 'historical',
+      active: false,
+      itemsCount: 0
+    }
+  ]).constant('FILTERS_MENU', [
+    {
+      label: 'Ascending',
+      type: '$orderby',
+      attr: 'created_at',
+      value: 'asc',
+      selected: true
+    }, {
+      label: 'Descending',
+      type: '$orderby',
+      attr: 'created_at',
+      value: 'desc',
+      selected: false
+    }, {
+      divider: true
+    }, {
+      label: 'Create',
+      type: '$filter',
+      attr: 'action',
+      cmd: 'eq',
+      value: "'CREATE'",
+      selected: false
+    }, {
+      label: 'Update',
+      type: '$filter',
+      attr: 'action',
+      cmd: 'eq',
+      value: "'UPDATE'",
+      selected: false
+    }, {
+      divider: true
+    }, {
+      label: 'Items',
+      type: '$filter',
+      attr: 'entity_type',
+      cmd: 'match',
+      value: "/Item/",
+      selected: false
+    }, {
+      label: 'Purchase Orders',
+      type: '$filter',
+      attr: 'entity_type',
+      cmd: 'match',
+      value: "/PurchaseOrder/",
+      selected: false
+    }, {
+      label: 'Invoices',
+      type: '$filter',
+      attr: 'entity_type',
+      cmd: 'match',
+      value: "/Invoice/",
+      selected: false
+    }, {
+      label: 'Accounts',
+      type: '$filter',
+      attr: 'entity_type',
+      cmd: 'match',
+      value: "/Account/",
+      selected: false
+    }, {
+      label: 'Organizations',
+      type: '$filter',
+      attr: 'entity_type',
+      cmd: 'match',
+      value: "/Organization/",
+      selected: false
+    }
+  ]).value('EventEmitter', function(payload) {
+    return {
+      $event: payload
+    };
+  });
+
+}).call(this);
+
+
+/*
  *   @desc Components for viewing & reconciling transactions, composing the Maestrano Transactions feature.
  */
 
 (function() {
-  angular.module('transac.transactions', ['transac.user', 'infinite-scroll']).value('EventEmitter', function(payload) {
+  angular.module('transac.transactions', ['transac.user', 'transac.alerts', 'infinite-scroll']).value('EventEmitter', function(payload) {
     return {
       $event: payload
     };
@@ -94,14 +192,13 @@
   angular.module('maestrano.transac').component('transac', {
     bindings: {},
     templateUrl: 'transac',
-    controller: ["TransacUserService", "TransacTxsDispatcher", function(TransacUserService, TransacTxsDispatcher) {
+    controller: ["TransacUserService", "TransacTxsDispatcher", "TransacAlertsService", function(TransacUserService, TransacTxsDispatcher, TransacAlertsService) {
       var ctrl, loadUser;
       ctrl = this;
       ctrl.$onInit = function() {
         ctrl.transacReady = false;
         ctrl.isTopBarShown = true;
-        ctrl.pendingTxsCount = 0;
-        ctrl.historyTxCount = 0;
+        ctrl.filters = null;
         return loadUser();
       };
       ctrl.onTxsCmpInit = function(arg) {
@@ -109,24 +206,19 @@
         api = arg.api;
         return ctrl.txsCmpApi = api;
       };
-      ctrl.onTopBarSelectMenu = function(arg) {
-        var menu;
-        menu = arg.menu;
-        return TransacTxsDispatcher.reloadTxs(menu.type);
+      ctrl.onTopBarCmpInit = function(arg) {
+        var api;
+        api = arg.api;
+        return ctrl.topBarCmpApi = api;
       };
-      ctrl.onTopBarSearch = function(arg) {
-        var params, query, selectedMenu;
-        query = arg.query, selectedMenu = arg.selectedMenu;
-        params = query ? {
-          $filter: query
-        } : null;
-        return ctrl.txsCmpApi.searchTxs(selectedMenu.type, params, true);
+      ctrl.onTopBarFilter = function(arg) {
+        var filters, selectedMenu;
+        selectedMenu = arg.selectedMenu, filters = arg.filters;
+        ctrl.filters = filters;
+        return ctrl.txsCmpApi.filterTxs(selectedMenu.type, filters);
       };
-      ctrl.updateTransactionsCount = function(arg) {
-        var historyTxsCount, pendingTxsCount;
-        pendingTxsCount = arg.pendingTxsCount, historyTxsCount = arg.historyTxsCount;
-        ctrl.pendingTxsCount = pendingTxsCount;
-        return ctrl.historyTxsCount = historyTxsCount;
+      ctrl.updateTransactionsCount = function(paginationTotals) {
+        return ctrl.topBarCmpApi.updateMenusItemsCount(paginationTotals);
       };
       ctrl.toggleTopBar = function(arg) {
         var isReconciling;
@@ -140,6 +232,7 @@
       };
       loadUser = function() {
         return TransacUserService.fetch().then(null, function(err) {
+          TransacAlertsService.send(err.message.type, err.message.text);
           return ctrl.transacLoadError = true;
         })["finally"](function() {
           return ctrl.transacReady = true;
@@ -150,118 +243,33 @@
 
 }).call(this);
 
-
-/*
- *   @desc "Tabs" style topbar menu component
- *   @require transac-search-bar component ($compiled)
- *   @binding {Function=} [onInitMenu] Callback fired $onInit, emitting the default selected menu
- *   @binding {Function} [onSelectMenu] Callback fired when a menu tab is clicked, emitting the selected menu
- *   @binding {number} [pendingTxsCount] number of pending transactions
- *   @binding {number} [historyTxsCount] number of history transactions
- *   @binding {boolean} [isMenuLoading] Disables clicks & animates menu loader when true
- */
-
 (function() {
-  angular.module('transac.top-bar').component('transacTopBar', {
-    bindings: {
-      onInitMenu: '&?',
-      onSelectMenu: '&',
-      onSearch: '&',
-      pendingTxsCount: '<',
-      isMenuLoading: '<?'
-    },
-    templateUrl: 'components/top-bar',
-    controller: ["MENUS", "EventEmitter", "$compile", "$scope", function(MENUS, EventEmitter, $compile, $scope) {
-      var contractSearchBar, ctrl, expandSearchBar;
-      ctrl = this;
-      ctrl.$onInit = function() {
-        ctrl.isSearchBarShown = false;
-        ctrl.menus = angular.copy(MENUS);
-        ctrl.selectedMenu = _.find(ctrl.menus, 'active');
-        if (ctrl.onInitMenu != null) {
-          return ctrl.onInitMenu(EventEmitter({
-            menu: ctrl.selectedMenu
-          }));
-        }
-      };
-      ctrl.onMenuItemClick = function(menu) {
-        if (ctrl.isMenuLoading) {
-          return;
-        }
-        if (_.isEqual(menu, ctrl.selectedMenu)) {
-          return;
-        }
-        _.each(ctrl.menus, function(menu) {
-          menu.active = false;
-        });
-        menu.active = true;
-        ctrl.selectedMenu = menu;
-        return ctrl.onSelectMenu(EventEmitter({
-          menu: ctrl.selectedMenu
-        }));
-      };
-      ctrl.getCount = function(menu) {
-        return (menu.title && ctrl[menu.type + 'TxsCount']) || 0;
-      };
-      ctrl.toggleSearch = function($event) {
-        if (ctrl.isEditingSearchBar) {
-          return ctrl.searchBarApi.clearSearchText();
-        }
-        if (ctrl.isSearchBarShown) {
-          return contractSearchBar($event);
-        } else {
-          return expandSearchBar($event);
-        }
-      };
-      ctrl.onSearchBarInit = function(arg) {
-        var api;
-        api = arg.api;
-        return ctrl.searchBarApi = api;
-      };
-      ctrl.onSearchBarSubmit = function(args) {
-        args.selectedMenu = ctrl.selectedMenu;
-        return ctrl.onSearch(EventEmitter(args));
-      };
-      ctrl.onSearchBarChange = function(arg) {
-        var isEditing;
-        isEditing = arg.isEditing;
-        return ctrl.isEditingSearchBar = isEditing;
-      };
-      expandSearchBar = function($event) {
-        var $menu, searchBarCmp;
-        searchBarCmp = "<transac-search-bar\n  on-init=\"onSearchBarInit($event)\"\n  on-submit=\"onSearchBarSubmit($event)\"\n  on-change=\"onSearchBarChange($event)\">\n</transac-search-bar>";
-        $menu = angular.element($event.currentTarget.parentElement).find('.top-bar_menu');
-        angular.merge($scope, {
-          onSearchBarInit: ctrl.onSearchBarInit,
-          onSearchBarSubmit: ctrl.onSearchBarSubmit,
-          onSearchBarChange: ctrl.onSearchBarChange
-        });
-        $menu.append($compile(searchBarCmp)($scope));
-        ctrl.isSearchBarShown = true;
-      };
-      contractSearchBar = function($event) {
-        var $searchBar;
-        $searchBar = angular.element($event.currentTarget.parentElement).find('transac-search-bar');
-        $searchBar.addClass('remove-search-bar');
-        $searchBar.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function() {
-          $searchBar.remove();
-          return ctrl.isSearchBarShown = false;
-        });
-      };
-    }]
-  });
+  angular.module('transac.alerts').service('TransacAlertsService', ["toastr", "TOASTR_OPTS", function(toastr, TOASTR_OPTS) {
+    this.send = function(type, message, title, options) {
+      if (title == null) {
+        title = null;
+      }
+      if (options == null) {
+        options = {};
+      }
+      options = angular.merge({}, TOASTR_OPTS[type], options);
+      return toastr[type](_.capitalize(message), title, options);
+    };
+    return this;
+  }]);
 
 }).call(this);
 
-angular.module('maestrano.transac').run(['$templateCache', function($templateCache) {$templateCache.put('transac','<div ng-if="$ctrl.transacReady">\n  <transac-top-bar ng-show="$ctrl.isTopBarShown" is-menu-loading="$ctrl.isTxsLoading" on-select-menu="$ctrl.onTopBarSelectMenu($event)" on-search="$ctrl.onTopBarSearch($event)" pending-txs-count="$ctrl.pendingTxsCount" history-txs-count="$ctrl.historyTxsCount"></transac-top-bar>\n\n  <transac-txs on-init="$ctrl.onTxsCmpInit($event)" on-transactions-change="$ctrl.updateTransactionsCount($event)" on-reconciling="$ctrl.toggleTopBar($event)" on-loading-change="$ctrl.updateTxsLoadingStatus($event)"></transac-txs>\n</div>\n<div ng-if="!$ctrl.transacReady">\n  <p>Loading...</p>\n</div>\n');
-$templateCache.put('components/top-bar','<div class="top-bar">\n  <div class="top-bar_menu">\n    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ \'active\': menu.active, \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">\n      <h5>{{::menu.title}} ({{$ctrl.getCount(menu)}})</h5>\n      <div class="top-bar_menu_tab-line"></div>\n    </a>\n    <!-- $compiles transac-search-bar cmp here (see controller) -->\n  </div>\n  <button class="top-bar_toggle-search-btn" ng-click="$ctrl.toggleSearch($event)">\n    <i class="fa fa-2x fa-fw" ng-class="{ \'fa-search\': !$ctrl.isEditingSearchBar, \'fa-times\': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>\n  </button>\n</div>\n');
-$templateCache.put('components/top-bar/search-bar','<input type="text" placeholder="Search Transactions..." ng-model="$ctrl.search.text" ng-keypress="$ctrl.submitOnKeypress($event)" ng-change="$ctrl.onSearchChange()">\n');
+angular.module('maestrano.transac').run(['$templateCache', function($templateCache) {$templateCache.put('transac','<div ng-if="$ctrl.transacReady">\n  <transac-top-bar ng-show="$ctrl.isTopBarShown" is-menu-loading="$ctrl.isTxsLoading" on-init="$ctrl.onTopBarCmpInit($event)" on-filter="$ctrl.onTopBarFilter($event)"></transac-top-bar>\n\n  <transac-txs on-init="$ctrl.onTxsCmpInit($event)" filters="$ctrl.filters" on-transactions-change="$ctrl.updateTransactionsCount($event)" on-reconciling="$ctrl.toggleTopBar($event)" on-loading-change="$ctrl.updateTxsLoadingStatus($event)"></transac-txs>\n</div>\n<div ng-if="!$ctrl.transacReady">\n  <p>Loading...</p>\n</div>\n');
+$templateCache.put('components/top-bar','<div class="top-bar">\n  <transac-filters-selector filters-menu="$ctrl.filtersMenu" on-select="$ctrl.applyFilterOnSelect($event)" on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>\n  <div class="top-bar_menu">\n    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ \'active\': menu.active, \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">\n      <h5>{{::menu.title}} ({{menu.itemsCount}})</h5>\n      <div class="top-bar_menu_tab-line"></div>\n    </a>\n    <!-- $compiles transac-search-bar cmp here (see controller) -->\n  </div>\n  <button class="top-bar_toggle-search-btn" ng-class="{ \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.toggleSearch($event)" ng-disabled="$ctrl.isMenuLoading">\n    <i class="fa fa-2x fa-fw" ng-class="{ \'fa-search\': !$ctrl.isEditingSearchBar, \'fa-times\': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>\n  </button>\n</div>\n');
+$templateCache.put('components/top-bar/filters-selector','<div class="filters-selector">\n  <div class="btn-group" uib-dropdown on-toggle="$ctrl.toggleSelector(open)" auto-close="outsideClick">\n    <button id="filters-selector_selector-btn" type="button" class="btn btn-primary" ng-class="{ \'disabled\': $ctrl.isDisabled }" ng-click="$ctrl.toggleSelector()" uib-dropdown-toggle>\n      <i class="fa fa-filter fa-2x fa-fw" aria-hidden="true"></i>\n    </button>\n    <ul class="dropdown-menu filters-selector_selector-dropdown" uib-dropdown-menu role="menu" aria-labelledby="filters-selector_selector-btn">\n      <li role="{{!item.divider ? \'menuitem\' : \'\'}}" ng-repeat="item in $ctrl.filtersMenu" ng-class="{ \'divider\': item.divider }">\n        <a href="" ng-if="!$ctrl.divider" ng-class="{ \'selected\': item.selected }" ng-click="$ctrl.applyFilterOnClick(item)">{{item.label}}</a>\n      </li>\n    </ul>\n  </div>\n</div>\n');
+$templateCache.put('components/top-bar/search-bar','<input type="text" placeholder="Search transactions..." ng-model="$ctrl.search.text" ng-keypress="$ctrl.submitOnKeypress($event)" ng-change="$ctrl.onSearchChange()">\n');
 $templateCache.put('components/transactions/transaction','<div ng-class="{ \'selected\': $ctrl.isSelected }">\n  <div class="summary">\n    <a href="" class="summary_content" ng-click="$ctrl.selectOnClick()">\n      <div class="summary_content_icon">\n        <i class="fa {{$ctrl.icon()}} fa-2x" aria-hidden="true"></i>\n      </div>\n      <div class="summary_content_caption">\n        <div class="summary_content_caption_title">\n          <span>{{::$ctrl.title()}}</span>\n        </div>\n        <div class="summary_content_caption_subtitle">\n          <span>{{::$ctrl.subtitle()}}</span>\n        </div>\n      </div>\n      <div class="summary_content_warning" ng-if="$ctrl.hasMatches()">\n        <div>\n          <i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>\n          <span>This record may be a duplicate</span>\n        </div>\n      </div>\n      <div class="summary_actions">\n        <button type="button" class="summary_actions_action--deny" ng-click="$ctrl.denyOnClick()">\n          <i class="fa fa-times fa-2x"></i>\n        </button>\n        <button type="button" class="summary_actions_action--approve" ng-click="$ctrl.approveOnClick(true)">\n          <i class="fa fa-check fa-2x"></i>\n        </button>\n      </div>\n    </a>\n  </div>\n  <div class="detail" ng-if="$ctrl.isSelected">\n    <div class="row">\n      <div class="col-md-6 detail_section no-gutters">\n        <transac-tx-changes changes="$ctrl.formattedChanges"></transac-tx-changes>\n      </div>\n      <div class="col-md-3 detail_section no-gutters">\n        <div class="detail_section_title">\n          <h5>Select apps to share with:</h5>\n        </div>\n        <div class="detail_section_app" ng-repeat="mapping in ::$ctrl.transaction.mappings" ng-click="$ctrl.selectAppOnClick($event, mapping)">\n          <span>{{::mapping.app_name}}</span>\n          <input type="checkbox" ng-checked="mapping.sharedWith">\n        </div>\n      </div>\n      <div class="col-md-3 detail_section no-gutters">\n        <div class="detail_section_action">\n          <div class="detail_section_action_approve" ng-click="$ctrl.approveOnClick()">\n            <span class="action-label">Approve only this time</span>\n            <div class="action-button"><i class="fa fa-check fa-2x"></i></div>\n          </div>\n        </div>\n        <div class="detail_section_action">\n          <div class="detail_section_action_deny" ng-click="$ctrl.denyOnClick(true)">\n            <span class="action-label">Never share this record</span>\n            <div class="action-button"><i class="fa fa-ban fa-2x"></i></div>\n          </div>\n        </div>\n        <div class="detail_section_action" ng-if="$ctrl.hasMatches()">\n          <div class="detail_section_action_duplicate" ng-click="$ctrl.reconcileOnClick()">\n            <span class="action-label">This record is a duplicate</span>\n            <div class="action-button"><i class="fa fa-link fa-2x"></i></div>\n          </div>\n        </div>\n      </div>\n    </div>\n    <div ng-if="$ctrl.hasMatches()">\n      <div class="row detail_dup-line-break">\n        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>\n        <div class="detail_dup-line-break_title">\n          <div>\n            <i class="fa fa-exclamation fa-lg" aria-hidden="true"></i>\n            <span>Potential Duplicates</span>\n          </div>\n        </div>\n        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--right"></div>\n      </div>\n      <div class="row">\n        <div class="col-md-12 col-xs-12 detail_section detail_section_matches">\n          <transac-tx-matches matches="::$ctrl.matches"></transac-tx-matches>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n');
 $templateCache.put('components/transactions/transaction-changes','<div class="table-responsive">\n  <table class="table table-striped borderless">\n    <tr>\n      <th ng-if="$ctrl.onSelect">Tick</th>\n      <th>Field</th>\n      <th>Value</th>\n    </tr>\n    <tr ng-repeat="(key, value) in ::$ctrl.changes">\n      <td ng-if="$ctrl.onSelect"><input type="checkbox"></td>\n      <td>{{::key}}</td>\n      <td>{{::value}}</td>\n    </tr>\n  </table>\n</div>\n');
 $templateCache.put('components/transactions/transaction-matches','<div ng-repeat="match in ::$ctrl.matches" class="match">\n  <div class="match_caption">\n    <div class="match_caption_title">\n      <span>{{::$ctrl.title(match)}}</span>\n    </div>\n    <div class="match_caption_subtitle">\n      <span>{{::$ctrl.subtitle(match)}}</span>\n    </div>\n  </div>\n</div>\n');
 $templateCache.put('components/transactions/transaction-reconcile','<div class="top-panel">\n  <div class="top-panel-btn top-panel_btn--back" ng-click="$ctrl.back()">\n    <div class="action-button"><i class="fa fa-angle-double-left fa-2x"></i></div>\n    <span class="action-label">Back</span>\n  </div>\n  <div class="top-panel_title">\n    <span>Reconcile duplicate records</span>\n  </div>\n  <div class="top-panel-btn top-panel_btn--next top-panel_btn--align-right" ng-if="$ctrl.isNextBtnShown()" ng-click="$ctrl.next()">\n    <span class="action-label">Next</span>\n    <div class="action-button"><i class="fa fa-angle-double-right fa-2x"></i></div>\n  </div>\n  <div class="top-panel-btn top-panel_btn--done top-panel_btn--align-right" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">\n    <span class="action-label">Publish</span>\n    <div class="action-button"><i class="fa fa-check fa-2x"></i></div>\n  </div>\n</div>\n<div class="edit" ng-show="$ctrl.editing">\n  <div class="edit_tx">\n    <transac-tx-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" deselected="$ctrl.isTxDeselected(tx)" on-select="$ctrl.onSelect($event)"></transac-tx-tile>\n  </div>\n</div>\n<div class="review" ng-if="!$ctrl.editing">\n  <div class="review_tx">\n    <transac-tx-tile transaction="::$ctrl.selectedTx" checked="true" title="::$ctrl.selectedTxTitle" subtitle="::$ctrl.selectedTxSubtitle"></transac-tx-tile>\n  </div>\n</div>\n');
 $templateCache.put('components/transactions/transaction-tile','<div class="tx-tile" ng-class="{ \'deselected\': $ctrl.deselected, \'selected\': $ctrl.checked }">\n  <div class="tx-tile_topbar row no-gutters" ng-class="{\'no-click\': !$ctrl.isOnSelectDefined()}" ng-click="$ctrl.onSelectTx()">\n    <div class="tx-tile_topbar_checkbox" ng-if="$ctrl.isOnSelectDefined()">\n      <input type="checkbox" ng-checked="$ctrl.checked" disabled>\n    </div>\n    <div class="tx-tile_topbar_text">\n      <h5>{{::$ctrl.title}}</h5>\n      <div class="tx-tile_topbar_text_subtitle">\n        <p>{{::$ctrl.subtitle}}</p>\n      </div>\n    </div>\n  </div>\n  <transac-tx-changes changes="::$ctrl.formattedTxAttrs"></transac-tx-changes>\n</div>\n');
-$templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.reconciling" infinite-scroll="$ctrl.loadMore()" infinite-scroll-immediate-check="false" infinite-scroll-disabled="$ctrl.isPaginationDisabled()">\n  <!-- <transac-txs-controls></transac-txs-controls> -->\n  <transac-tx transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>\n  <div ng-if="$ctrl.loading" class="loading">\n    <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>\n  </div>\n  <div ng-if="!$ctrl.loading" class="manual-load">\n    <div ng-if="($ctrl.txsType == \'pending\')">\n      <button ng-click="$ctrl.loadMore()" ng-if="!$ctrl.isPaginationDisabled()">Scroll for more</button>\n      <p ng-if="$ctrl.allTxsFound()">All results</p>\n      <p ng-if="$ctrl.noTxsFound()">No results</p>\n    </div>\n    <div ng-if="($ctrl.txsType == \'history\')">\n      <span>Coming Soon</span>\n    </div>\n  </div>\n</div>\n<div ng-if="$ctrl.reconciling">\n  <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>\n</div>\n');}]);
+$templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.reconciling" infinite-scroll="$ctrl.loadMore()" infinite-scroll-immediate-check="false" infinite-scroll-disabled="$ctrl.isPaginationDisabled()">\n  <transac-tx transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>\n  <div ng-if="$ctrl.loading" class="loading">\n    <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>\n  </div>\n  <div ng-if="!$ctrl.loading" class="manual-load">\n    <div ng-if="($ctrl.txsType == \'pending\')">\n      <button ng-click="$ctrl.loadMore()" ng-if="!$ctrl.isPaginationDisabled()">Scroll for more</button>\n      <p ng-if="$ctrl.allTxsFound()">All results</p>\n      <p ng-if="$ctrl.noTxsFound()">No results</p>\n    </div>\n    <div ng-if="($ctrl.txsType == \'historical\')">\n      <span>Coming Soon</span>\n    </div>\n  </div>\n</div>\n<div ng-if="$ctrl.reconciling">\n  <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>\n</div>\n');}]);
 
 /*
  *   @desc Provider configuration & service business logic for the current user state.
@@ -320,7 +328,12 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           return service.get();
         }, function(err) {
           $log.error(err);
-          return $q.reject(err);
+          return $q.reject({
+            message: {
+              text: "Failed to load User for Transac!",
+              type: 'error'
+            }
+          });
         });
       };
       return service;
@@ -334,11 +347,277 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
 
 
 /*
+ *   @desc "Tabs" style topbar menu component
+ *   @require transac-search-bar component ($compiled)
+ *   @binding {Function=} [onInit] Callback fired $onInit, emitting the default selected menu
+ *   @binding {Function} [onSelectMenu] Callback fired when a menu tab is clicked, emitting the selected menu
+ *   @binding {Object} [menusItemsCount] values for menus items count indicator
+ *   @binding {number} [menusItemsCount.pending] number of pending menu items
+ *   @binding {number} [menusItemsCount.historical] number of historical menu items
+ *   @binding {boolean} [isMenuLoading] Disables clicks & animates menu loader when true
+ */
+
+(function() {
+  angular.module('transac.top-bar').component('transacTopBar', {
+    bindings: {
+      onInit: '&?',
+      onFilter: '&',
+      menusItemsCount: '<?',
+      isMenuLoading: '<?'
+    },
+    templateUrl: 'components/top-bar',
+    controller: ["$compile", "$scope", "EventEmitter", "TransacTopBarStore", "TransacTopBarDispatcher", function($compile, $scope, EventEmitter, TransacTopBarStore, TransacTopBarDispatcher) {
+      var contractSearchBar, ctrl, expandSearchBar, initTopBarState, updateMenusItemsCount;
+      ctrl = this;
+      ctrl.$onInit = function() {
+        ctrl.isSearchBarShown = false;
+        initTopBarState();
+        if (ctrl.onInit != null) {
+          return ctrl.onInit(EventEmitter({
+            api: {
+              selectedMenu: ctrl.selectedMenu,
+              updateMenusItemsCount: updateMenusItemsCount
+            }
+          }));
+        }
+      };
+      ctrl.$onChanges = function(changes) {
+        if (changes.isMenuLoading != null) {
+          return $scope.isMenuLoading = changes.isMenuLoading.currentValue;
+        }
+      };
+      ctrl.onMenuItemClick = function(menu) {
+        var selectedMenu;
+        if (ctrl.isMenuLoading) {
+          return;
+        }
+        if (_.isEqual(menu, ctrl.selectedMenu)) {
+          return;
+        }
+        selectedMenu = TransacTopBarDispatcher.selectMenu(menu);
+        return ctrl.onFilter(EventEmitter({
+          selectedMenu: selectedMenu,
+          filters: ctrl.filters
+        }));
+      };
+      ctrl.toggleSearch = function($event) {
+        if (ctrl.isEditingSearchBar) {
+          return ctrl.searchBarApi.clearSearchText();
+        }
+        if (ctrl.isSearchBarShown) {
+          return contractSearchBar($event);
+        } else {
+          return expandSearchBar($event);
+        }
+      };
+      ctrl.onSearchBarInit = function(arg) {
+        var api;
+        api = arg.api;
+        return ctrl.searchBarApi = api;
+      };
+      ctrl.onSearchBarSubmit = function(arg) {
+        var filters, query;
+        query = arg.query;
+        filters = TransacTopBarDispatcher.updateSearchFilter(query);
+        return ctrl.onFilter(EventEmitter({
+          selectedMenu: ctrl.selectedMenu,
+          filters: filters
+        }));
+      };
+      ctrl.onSearchBarChange = function(arg) {
+        var isEditing;
+        isEditing = arg.isEditing;
+        return ctrl.isEditingSearchBar = isEditing;
+      };
+      ctrl.applyFilterOnSelect = function(arg) {
+        var selectedFilter;
+        selectedFilter = arg.selectedFilter;
+        return TransacTopBarDispatcher.applyFilter(selectedFilter);
+      };
+      ctrl.onFiltersSubmit = function() {
+        return ctrl.onFilter(EventEmitter({
+          selectedMenu: ctrl.selectedMenu,
+          filters: ctrl.filters
+        }));
+      };
+      initTopBarState = function() {
+        ctrl.menus = TransacTopBarStore.getState().menus;
+        ctrl.filters = TransacTopBarStore.getState().filters;
+        ctrl.filtersMenu = TransacTopBarStore.getState().filtersMenu;
+        ctrl.selectedMenu = TransacTopBarStore.getState().selectedMenu;
+        return TransacTopBarStore.subscribe().then(null, null, function(state) {
+          ctrl.menus = state.menus;
+          ctrl.filters = state.filters;
+          ctrl.filtersMenu = state.filtersMenu;
+          return ctrl.selectedMenu = state.selectedMenu;
+        });
+      };
+      updateMenusItemsCount = function(menusItemsCount) {
+        return TransacTopBarDispatcher.updateMenusItemsCount(menusItemsCount);
+      };
+      expandSearchBar = function($event) {
+        var $menu, searchBarCmp;
+        searchBarCmp = "<transac-search-bar\n  on-init=\"onSearchBarInit($event)\"\n  on-submit=\"onSearchBarSubmit($event)\"\n  on-change=\"onSearchBarChange($event)\"\n  is-disabled=\"isMenuLoading\">\n</transac-search-bar>";
+        $menu = angular.element($event.currentTarget.parentElement).find('.top-bar_menu');
+        angular.merge($scope, {
+          onSearchBarInit: ctrl.onSearchBarInit,
+          onSearchBarSubmit: ctrl.onSearchBarSubmit,
+          onSearchBarChange: ctrl.onSearchBarChange,
+          isMenuLoading: ctrl.isMenuLoading
+        });
+        $menu.append($compile(searchBarCmp)($scope));
+        ctrl.isSearchBarShown = true;
+      };
+      contractSearchBar = function($event) {
+        var $searchBar;
+        $searchBar = angular.element($event.currentTarget.parentElement).find('transac-search-bar');
+        $searchBar.addClass('remove-search-bar');
+        $searchBar.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function() {
+          $searchBar.remove();
+          return ctrl.isSearchBarShown = false;
+        });
+      };
+    }]
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('transac.transactions').service('TransacTopBarDispatcher', ["$q", "TransacTopBarStore", function($q, TransacTopBarStore) {
+    var _self;
+    _self = this;
+    this.selectMenu = function(menu) {
+      var state;
+      state = TransacTopBarStore.dispatch('selectMenu', menu);
+      return state.selectedMenu;
+    };
+    this.updateMenusItemsCount = function(menusItemsCount) {
+      return _.each(menusItemsCount, function(itemsCountValue, menuTypeKey) {
+        TransacTopBarStore.dispatch('updateMenuCount', {
+          menuType: menuTypeKey,
+          itemsCount: itemsCountValue
+        });
+      });
+    };
+    this.updateSearchFilter = function(query) {
+      var state;
+      state = TransacTopBarStore.dispatch('updateSearchFilter', query);
+      return state.filters;
+    };
+    this.applyFilter = function(filter) {
+      var state;
+      state = TransacTopBarStore.dispatch('applyFilter', filter);
+      return state.filters;
+    };
+    return this;
+  }]);
+
+}).call(this);
+
+
+/*
+ *   @desc Store for TopBar Filters & menus state management
+ */
+
+(function() {
+  angular.module('transac.top-bar').service('TransacTopBarStore', ["$q", "MENUS", "FILTERS_MENU", function($q, MENUS, FILTERS_MENU) {
+    var _self, callbacks, notify, state;
+    _self = this;
+    state = {
+      menus: MENUS,
+      selectedMenu: _.find(MENUS, 'active'),
+      filtersMenu: FILTERS_MENU,
+      filters: {
+        $filter: []
+      },
+      lastSearchQuery: ''
+    };
+    callbacks = {};
+    callbacks.dispatched = $q.defer();
+
+    /*
+     *   @desc Subscribe to notifications on state change via the dispatch method
+     *   @returns {Promise} A promise to the latest state
+     */
+    this.subscribe = function() {
+      return callbacks.dispatched.promise;
+    };
+
+    /*
+     *   @desc Dispatch actions mutating the filters & menus state managed by this Store.
+     */
+    this.dispatch = function(action, payload) {
+      var filter, filters, menu, query;
+      if (payload == null) {
+        payload = null;
+      }
+      switch (action) {
+        case 'selectMenu':
+          _.each(state.menus, function(menu) {
+            menu.active = false;
+          });
+          payload.active = true;
+          state.selectedMenu = payload;
+          break;
+        case 'updateMenuCount':
+          menu = _.find(state.menus, 'type', payload.menuType);
+          menu.itemsCount = payload.itemsCount;
+          break;
+        case 'updateSearchFilter':
+          _.pull(state.filters.$filter, state.lastSearchQuery);
+          state.lastSearchQuery = payload;
+          if (!_.isEmpty(payload)) {
+            state.filters.$filter.push(payload);
+          }
+          break;
+        case 'applyFilter':
+          filter = payload;
+          switch (filter.type) {
+            case '$orderby':
+              filters = _.filter(state.filtersMenu, 'type', '$orderby');
+              _.each(filters, function(f) {
+                f.selected = false;
+              });
+              filter.selected = true;
+              state.filters.$orderby = filter.attr + " " + filter.value;
+              break;
+            case '$filter':
+              filter.selected = !filter.selected;
+              query = filter.attr + " " + filter.cmd + " " + filter.value;
+              if (filter.selected) {
+                state.filters.$filter.push(query);
+                state.filters.$filter = _.uniq(state.filters.$filter);
+              } else {
+                _.pull(state.filters.$filter, query);
+              }
+          }
+      }
+      notify();
+      return _self.getState();
+    };
+
+    /*
+     *   @desc Get the latest state object
+     *   @returns {Object} The latest state object
+     */
+    this.getState = function() {
+      return state;
+    };
+    notify = function() {
+      callbacks.dispatched.notify(_self.getState());
+    };
+    return this;
+  }]);
+
+}).call(this);
+
+
+/*
  *   @desc Service responsible for dispatching messages to retrieve data and/or alter the Transactions state in methods that represent actions made from the view layer.
  */
 
 (function() {
-  angular.module('transac.transactions').service('TransacTxsDispatcher', ["$q", "$timeout", "TransacTxsStore", "TransacTxsService", function($q, $timeout, TransacTxsStore, TransacTxsService) {
+  angular.module('transac.transactions').service('TransacTxsDispatcher', ["$q", "$timeout", "TransacTxsStore", "TransacTxsService", "TransacAlertsService", function($q, $timeout, TransacTxsStore, TransacTxsService, TransacAlertsService) {
     var _self;
     _self = this;
 
@@ -346,7 +625,7 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
      *   @desc Load transactions & set pagination total
      *   @param {Object} [options=]
      *   @param {string} [options.url=] A custom url for the request (a pagination url)
-     *   @param {string} [options.type=] Type of transactions e.g 'pending', 'history'
+     *   @param {string} [options.type=] Type of transactions e.g 'pending', 'historical'
      *   @param {Object} [options.params=] Pagination & filter params for the request
      *   @param {boolean} [options.excludeParams=] Prevent option.params being passed onto TransacTxsService
      *   @returns {Promise<Object>} whether the load was successful or not
@@ -373,12 +652,16 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
       return TransacTxsService.get(options).then(function(response) {
         TransacTxsStore.dispatch('addTxs', response.transactions);
         TransacTxsStore.dispatch('setPgn', response.pagination);
-        return $q.when({
-          success: true
-        });
-      }, function(err) {
+        return true;
+      }, function() {
+        var msg;
+        msg = 'Failed to load transactions';
+        TransacAlertsService.send('error', msg, 'Error');
         return $q.reject({
-          message: 'Load transactions failed'
+          message: {
+            text: msg,
+            type: 'error'
+          }
         });
       })["finally"](function() {
         return TransacTxsStore.dispatch('loadingTxs', false);
@@ -432,15 +715,22 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
       TransacTxsService.commit(url, resource, mappings).then(function(res) {
         TransacTxsStore.dispatch('removeTx', res.transaction.id);
         return deferred.resolve({
-          success: true
+          data: res,
+          message: {
+            text: 'Commit transaction success',
+            type: 'success'
+          }
         });
-      }, function(err) {
+      }, function() {
         TransacTxsStore.dispatch('plusPgnTotal', 1);
         $timeout((function() {
           return deferred.notify(true);
         }), 0);
         return deferred.reject({
-          message: 'Commit transaction failed'
+          message: {
+            text: 'Commit transaction failed',
+            type: 'error'
+          }
         });
       });
       return deferred.promise;
@@ -458,7 +748,10 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
       deferred = $q.defer();
       if (args == null) {
         deferred.reject({
-          message: 'Cancelled merge'
+          message: {
+            text: 'Merge cancelled',
+            type: 'info'
+          }
         });
       } else {
         tx = _.find(TransacTxsStore.getState().transactions, function(t) {
@@ -467,18 +760,27 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         if (tx == null) {
           if (tx == null) {
             deferred.reject({
-              message: 'No transaction found - merge failed'
+              message: {
+                text: 'No transaction found, merge failed',
+                type: 'error'
+              }
             });
           }
         } else {
           TransacTxsStore.dispatch('loadingTxs');
           TransacTxsService.merge(tx.links.merge, tx.transaction_log.resource_type, args.mergeParams).then(function(res) {
             return deferred.resolve({
-              success: true
+              message: {
+                text: tx.transaction_log.reference + " merged successfully",
+                type: 'success'
+              }
             });
-          }, function(err) {
+          }, function() {
             return deferred.reject({
-              message: 'Merge transaction failed'
+              message: {
+                text: tx.transaction_log.reference + " failed to merge",
+                type: 'error'
+              }
             });
           });
         }
@@ -526,15 +828,15 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
 
     /*
      *   @desc Get pending or historical unreconcilled Transactions.
-     *   @http GET /api/v2/org-fbcy/transaction_logs/{pending|history}
+     *   @http GET /api/v2/org-fbcy/transaction_logs/{pending|historical}
      *   @param {Object} [options=]
      *   @param {Object} [options.url=] A custom url for the request (a pagination url)
-     *   @param {string} [options.type=] Type of transactions e.g 'pending', 'history'
+     *   @param {string} [options.type=] Type of transactions e.g 'pending', 'historical'
      *   @param {Object} [options.params=] Parameters for the GET request.
      *   @returns {Promise<Object>} A promise to the list of Transactions and pagination data.
      */
     this.get = function(options) {
-      var orgUid, params, type, url;
+      var orgUid, params, promise, type, url;
       if (options == null) {
         options = {};
       }
@@ -542,7 +844,8 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
       orgUid = DEV_AUTH.orgUid || TransacUserService.getCurrentOrg().uid;
       url = options.url || ("https://api-connec-sit.maestrano.io/api/v2/" + orgUid + "/transaction_logs/" + type);
       params = angular.merge({}, _self.getHttpConfig(), options);
-      return $http.get(url, params).then(function(response) {
+      promise = type === 'pending' ? $http.get(url, params) : $q.reject();
+      return promise.then(function(response) {
         if (!(response.status === 200 && (response.data != null))) {
           $log.error('TransacTxsService Error - no data found: ', response);
           return $q.reject(response);
@@ -885,11 +1188,62 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
 }).call(this);
 
 
+/**
+ *  @description Selectable filters component that builds filter params, and emits a submit event.
+ *  @binding {Array<Object>} [filtersMenu] Collection of filter menu objects
+ *  @binding {Function} [onSubmit] Callback fired on submit (dropdown 'outsideClick') if changes to selections
+ *  @binding {Function} [onSelect] Callback fired when a filter menu item is selected.
+ *  @binding {boolean=} [isDisabled] disables the dropdown
+ */
+
+(function() {
+  angular.module('transac.top-bar').component('transacFiltersSelector', {
+    bindings: {
+      filtersMenu: '<',
+      onSubmit: '&',
+      onSelect: '&',
+      isDisabled: '<?'
+    },
+    templateUrl: 'components/top-bar/filters-selector',
+    controller: ["EventEmitter", function(EventEmitter) {
+      var ctrl;
+      ctrl = this;
+      ctrl.$onInit = function() {
+        return ctrl.wasSelectionMade = false;
+      };
+      ctrl.toggleSelector = function(open) {
+        if (ctrl.isDisabled) {
+          return;
+        }
+        if (!ctrl.wasSelectionMade) {
+          return;
+        }
+        if (open == null) {
+          return;
+        }
+        ctrl.wasSelectionMade = false;
+        if (!open) {
+          return ctrl.onSubmit(EventEmitter(null));
+        }
+      };
+      ctrl.applyFilterOnClick = function(filter) {
+        ctrl.wasSelectionMade = true;
+        return ctrl.onSelect(EventEmitter({
+          selectedFilter: filter
+        }));
+      };
+    }]
+  });
+
+}).call(this);
+
+
 /*
  *   @desc Search bar component that builds a API query string, and emits change events.
  *   @binding {Function} [onSubmit] Callback fired on keypress with keyCode 13 (enter)
  *   @binding {Function=} [onChange] Callback fired on input ngChange
  *   @binding {Function=} [onInit]  Callback fired on component initialize, emitting an api for exposing cmp methods to the parent component
+ *   @binding {boolean=} [isDisabled] prevents onSubmit being fired
  */
 
 (function() {
@@ -897,7 +1251,8 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
     bindings: {
       onSubmit: '&',
       onChange: '&?',
-      onInit: '&?'
+      onInit: '&?',
+      isDisabled: '<?'
     },
     templateUrl: 'components/top-bar/search-bar',
     controller: ["EventEmitter", "$scope", function(EventEmitter, $scope) {
@@ -923,26 +1278,27 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         }
       };
       ctrl.submitOnKeypress = function($event, force) {
-        var args;
+        var query;
         if ($event == null) {
           $event = {};
         }
         if (force == null) {
           force = false;
         }
+        if (ctrl.isDisabled) {
+          return;
+        }
         if (!($event.keyCode === 13 || force)) {
           return;
         }
         if (ctrl.search.text) {
-          args = {
-            query: "reference match /" + ctrl.search.text + "/"
-          };
+          query = "reference match /" + ctrl.search.text + "/";
         } else {
-          args = {
-            query: null
-          };
+          query = "";
         }
-        return ctrl.onSubmit(EventEmitter(args));
+        return ctrl.onSubmit(EventEmitter({
+          query: query
+        }));
       };
       ctrl.clearSearchText = function() {
         ctrl.search.text = '';
@@ -981,7 +1337,7 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         });
         return TransacTxsService.matches(ctrl.transaction.links.matches, ctrl.transaction.transaction_log.resource_type).then(function(response) {
           return ctrl.matches = response.matches;
-        }, function(err) {});
+        });
       };
       ctrl.title = function() {
         return TransacTxsService.formatTitle(ctrl.transaction);
@@ -1026,12 +1382,12 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           m.auto_commit = auto;
         });
         return ctrl.onCommit(EventEmitter({
-          transaction: ctrl.transaction
-        })).then(function(res) {
+          transaction: ctrl.transaction,
+          action: 'approve',
+          auto: auto
+        })).then(null, function(res) {
           return $timeout(function() {
-            if (!res.success) {
-              return $element.removeClass('commiting');
-            }
+            return $element.removeClass('commiting');
           }, 300);
         });
       };
@@ -1045,12 +1401,12 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           m.push_disabled = auto;
         });
         return ctrl.onCommit(EventEmitter({
-          transaction: ctrl.transaction
-        })).then(function(res) {
+          transaction: ctrl.transaction,
+          action: 'refuse',
+          auto: auto
+        })).then(null, function(res) {
           return $timeout(function() {
-            if (!res.success) {
-              return $element.removeClass('commiting');
-            }
+            return $element.removeClass('commiting');
           }, 300);
         });
       };
@@ -1287,6 +1643,8 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
  *   @require transac-tx component
  *   @require transac-tx-reconcile component
  *   @require infinite-scroll directive (external)
+ *   @binding {string=} [txsType] The type of transactions to load, e.g 'pending', 'historical'
+ *   @binding {Object=} [filters] An object containing filters params to apply to load txs requests (Connec! api filter spec)
  *   @binding {Function=} [onInit] Callback fired $onInit, emitting upward an api.
  *   @binding {Function=} [onTransactionsChange] Callback fired on change to stored txs model
  *   @binding {Function=} [onReconciling] Callback fired on reconcile tx with matches (dups)
@@ -1297,21 +1655,22 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
   angular.module('transac.transactions').component('transacTxs', {
     bindings: {
       txsType: '<?',
+      filters: '<?',
       onInit: '&?',
       onTransactionsChange: '&?',
       onReconciling: '&?',
       onLoadingChange: '&?'
     },
     templateUrl: 'components/transactions/transactions',
-    controller: ["$q", "EventEmitter", "TransacTxsDispatcher", "TransacTxsStore", function($q, EventEmitter, TransacTxsDispatcher, TransacTxsStore) {
-      var ctrl, initTxsState, onSearchQuery, onTxsChange;
+    controller: ["$q", "EventEmitter", "TransacTxsDispatcher", "TransacTxsStore", "TransacAlertsService", function($q, EventEmitter, TransacTxsDispatcher, TransacTxsStore, TransacAlertsService) {
+      var ctrl, initTxsState, onFilterTxs, onTxsChange;
       ctrl = this;
       ctrl.$onInit = function() {
         ctrl.reconciling = false;
         if (ctrl.onInit != null) {
           ctrl.onInit(EventEmitter({
             api: {
-              searchTxs: onSearchQuery
+              filterTxs: onFilterTxs
             }
           }));
         }
@@ -1331,9 +1690,6 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
       ctrl.isPaginationDisabled = function() {
         return ctrl.loading || ctrl.reconciling || ctrl.noTxsFound() || ctrl.allTxsFound();
       };
-      ctrl.isFilteringTxs = function() {
-        return ctrl.cachedParams && ctrl.cachedParams.$filter;
-      };
       ctrl.allTxsFound = function() {
         return !ctrl.loading && ctrl.transactions.length && (ctrl.transactions.length === ctrl.pagination.total);
       };
@@ -1341,18 +1697,15 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         return !ctrl.loading && !ctrl.transactions.length && !ctrl.pagination.total;
       };
       ctrl.onTransactionCommit = function(arg) {
-        var transaction;
-        transaction = arg.transaction;
-        return TransacTxsDispatcher.commitTx(transaction.links.commit, transaction.transaction_log.resource_type, transaction.mappings).then(function(res) {
-          return $q.when({
-            success: res.success
-          });
-        }, function(err) {
-          return $q.when({
-            success: false,
-            message: err.message
-          });
-        }, function(res) {
+        var action, auto, transaction;
+        transaction = arg.transaction, action = arg.action, auto = arg.auto;
+        return TransacTxsDispatcher.commitTx(transaction.links.commit, transaction.transaction_log.resource_type, transaction.mappings).then(null, function(err) {
+          TransacAlertsService.send(err.message.type, "Failed to " + action + " sharing of " + transaction.transaction_log.reference);
+          return $q.reject(err);
+        }, function() {
+          var phrase;
+          phrase = auto ? action + "d ongoing sharing for" : action + "d sharing for";
+          TransacAlertsService.send('success', phrase + " " + transaction.transaction_log.reference);
           return onTxsChange();
         });
       };
@@ -1373,15 +1726,12 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
       };
       ctrl.onTransactionReconciled = function(args) {
         return TransacTxsDispatcher.mergeTxs(args).then(function(res) {
-          TransacTxsDispatcher.reloadTxs(ctrl.type);
-          return $q.when({
-            success: res.success
-          });
+          TransacAlertsService.send(res.message.type, res.message.text);
+          TransacTxsDispatcher.reloadTxs(ctrl.txsType, ctrl.filters);
+          return res;
         }, function(err) {
-          return $q.when({
-            success: false,
-            message: err.message
-          });
+          TransacAlertsService.send(err.message.type, err.message.text);
+          return $q.reject(err);
         })["finally"](function() {
           ctrl.reconcileData = null;
           ctrl.reconciling = false;
@@ -1396,20 +1746,18 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         ctrl.txsType = TransacTxsStore.getState().txsType;
         ctrl.transactions = TransacTxsStore.getState().transactions;
         ctrl.pagination = TransacTxsStore.getState().pagination;
-        ctrl.cachedParams = TransacTxsStore.getState().cachedParams;
         ctrl.loading = TransacTxsStore.getState().loading;
         return TransacTxsStore.subscribe().then(null, null, function(state) {
           ctrl.txsType = state.txsType;
           ctrl.transactions = state.transactions;
           ctrl.pagination = state.pagination;
-          ctrl.cachedParams = state.cachedParams;
           ctrl.loading = state.loading;
           return ctrl.onLoadingChange(EventEmitter({
             loading: ctrl.loading
           }));
         });
       };
-      onSearchQuery = function(type, params) {
+      onFilterTxs = function(type, params) {
         return TransacTxsDispatcher.reloadTxs(type, params).then(function() {
           return onTxsChange();
         });
@@ -1419,7 +1767,7 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         if (!_.isUndefined(ctrl.onTransactionsChange)) {
           return ctrl.onTransactionsChange(EventEmitter((
             obj = {},
-            obj[ctrl.txsType + "TxsCount"] = ctrl.pagination.total,
+            obj["" + ctrl.txsType] = ctrl.pagination.total,
             obj
           )));
         }
