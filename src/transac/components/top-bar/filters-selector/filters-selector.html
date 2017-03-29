@@ -5,7 +5,7 @@
     </button>
     <ul class="dropdown-menu filters-selector_selector-dropdown" uib-dropdown-menu role="menu" aria-labelledby="filters-selector_selector-btn">
       <li role="{{!item.divider ? 'menuitem' : ''}}" ng-repeat="item in $ctrl.filtersMenu" ng-class="{ 'divider': item.divider }">
-        <a href="" ng-if="!$ctrl.divider" ng-class="{ 'selected': item.selected }" ng-click="$ctrl.applyFilterOnClick(item)">{{item.label}}</a>
+        <a href="" ng-if="!$ctrl.divider" ng-class="{ 'selected': item.selected }" ng-click="$ctrl.selectFilterOnClick(item)">{{item.label}}</a>
       </li>
     </ul>
   </div>

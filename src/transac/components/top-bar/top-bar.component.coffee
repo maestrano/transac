@@ -46,19 +46,20 @@ angular.module('transac.top-bar').component('transacTopBar', {
     ctrl.onSearchBarInit = ({api})->
       ctrl.searchBarApi = api
 
-    ctrl.onSearchBarSubmit = ({query})->
-      filters = TransacTopBarDispatcher.updateSearchFilter(query)
+    ctrl.onSearchBarSubmit = ({filter})->
+      filters = TransacTopBarDispatcher.updateSearchFilter(filter)
       # Emit the currently applied filters, and selected menu
       ctrl.onFilter(EventEmitter(selectedMenu: ctrl.selectedMenu, filters: filters))
 
     ctrl.onSearchBarChange = ({isEditing})->
       ctrl.isEditingSearchBar = isEditing
 
-    ctrl.applyFilterOnSelect = ({selectedFilter})->
-      TransacTopBarDispatcher.applyFilter(selectedFilter)
+    ctrl.onFilterSelect = ({selectedFilter})->
+      TransacTopBarDispatcher.selectFilter(selectedFilter)
 
     ctrl.onFiltersSubmit = ->
-      ctrl.onFilter(EventEmitter(selectedMenu: ctrl.selectedMenu, filters: ctrl.filters))
+      filters = TransacTopBarDispatcher.applyFilters()
+      ctrl.onFilter(EventEmitter(selectedMenu: ctrl.selectedMenu, filters: filters))
 
     # Private
 

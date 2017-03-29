@@ -27,7 +27,7 @@ angular.module('transac.top-bar').component('transacFiltersSelector', {
       ctrl.wasSelectionMade = false
       ctrl.onSubmit(EventEmitter(null)) unless open
 
-    ctrl.applyFilterOnClick = (filter)->
+    ctrl.selectFilterOnClick = (filter)->
       ctrl.wasSelectionMade = true
       ctrl.onSelect(EventEmitter(selectedFilter: filter))
 

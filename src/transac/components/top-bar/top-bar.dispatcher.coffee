@@ -12,12 +12,16 @@ angular.module('transac.transactions').service('TransacTopBarDispatcher', ($q, T
       return
     )
 
-  @updateSearchFilter = (query)->
-    state = TransacTopBarStore.dispatch('updateSearchFilter', query)
+  @updateSearchFilter = (filters)->
+    state = TransacTopBarStore.dispatch('updateSearchFilter', filters)
     state.filters
 
-  @applyFilter = (filter)->
-    state = TransacTopBarStore.dispatch('applyFilter', filter)
+  @selectFilter = (filter)->
+    TransacTopBarStore.dispatch('selectFilter', filter)
+    return
+
+  @applyFilters = ->
+    state = TransacTopBarStore.dispatch('applyFilters')
     state.filters
 
   return @

@@ -28,10 +28,10 @@ angular.module('transac.top-bar').component('transacSearchBar', {
       return if ctrl.isDisabled
       return unless $event.keyCode == 13 || force
       if ctrl.search.text
-        query = "reference match /#{ctrl.search.text}/"
+        filter = attr: 'reference', cmd: 'match', value: "/#{ctrl.search.text}/"
       else
-        query = ""
-      ctrl.onSubmit(EventEmitter(query: query))
+        filter = null
+      ctrl.onSubmit(EventEmitter(filter: filter))
 
     ctrl.clearSearchText = ->
       ctrl.search.text = ''
