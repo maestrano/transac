@@ -15,21 +15,21 @@
 
 
 /*
- *   @desc The Common module is the container reference for all application specific components
- */
-
-(function() {
-  angular.module('transac.common', []);
-
-}).call(this);
-
-
-/*
  *   @desc The Components module is the container reference for all reusable modules. Modules added as depenedencies here should be decoupled.
  */
 
 (function() {
   angular.module('transac.components', ['transac.user', 'transac.alerts', 'transac.top-bar', 'transac.transactions']);
+
+}).call(this);
+
+
+/*
+ *   @desc The Common module is the container reference for all application specific components
+ */
+
+(function() {
+  angular.module('transac.common', []);
 
 }).call(this);
 
@@ -59,16 +59,6 @@
       timeOut: 1500
     }
   });
-
-}).call(this);
-
-
-/*
- *   @desc Components for configuring, managing & displaying the current user state.
- */
-
-(function() {
-  angular.module('transac.user', []);
 
 }).call(this);
 
@@ -185,6 +175,16 @@
 
 
 /*
+ *   @desc Components for configuring, managing & displaying the current user state.
+ */
+
+(function() {
+  angular.module('transac.user', []);
+
+}).call(this);
+
+
+/*
  *   @desc Transac! Root Component - embeds the library feature components.
  */
 
@@ -260,91 +260,6 @@
 
 }).call(this);
 
-angular.module('maestrano.transac').run(['$templateCache', function($templateCache) {$templateCache.put('transac','<div ng-if="$ctrl.transacReady">\n  <transac-top-bar ng-show="$ctrl.isTopBarShown" is-menu-loading="$ctrl.isTxsLoading" on-init="$ctrl.onTopBarCmpInit($event)" on-filter="$ctrl.onTopBarFilter($event)"></transac-top-bar>\n\n  <transac-txs on-init="$ctrl.onTxsCmpInit($event)" filters="$ctrl.filters" on-transactions-change="$ctrl.updateTransactionsCount($event)" on-reconciling="$ctrl.toggleTopBar($event)" on-loading-change="$ctrl.updateTxsLoadingStatus($event)"></transac-txs>\n</div>\n<div ng-if="!$ctrl.transacReady">\n  <p>Loading...</p>\n</div>\n');
-$templateCache.put('components/top-bar','<div class="top-bar">\n  <transac-filters-selector filters-menu="$ctrl.filtersMenu" on-select="$ctrl.applyFilterOnSelect($event)" on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>\n  <div class="top-bar_menu">\n    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ \'active\': menu.active, \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">\n      <h5>{{::menu.title}} ({{menu.itemsCount}})</h5>\n      <div class="top-bar_menu_tab-line"></div>\n    </a>\n    <!-- $compiles transac-search-bar cmp here (see controller) -->\n  </div>\n  <button class="top-bar_toggle-search-btn" ng-class="{ \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.toggleSearch($event)" ng-disabled="$ctrl.isMenuLoading">\n    <i class="fa fa-2x fa-fw" ng-class="{ \'fa-search\': !$ctrl.isEditingSearchBar, \'fa-times\': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>\n  </button>\n</div>\n');
-$templateCache.put('components/top-bar/filters-selector','<div class="filters-selector">\n  <div class="btn-group" uib-dropdown on-toggle="$ctrl.toggleSelector(open)" auto-close="outsideClick">\n    <button id="filters-selector_selector-btn" type="button" class="btn btn-primary" ng-class="{ \'disabled\': $ctrl.isDisabled }" ng-click="$ctrl.toggleSelector()" uib-dropdown-toggle>\n      <i class="fa fa-filter fa-2x fa-fw" aria-hidden="true"></i>\n    </button>\n    <ul class="dropdown-menu filters-selector_selector-dropdown" uib-dropdown-menu role="menu" aria-labelledby="filters-selector_selector-btn">\n      <li role="{{!item.divider ? \'menuitem\' : \'\'}}" ng-repeat="item in $ctrl.filtersMenu" ng-class="{ \'divider\': item.divider }">\n        <a href="" ng-if="!$ctrl.divider" ng-class="{ \'selected\': item.selected }" ng-click="$ctrl.applyFilterOnClick(item)">{{item.label}}</a>\n      </li>\n    </ul>\n  </div>\n</div>\n');
-$templateCache.put('components/top-bar/search-bar','<input type="text" placeholder="Search transactions..." ng-model="$ctrl.search.text" ng-keypress="$ctrl.submitOnKeypress($event)" ng-change="$ctrl.onSearchChange()">\n');
-$templateCache.put('components/transactions/transaction','<div ng-class="{ \'selected\': $ctrl.isSelected }">\n  <div class="summary">\n    <a href="" class="summary_content" ng-click="$ctrl.selectOnClick()">\n      <div class="summary_content_icon">\n        <i class="fa {{$ctrl.icon()}} fa-2x" aria-hidden="true"></i>\n      </div>\n      <div class="summary_content_caption">\n        <div class="summary_content_caption_title">\n          <span>{{::$ctrl.title()}}</span>\n        </div>\n        <div class="summary_content_caption_subtitle">\n          <span>{{::$ctrl.subtitle()}}</span>\n        </div>\n      </div>\n      <div class="summary_content_warning" ng-if="$ctrl.hasMatches()">\n        <div>\n          <i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>\n          <span>This record may be a duplicate</span>\n        </div>\n      </div>\n      <div class="summary_actions">\n        <button type="button" class="summary_actions_action--deny" ng-click="$ctrl.denyOnClick()">\n          <i class="fa fa-times fa-2x"></i>\n        </button>\n        <button type="button" class="summary_actions_action--approve" ng-click="$ctrl.approveOnClick(true)">\n          <i class="fa fa-check fa-2x"></i>\n        </button>\n      </div>\n    </a>\n  </div>\n  <div class="detail" ng-if="$ctrl.isSelected">\n    <div class="row">\n      <div class="col-md-6 detail_section no-gutters">\n        <transac-tx-changes changes="$ctrl.formattedChanges"></transac-tx-changes>\n      </div>\n      <div class="col-md-3 detail_section no-gutters">\n        <div class="detail_section_title">\n          <h5>Select apps to share with:</h5>\n        </div>\n        <div class="detail_section_app" ng-repeat="mapping in ::$ctrl.transaction.mappings" ng-click="$ctrl.selectAppOnClick($event, mapping)">\n          <span>{{::mapping.app_name}}</span>\n          <input type="checkbox" ng-checked="mapping.sharedWith">\n        </div>\n      </div>\n      <div class="col-md-3 detail_section no-gutters">\n        <div class="detail_section_action">\n          <div class="detail_section_action_approve" ng-click="$ctrl.approveOnClick()">\n            <span class="action-label">Approve only this time</span>\n            <div class="action-button"><i class="fa fa-check fa-2x"></i></div>\n          </div>\n        </div>\n        <div class="detail_section_action">\n          <div class="detail_section_action_deny" ng-click="$ctrl.denyOnClick(true)">\n            <span class="action-label">Never share this record</span>\n            <div class="action-button"><i class="fa fa-ban fa-2x"></i></div>\n          </div>\n        </div>\n        <div class="detail_section_action" ng-if="$ctrl.hasMatches()">\n          <div class="detail_section_action_duplicate" ng-click="$ctrl.reconcileOnClick()">\n            <span class="action-label">This record is a duplicate</span>\n            <div class="action-button"><i class="fa fa-link fa-2x"></i></div>\n          </div>\n        </div>\n      </div>\n    </div>\n    <div ng-if="$ctrl.hasMatches()">\n      <div class="row detail_dup-line-break">\n        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>\n        <div class="detail_dup-line-break_title">\n          <div>\n            <i class="fa fa-exclamation fa-lg" aria-hidden="true"></i>\n            <span>Potential Duplicates</span>\n          </div>\n        </div>\n        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--right"></div>\n      </div>\n      <div class="row">\n        <div class="col-md-12 col-xs-12 detail_section detail_section_matches">\n          <transac-tx-matches matches="::$ctrl.matches"></transac-tx-matches>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n');
-$templateCache.put('components/transactions/transaction-changes','<div class="table-responsive">\n  <table class="table table-striped borderless">\n    <tr>\n      <th ng-if="$ctrl.onSelect">Tick</th>\n      <th>Field</th>\n      <th>Value</th>\n    </tr>\n    <tr ng-repeat="(key, value) in ::$ctrl.changes">\n      <td ng-if="$ctrl.onSelect"><input type="checkbox"></td>\n      <td>{{::key}}</td>\n      <td>{{::value}}</td>\n    </tr>\n  </table>\n</div>\n');
-$templateCache.put('components/transactions/transaction-matches','<div ng-repeat="match in ::$ctrl.matches" class="match">\n  <div class="match_caption">\n    <div class="match_caption_title">\n      <span>{{::$ctrl.title(match)}}</span>\n    </div>\n    <div class="match_caption_subtitle">\n      <span>{{::$ctrl.subtitle(match)}}</span>\n    </div>\n  </div>\n</div>\n');
-$templateCache.put('components/transactions/transaction-reconcile','<div class="top-panel">\n  <div class="top-panel-btn top-panel_btn--back" ng-click="$ctrl.back()">\n    <div class="action-button"><i class="fa fa-angle-double-left fa-2x"></i></div>\n    <span class="action-label">Back</span>\n  </div>\n  <div class="top-panel_title">\n    <span>Reconcile duplicate records</span>\n  </div>\n  <div class="top-panel-btn top-panel_btn--next top-panel_btn--align-right" ng-if="$ctrl.isNextBtnShown()" ng-click="$ctrl.next()">\n    <span class="action-label">Next</span>\n    <div class="action-button"><i class="fa fa-angle-double-right fa-2x"></i></div>\n  </div>\n  <div class="top-panel-btn top-panel_btn--done top-panel_btn--align-right" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">\n    <span class="action-label">Publish</span>\n    <div class="action-button"><i class="fa fa-check fa-2x"></i></div>\n  </div>\n</div>\n<div class="edit" ng-show="$ctrl.editing">\n  <div class="edit_tx">\n    <transac-tx-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" deselected="$ctrl.isTxDeselected(tx)" on-select="$ctrl.onSelect($event)"></transac-tx-tile>\n  </div>\n</div>\n<div class="review" ng-if="!$ctrl.editing">\n  <div class="review_tx">\n    <transac-tx-tile transaction="::$ctrl.selectedTx" checked="true" title="::$ctrl.selectedTxTitle" subtitle="::$ctrl.selectedTxSubtitle"></transac-tx-tile>\n  </div>\n</div>\n');
-$templateCache.put('components/transactions/transaction-tile','<div class="tx-tile" ng-class="{ \'deselected\': $ctrl.deselected, \'selected\': $ctrl.checked }">\n  <div class="tx-tile_topbar row no-gutters" ng-class="{\'no-click\': !$ctrl.isOnSelectDefined()}" ng-click="$ctrl.onSelectTx()">\n    <div class="tx-tile_topbar_checkbox" ng-if="$ctrl.isOnSelectDefined()">\n      <input type="checkbox" ng-checked="$ctrl.checked" disabled>\n    </div>\n    <div class="tx-tile_topbar_text">\n      <h5>{{::$ctrl.title}}</h5>\n      <div class="tx-tile_topbar_text_subtitle">\n        <p>{{::$ctrl.subtitle}}</p>\n      </div>\n    </div>\n  </div>\n  <transac-tx-changes changes="::$ctrl.formattedTxAttrs"></transac-tx-changes>\n</div>\n');
-$templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.reconciling" infinite-scroll="$ctrl.loadMore()" infinite-scroll-immediate-check="false" infinite-scroll-disabled="$ctrl.isPaginationDisabled()">\n  <transac-tx transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>\n  <div ng-if="$ctrl.loading" class="loading">\n    <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>\n  </div>\n  <div ng-if="!$ctrl.loading" class="manual-load">\n    <div ng-if="($ctrl.txsType == \'pending\')">\n      <button ng-click="$ctrl.loadMore()" ng-if="!$ctrl.isPaginationDisabled()">Scroll for more</button>\n      <p ng-if="$ctrl.allTxsFound()">All results</p>\n      <p ng-if="$ctrl.noTxsFound()">No results</p>\n    </div>\n    <div ng-if="($ctrl.txsType == \'historical\')">\n      <span>Coming Soon</span>\n    </div>\n  </div>\n</div>\n<div ng-if="$ctrl.reconciling">\n  <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>\n</div>\n');}]);
-
-/*
- *   @desc Provider configuration & service business logic for the current user state.
- */
-
-(function() {
-  angular.module('transac.user').provider('TransacUserService', function() {
-    var _$get, options, provider;
-    provider = this;
-    options = {
-      user: null,
-      organizations: null
-    };
-    provider.configure = function(data) {
-      return angular.extend(options, data);
-    };
-    _$get = function($q, $log) {
-      var service;
-      service = this;
-      service.user = {};
-
-      /*
-       *   @returns {Object} Current user model
-       */
-      service.get = function() {
-        return angular.copy(service.user);
-      };
-
-      /*
-       *   @returns {Object} Currently selected organization
-       */
-      service.getCurrentOrg = function() {
-        if (_.isEmpty(service.user)) {
-          return {};
-        }
-        return _.find(service.user.organizations, function(org) {
-          return org.id === service.user.currentOrgId;
-        });
-      };
-
-      /*
-       *   @desc Retrieves & update store with latest User data
-       *   @returns {Promise<Object>} A promise to the current user
-       */
-      service.fetch = function() {
-        var promises;
-        promises = _.map(options, function(callback, key) {
-          if (callback != null) {
-            return callback();
-          } else {
-            return $q.reject("transac error: no " + key + " callback configured.");
-          }
-        });
-        return $q.all(promises).then(function(response) {
-          service.user = angular.merge({}, response[0], response[1]);
-          return service.get();
-        }, function(err) {
-          $log.error(err);
-          return $q.reject({
-            message: {
-              text: "Failed to load User for Transac!",
-              type: 'error'
-            }
-          });
-        });
-      };
-      return service;
-    };
-    _$get.$inject = ['$q', '$log'];
-    provider.$get = _$get;
-    return provider;
-  });
-
-}).call(this);
-
 
 /*
  *   @desc "Tabs" style topbar menu component
@@ -416,9 +331,9 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         return ctrl.searchBarApi = api;
       };
       ctrl.onSearchBarSubmit = function(arg) {
-        var filters, query;
-        query = arg.query;
-        filters = TransacTopBarDispatcher.updateSearchFilter(query);
+        var filter, filters;
+        filter = arg.filter;
+        filters = TransacTopBarDispatcher.updateSearchFilter(filter);
         return ctrl.onFilter(EventEmitter({
           selectedMenu: ctrl.selectedMenu,
           filters: filters
@@ -429,15 +344,17 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         isEditing = arg.isEditing;
         return ctrl.isEditingSearchBar = isEditing;
       };
-      ctrl.applyFilterOnSelect = function(arg) {
+      ctrl.onFilterSelect = function(arg) {
         var selectedFilter;
         selectedFilter = arg.selectedFilter;
-        return TransacTopBarDispatcher.applyFilter(selectedFilter);
+        return TransacTopBarDispatcher.selectFilter(selectedFilter);
       };
       ctrl.onFiltersSubmit = function() {
+        var filters;
+        filters = TransacTopBarDispatcher.applyFilters();
         return ctrl.onFilter(EventEmitter({
           selectedMenu: ctrl.selectedMenu,
-          filters: ctrl.filters
+          filters: filters
         }));
       };
       initTopBarState = function() {
@@ -482,6 +399,16 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
 
 }).call(this);
 
+angular.module('maestrano.transac').run(['$templateCache', function($templateCache) {$templateCache.put('transac','<div ng-if="$ctrl.transacReady">\n  <transac-top-bar ng-show="$ctrl.isTopBarShown" is-menu-loading="$ctrl.isTxsLoading" on-init="$ctrl.onTopBarCmpInit($event)" on-filter="$ctrl.onTopBarFilter($event)"></transac-top-bar>\n\n  <transac-txs on-init="$ctrl.onTxsCmpInit($event)" filters="$ctrl.filters" on-transactions-change="$ctrl.updateTransactionsCount($event)" on-reconciling="$ctrl.toggleTopBar($event)" on-loading-change="$ctrl.updateTxsLoadingStatus($event)"></transac-txs>\n</div>\n<div ng-if="!$ctrl.transacReady">\n  <p>Loading...</p>\n</div>\n');
+$templateCache.put('components/top-bar','<div class="top-bar">\n  <transac-filters-selector filters-menu="$ctrl.filtersMenu" on-select="$ctrl.onFilterSelect($event)" on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>\n  <div class="top-bar_menu">\n    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ \'active\': menu.active, \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">\n      <h5>{{::menu.title}} ({{menu.itemsCount}})</h5>\n      <div class="top-bar_menu_tab-line"></div>\n    </a>\n    <!-- $compiles transac-search-bar cmp here (see controller) -->\n  </div>\n  <button class="top-bar_toggle-search-btn" ng-class="{ \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.toggleSearch($event)" ng-disabled="$ctrl.isMenuLoading">\n    <i class="fa fa-2x fa-fw" ng-class="{ \'fa-search\': !$ctrl.isEditingSearchBar, \'fa-times\': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>\n  </button>\n</div>\n');
+$templateCache.put('components/top-bar/filters-selector','<div class="filters-selector">\n  <div class="btn-group" uib-dropdown on-toggle="$ctrl.toggleSelector(open)" auto-close="outsideClick">\n    <button id="filters-selector_selector-btn" type="button" class="btn btn-primary" ng-class="{ \'disabled\': $ctrl.isDisabled }" ng-click="$ctrl.toggleSelector()" uib-dropdown-toggle>\n      <i class="fa fa-filter fa-2x fa-fw" aria-hidden="true"></i>\n    </button>\n    <ul class="dropdown-menu filters-selector_selector-dropdown" uib-dropdown-menu role="menu" aria-labelledby="filters-selector_selector-btn">\n      <li role="{{!item.divider ? \'menuitem\' : \'\'}}" ng-repeat="item in $ctrl.filtersMenu" ng-class="{ \'divider\': item.divider }">\n        <a href="" ng-if="!$ctrl.divider" ng-class="{ \'selected\': item.selected }" ng-click="$ctrl.selectFilterOnClick(item)">{{item.label}}</a>\n      </li>\n    </ul>\n  </div>\n</div>\n');
+$templateCache.put('components/top-bar/search-bar','<input type="text" placeholder="Search transactions..." ng-model="$ctrl.search.text" ng-keypress="$ctrl.submitOnKeypress($event)" ng-change="$ctrl.onSearchChange()">\n');
+$templateCache.put('components/transactions/transaction','<div ng-class="{ \'selected\': $ctrl.isSelected }">\n  <div class="summary">\n    <a href="" class="summary_content" ng-click="$ctrl.selectOnClick()">\n      <div class="summary_content_icon">\n        <i class="fa {{$ctrl.icon()}} fa-2x" aria-hidden="true"></i>\n      </div>\n      <div class="summary_content_caption">\n        <div class="summary_content_caption_title">\n          <span>{{::$ctrl.title()}}</span>\n        </div>\n        <div class="summary_content_caption_subtitle">\n          <span>{{::$ctrl.subtitle()}}</span>\n        </div>\n      </div>\n      <div class="summary_content_warning" ng-if="$ctrl.hasMatches()">\n        <div>\n          <i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>\n          <span>This record may be a duplicate</span>\n        </div>\n      </div>\n      <div class="summary_actions">\n        <button type="button" class="summary_actions_action--deny" ng-click="$ctrl.denyOnClick()">\n          <i class="fa fa-times fa-2x"></i>\n        </button>\n        <button type="button" class="summary_actions_action--approve" ng-click="$ctrl.approveOnClick(true)">\n          <i class="fa fa-check fa-2x"></i>\n        </button>\n      </div>\n    </a>\n  </div>\n  <div class="detail" ng-if="$ctrl.isSelected">\n    <div class="row">\n      <div class="col-md-6 detail_section no-gutters">\n        <transac-tx-changes changes="$ctrl.formattedChanges"></transac-tx-changes>\n      </div>\n      <div class="col-md-3 detail_section no-gutters">\n        <div class="detail_section_title">\n          <h5>Select apps to share with:</h5>\n        </div>\n        <div class="detail_section_app" ng-repeat="mapping in ::$ctrl.transaction.mappings" ng-click="$ctrl.selectAppOnClick($event, mapping)">\n          <span>{{::mapping.app_name}}</span>\n          <input type="checkbox" ng-checked="mapping.sharedWith">\n        </div>\n      </div>\n      <div class="col-md-3 detail_section no-gutters">\n        <div class="detail_section_action">\n          <div class="detail_section_action_approve" ng-click="$ctrl.approveOnClick()">\n            <span class="action-label">Approve only this time</span>\n            <div class="action-button"><i class="fa fa-check fa-2x"></i></div>\n          </div>\n        </div>\n        <div class="detail_section_action">\n          <div class="detail_section_action_deny" ng-click="$ctrl.denyOnClick(true)">\n            <span class="action-label">Never share this record</span>\n            <div class="action-button"><i class="fa fa-ban fa-2x"></i></div>\n          </div>\n        </div>\n        <div class="detail_section_action" ng-if="$ctrl.hasMatches()">\n          <div class="detail_section_action_duplicate" ng-click="$ctrl.reconcileOnClick()">\n            <span class="action-label">This record is a duplicate</span>\n            <div class="action-button"><i class="fa fa-link fa-2x"></i></div>\n          </div>\n        </div>\n      </div>\n    </div>\n    <div ng-if="$ctrl.hasMatches()">\n      <div class="row detail_dup-line-break">\n        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>\n        <div class="detail_dup-line-break_title">\n          <div>\n            <i class="fa fa-exclamation fa-lg" aria-hidden="true"></i>\n            <span>Potential Duplicates</span>\n          </div>\n        </div>\n        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--right"></div>\n      </div>\n      <div class="row">\n        <div class="col-md-12 col-xs-12 detail_section detail_section_matches">\n          <transac-tx-matches matches="::$ctrl.matches"></transac-tx-matches>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n');
+$templateCache.put('components/transactions/transaction-changes','<div class="table-responsive">\n  <table class="table table-striped borderless">\n    <tr>\n      <th ng-if="$ctrl.onSelect">Tick</th>\n      <th>Field</th>\n      <th>Value</th>\n    </tr>\n    <tr ng-repeat="(key, value) in ::$ctrl.changes">\n      <td ng-if="$ctrl.onSelect"><input type="checkbox"></td>\n      <td>{{::key}}</td>\n      <td>{{::value}}</td>\n    </tr>\n  </table>\n</div>\n');
+$templateCache.put('components/transactions/transaction-matches','<div ng-repeat="match in ::$ctrl.matches" class="match">\n  <div class="match_caption">\n    <div class="match_caption_title">\n      <span>{{::$ctrl.title(match)}}</span>\n    </div>\n    <div class="match_caption_subtitle">\n      <span>{{::$ctrl.subtitle(match)}}</span>\n    </div>\n  </div>\n</div>\n');
+$templateCache.put('components/transactions/transaction-reconcile','<div class="top-panel">\n  <div class="top-panel-btn top-panel_btn--back" ng-click="$ctrl.back()">\n    <div class="action-button"><i class="fa fa-angle-double-left fa-2x"></i></div>\n    <span class="action-label">Back</span>\n  </div>\n  <div class="top-panel_title">\n    <span>Reconcile duplicate records</span>\n  </div>\n  <div class="top-panel-btn top-panel_btn--next top-panel_btn--align-right" ng-if="$ctrl.isNextBtnShown()" ng-click="$ctrl.next()">\n    <span class="action-label">Next</span>\n    <div class="action-button"><i class="fa fa-angle-double-right fa-2x"></i></div>\n  </div>\n  <div class="top-panel-btn top-panel_btn--done top-panel_btn--align-right" ng-if="!$ctrl.editing" ng-click="$ctrl.publish()">\n    <span class="action-label">Publish</span>\n    <div class="action-button"><i class="fa fa-check fa-2x"></i></div>\n  </div>\n</div>\n<div class="edit" ng-show="$ctrl.editing">\n  <div class="edit_tx">\n    <transac-tx-tile  ng-repeat="tx in ::$ctrl.transactions track by tx.id" transaction="::tx" checked="$ctrl.isTxChecked(tx)" deselected="$ctrl.isTxDeselected(tx)" on-select="$ctrl.onSelect($event)"></transac-tx-tile>\n  </div>\n</div>\n<div class="review" ng-if="!$ctrl.editing">\n  <div class="review_tx">\n    <transac-tx-tile transaction="::$ctrl.selectedTx" checked="true" title="::$ctrl.selectedTxTitle" subtitle="::$ctrl.selectedTxSubtitle"></transac-tx-tile>\n  </div>\n</div>\n');
+$templateCache.put('components/transactions/transaction-tile','<div class="tx-tile" ng-class="{ \'deselected\': $ctrl.deselected, \'selected\': $ctrl.checked }">\n  <div class="tx-tile_topbar row no-gutters" ng-class="{\'no-click\': !$ctrl.isOnSelectDefined()}" ng-click="$ctrl.onSelectTx()">\n    <div class="tx-tile_topbar_checkbox" ng-if="$ctrl.isOnSelectDefined()">\n      <input type="checkbox" ng-checked="$ctrl.checked" disabled>\n    </div>\n    <div class="tx-tile_topbar_text">\n      <h5>{{::$ctrl.title}}</h5>\n      <div class="tx-tile_topbar_text_subtitle">\n        <p>{{::$ctrl.subtitle}}</p>\n      </div>\n    </div>\n  </div>\n  <transac-tx-changes changes="::$ctrl.formattedTxAttrs"></transac-tx-changes>\n</div>\n');
+$templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.reconciling" infinite-scroll="$ctrl.loadMore()" infinite-scroll-immediate-check="false" infinite-scroll-disabled="$ctrl.isPaginationDisabled()">\n  <transac-tx transaction="transaction" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>\n  <div ng-if="$ctrl.loading" class="loading">\n    <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>\n  </div>\n  <div ng-if="!$ctrl.loading" class="manual-load">\n    <div ng-if="($ctrl.txsType == \'pending\')">\n      <button ng-click="$ctrl.loadMore()" ng-if="!$ctrl.isPaginationDisabled()">Scroll for more</button>\n      <p ng-if="$ctrl.allTxsFound()">All results</p>\n      <p ng-if="$ctrl.noTxsFound()">No results</p>\n    </div>\n    <div ng-if="($ctrl.txsType == \'historical\')">\n      <span>Coming Soon</span>\n    </div>\n  </div>\n</div>\n<div ng-if="$ctrl.reconciling">\n  <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>\n</div>\n');}]);
 (function() {
   angular.module('transac.transactions').service('TransacTopBarDispatcher', ["$q", "TransacTopBarStore", function($q, TransacTopBarStore) {
     var _self;
@@ -499,14 +426,17 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         });
       });
     };
-    this.updateSearchFilter = function(query) {
+    this.updateSearchFilter = function(filters) {
       var state;
-      state = TransacTopBarStore.dispatch('updateSearchFilter', query);
+      state = TransacTopBarStore.dispatch('updateSearchFilter', filters);
       return state.filters;
     };
-    this.applyFilter = function(filter) {
+    this.selectFilter = function(filter) {
+      TransacTopBarStore.dispatch('selectFilter', filter);
+    };
+    this.applyFilters = function() {
       var state;
-      state = TransacTopBarStore.dispatch('applyFilter', filter);
+      state = TransacTopBarStore.dispatch('applyFilters');
       return state.filters;
     };
     return this;
@@ -521,15 +451,13 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
 
 (function() {
   angular.module('transac.top-bar').service('TransacTopBarStore', ["$q", "MENUS", "FILTERS_MENU", function($q, MENUS, FILTERS_MENU) {
-    var _self, callbacks, notify, state;
+    var _self, buildFilterQuery, callbacks, notify, state;
     _self = this;
     state = {
       menus: MENUS,
       selectedMenu: _.find(MENUS, 'active'),
       filtersMenu: FILTERS_MENU,
-      filters: {
-        $filter: []
-      },
+      filters: {},
       lastSearchQuery: ''
     };
     callbacks = {};
@@ -547,7 +475,7 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
      *   @desc Dispatch actions mutating the filters & menus state managed by this Store.
      */
     this.dispatch = function(action, payload) {
-      var filter, filters, menu, query;
+      var filters, menu, orderbyFilter;
       if (payload == null) {
         payload = null;
       }
@@ -564,33 +492,25 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           menu.itemsCount = payload.itemsCount;
           break;
         case 'updateSearchFilter':
-          _.pull(state.filters.$filter, state.lastSearchQuery);
-          state.lastSearchQuery = payload;
-          if (!_.isEmpty(payload)) {
-            state.filters.$filter.push(payload);
+          state.filters.$filter = buildFilterQuery(payload);
+          break;
+        case 'selectFilter':
+          if (payload.type === '$orderby') {
+            filters = _.filter(state.filtersMenu, 'type', '$orderby');
+            _.each(filters, function(f) {
+              f.selected = false;
+            });
+            payload.selected = true;
+          } else {
+            payload.selected = !payload.selected;
           }
           break;
-        case 'applyFilter':
-          filter = payload;
-          switch (filter.type) {
-            case '$orderby':
-              filters = _.filter(state.filtersMenu, 'type', '$orderby');
-              _.each(filters, function(f) {
-                f.selected = false;
-              });
-              filter.selected = true;
-              state.filters.$orderby = filter.attr + " " + filter.value;
-              break;
-            case '$filter':
-              filter.selected = !filter.selected;
-              query = filter.attr + " " + filter.cmd + " " + filter.value;
-              if (filter.selected) {
-                state.filters.$filter.push(query);
-                state.filters.$filter = _.uniq(state.filters.$filter);
-              } else {
-                _.pull(state.filters.$filter, query);
-              }
-          }
+        case 'applyFilters':
+          orderbyFilter = _.find(_.filter(state.filtersMenu, {
+            'type': '$orderby'
+          }), 'selected');
+          state.filters.$orderby = orderbyFilter.attr + " " + orderbyFilter.value;
+          state.filters.$filter = buildFilterQuery();
       }
       notify();
       return _self.getState();
@@ -605,6 +525,24 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
     };
     notify = function() {
       callbacks.dispatched.notify(_self.getState());
+    };
+    buildFilterQuery = function(extraFilters) {
+      var filters, query;
+      if (extraFilters == null) {
+        extraFilters = [];
+      }
+      query = "";
+      filters = _.filter(state.filtersMenu, {
+        'type': '$filter',
+        'selected': true
+      }).concat(extraFilters);
+      _.each(filters, function(filter, index) {
+        query += filter.attr + " " + filter.cmd + " " + filter.value;
+        if (index !== (filters.length - 1)) {
+          query += " AND ";
+        }
+      });
+      return query;
     };
     return this;
   }]);
@@ -1188,6 +1126,81 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
 }).call(this);
 
 
+/*
+ *   @desc Provider configuration & service business logic for the current user state.
+ */
+
+(function() {
+  angular.module('transac.user').provider('TransacUserService', function() {
+    var _$get, options, provider;
+    provider = this;
+    options = {
+      user: null,
+      organizations: null
+    };
+    provider.configure = function(data) {
+      return angular.extend(options, data);
+    };
+    _$get = function($q, $log) {
+      var service;
+      service = this;
+      service.user = {};
+
+      /*
+       *   @returns {Object} Current user model
+       */
+      service.get = function() {
+        return angular.copy(service.user);
+      };
+
+      /*
+       *   @returns {Object} Currently selected organization
+       */
+      service.getCurrentOrg = function() {
+        if (_.isEmpty(service.user)) {
+          return {};
+        }
+        return _.find(service.user.organizations, function(org) {
+          return org.id === service.user.currentOrgId;
+        });
+      };
+
+      /*
+       *   @desc Retrieves & update store with latest User data
+       *   @returns {Promise<Object>} A promise to the current user
+       */
+      service.fetch = function() {
+        var promises;
+        promises = _.map(options, function(callback, key) {
+          if (callback != null) {
+            return callback();
+          } else {
+            return $q.reject("transac error: no " + key + " callback configured.");
+          }
+        });
+        return $q.all(promises).then(function(response) {
+          service.user = angular.merge({}, response[0], response[1]);
+          return service.get();
+        }, function(err) {
+          $log.error(err);
+          return $q.reject({
+            message: {
+              text: "Failed to load User for Transac!",
+              type: 'error'
+            }
+          });
+        });
+      };
+      return service;
+    };
+    _$get.$inject = ['$q', '$log'];
+    provider.$get = _$get;
+    return provider;
+  });
+
+}).call(this);
+
+
 /**
  *  @description Selectable filters component that builds filter params, and emits a submit event.
  *  @binding {Array<Object>} [filtersMenu] Collection of filter menu objects
@@ -1226,7 +1239,7 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           return ctrl.onSubmit(EventEmitter(null));
         }
       };
-      ctrl.applyFilterOnClick = function(filter) {
+      ctrl.selectFilterOnClick = function(filter) {
         ctrl.wasSelectionMade = true;
         return ctrl.onSelect(EventEmitter({
           selectedFilter: filter
@@ -1278,7 +1291,7 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         }
       };
       ctrl.submitOnKeypress = function($event, force) {
-        var query;
+        var filter;
         if ($event == null) {
           $event = {};
         }
@@ -1292,12 +1305,16 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           return;
         }
         if (ctrl.search.text) {
-          query = "reference match /" + ctrl.search.text + "/";
+          filter = {
+            attr: 'reference',
+            cmd: 'match',
+            value: "/" + ctrl.search.text + "/"
+          };
         } else {
-          query = "";
+          filter = null;
         }
         return ctrl.onSubmit(EventEmitter({
-          query: query
+          filter: filter
         }));
       };
       ctrl.clearSearchText = function() {
