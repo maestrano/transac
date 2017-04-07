@@ -46,13 +46,16 @@
         <div class="detail_section_action">
           <div class="detail_section_action_approve" ng-click="$ctrl.approveOnClick()">
             <span class="action-label">Approve only this time</span>
-            <div class="action-button"><i class="fa fa-check fa-2x"></i></div>
+            <div class="action-button"><i class="fa fa-check fa-2x"></i><span>x1</span></div>
           </div>
         </div>
         <div class="detail_section_action">
           <div class="detail_section_action_deny" ng-click="$ctrl.denyOnClick(true)">
             <span class="action-label">Never share this record</span>
-            <div class="action-button"><i class="fa fa-ban fa-2x"></i></div>
+            <div class="action-button">
+              <i class="fa fa-times fa-2x first"/>
+              <i class="fa fa-times fa-2x second"/>
+            </div>
           </div>
         </div>
         <div class="detail_section_action" ng-if="$ctrl.hasMatches()">

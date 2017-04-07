@@ -75,6 +75,7 @@ transac-tx {
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
+    margin-right: 15px;
   }
 
   .summary_actions_action--approve {
@@ -142,6 +143,21 @@ transac-tx {
 
   .detail_section_action_deny {
     .transac-action-button-labeled--label-left(@transac-tx-deny-color);
+    .action-button {
+      position: relative;
+      width: 51px;
+      height: 30px;
+      i.first {
+        position: absolute;
+        top: 0;
+        left: 9px;
+      }
+      i.second {
+        position: absolute;
+        top: 5px;
+        left: 25px;
+      }
+    }
   }
 
   .detail_section_action_duplicate {
