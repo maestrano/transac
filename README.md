@@ -2,7 +2,6 @@
 
 ## Todo (ordered)
 
-- fix transaction summary <a> nesting ng-click issue
 - history view (connect to API)
 - Jump to transaction on merge screen back
 - merge view field selection

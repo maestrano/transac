@@ -18,15 +18,15 @@
           <span>This record may be a duplicate</span>
         </div>
       </div>
-      <div class="summary_actions">
-        <button type="button" class="summary_actions_action--deny" ng-click="$ctrl.denyOnClick()">
-          <i class="fa fa-times fa-2x"></i>
-        </button>
-        <button type="button" class="summary_actions_action--approve" ng-click="$ctrl.approveOnClick(true)">
-          <i class="fa fa-check fa-2x"></i>
-        </button>
-      </div>
     </a>
+    <div class="summary_actions">
+      <button type="button" class="summary_actions_action--deny" ng-click="$ctrl.denyOnClick()">
+        <i class="fa fa-times fa-2x"></i>
+      </button>
+      <button type="button" class="summary_actions_action--approve" ng-click="$ctrl.approveOnClick(true)">
+        <i class="fa fa-check fa-2x"></i>
+      </button>
+    </div>
   </div>
   <div class="detail" ng-if="$ctrl.isSelected">
     <div class="row">
