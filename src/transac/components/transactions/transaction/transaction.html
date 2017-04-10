@@ -20,10 +20,10 @@
       </div>
     </a>
     <div class="summary_actions">
-      <button type="button" class="summary_actions_action--deny" ng-click="$ctrl.denyOnClick()">
+      <button type="button" class="summary_actions_action--deny" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
         <i class="fa fa-times fa-2x"></i>
       </button>
-      <button type="button" class="summary_actions_action--approve" ng-click="$ctrl.approveOnClick(true)">
+      <button type="button" class="summary_actions_action--approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
         <i class="fa fa-check fa-2x"></i>
       </button>
     </div>
