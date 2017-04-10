@@ -104,6 +104,8 @@ angular.module('transac.transactions').component('transacTx', {
 
     ctrl.reconcileOnClick = ()->
       return unless ctrl.hasMatches()
+      # Mark transaction as reconciling for scroll back to element on reconcile cancel
+      $element.addClass('reconciling')
       # Prepare tx for reconciliation (formats the tx into same object structure as matches
       # to streamline the collection for display within the tx-reconcile cmp)
       transaction = angular.merge({}, ctrl.transaction.transaction_log, ctrl.transaction.changes)

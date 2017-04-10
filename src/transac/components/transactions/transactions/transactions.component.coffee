@@ -20,7 +20,7 @@ angular.module('transac.transactions').component('transacTxs', {
     onLoadingChange: '&?'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: ($q, EventEmitter, TransacTxsDispatcher, TransacTxsStore, TransacAlertsService)->
+  controller: ($q, $element, $document, $timeout, EventEmitter, TransacTxsDispatcher, TransacTxsStore, TransacAlertsService)->
     ctrl = this
 
     # Public
@@ -85,6 +85,8 @@ angular.module('transac.transactions').component('transacTxs', {
         ctrl.reconcileData = null
         ctrl.reconciling = false
         ctrl.onReconciling(EventEmitter(isReconciling: false)) if ctrl.onReconciling
+        # On next digest cycle, scroll to tx marked as reconciling
+        $timeout((-> scrollToReconcilingTx()), 0)
       )
 
     # Private
@@ -115,6 +117,14 @@ angular.module('transac.transactions').component('transacTxs', {
       ctrl.onTransactionsChange(
         EventEmitter("#{ctrl.txsType}": ctrl.pagination.total)
       ) unless _.isUndefined(ctrl.onTransactionsChange)
+
+    # Scroll back to transaction on merge cancel, and remove reconciling class.
+    scrollToReconcilingTx = ->
+      selectedTxEl = $element.find('.reconciling .selected')
+      return unless selectedTxEl?
+      angular.element($document[0].body).animate(scrollTop: selectedTxEl.offset().top)
+      selectedTxEl.parent().removeClass('reconciling')
+      return
 
     return
 })

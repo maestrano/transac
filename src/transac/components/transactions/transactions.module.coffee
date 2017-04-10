@@ -7,6 +7,7 @@ angular.module('transac.transactions',
     'transac.alerts'
     # external
     'infinite-scroll'
+    'ngAnimate'
   ])
   # EventEmitter wrapper for emitting events through component '&' callbacks.
   .value('EventEmitter', (payload)-> { $event: payload })

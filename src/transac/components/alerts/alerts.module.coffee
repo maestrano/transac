@@ -4,7 +4,7 @@
 angular.module('transac.alerts',
   [
     # deps
-    'toastr',
+    'toastr'
     'ngAnimate'
   ])
   .config(['toastrConfig',
