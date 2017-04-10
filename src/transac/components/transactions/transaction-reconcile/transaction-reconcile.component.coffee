@@ -14,10 +14,11 @@ angular.module('transac.transactions').component('transacTxReconcile', {
     onReconciled: '&'
   },
   templateUrl: 'components/transactions/transaction-reconcile',
-  controller: (EventEmitter)->
+  controller: ($window, EventEmitter)->
     ctrl = this
 
     ctrl.$onInit = ->
+      $window.scrollTo(0, 0)
       ctrl.editing = true
       ctrl.transactions = [].concat(ctrl.transaction, ctrl.matches)
       ctrl.selectedTx = {}
