@@ -79,11 +79,17 @@ transac-tx {
   }
 
   .summary_actions_action--approve {
-    .transac-action-button(@transac-tx-approve-color);
+    color: @transac-tx-approve-color;
+    &:hover {
+      color: lighten(@transac-tx-approve-color, 20%);
+    }
   }
 
   .summary_actions_action--deny {
-    .transac-action-button(@transac-tx-deny-color);
+    color: @transac-tx-deny-color;
+    &:hover {
+      color: lighten(@transac-tx-deny-color, 20%);
+    }
   }
 
   .detail {

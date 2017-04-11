@@ -13,6 +13,7 @@ angular.module('transac.alerts',
         # TODO: this timeOut config isn't working?
         timeOut: 1500
         positionClass: 'toast-top-right'
+        # TODO: also not working
         preventDuplicates: false
         progressBar: true
       )
