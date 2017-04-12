@@ -63,6 +63,9 @@ angular.module('transac.transactions').component('transacTx', {
         when 'update'
           'fa-pencil-square'
 
+    ctrl.getPendingMappings = ->
+      _.select(ctrl.transaction.mappings, pending: true)
+
     ctrl.hasMatches = ->
       ctrl.matches && ctrl.matches.length
 

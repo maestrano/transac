@@ -40,7 +40,7 @@
           <div class="detail_apps_title">
             <h5>Select apps to share with:</h5>
           </div>
-          <div class="detail_apps_app" ng-repeat="mapping in ::$ctrl.transaction.mappings" ng-click="$ctrl.selectAppOnClick($event, mapping)">
+          <div class="detail_apps_app" ng-repeat="mapping in ::$ctrl.getPendingMappings()" ng-click="$ctrl.selectAppOnClick($event, mapping)">
             <span>{{::mapping.app_name}}</span>
             <input type="checkbox" ng-checked="mapping.sharedWith">
           </div>
