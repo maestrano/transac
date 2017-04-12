@@ -79,17 +79,11 @@ transac-tx {
   }
 
   .summary_actions_action--approve {
-    color: @transac-tx-approve-color;
-    &:hover {
-      color: lighten(@transac-tx-approve-color, 20%);
-    }
+    .tx-icon-approve();
   }
 
   .summary_actions_action--deny {
-    color: @transac-tx-deny-color;
-    &:hover {
-      color: lighten(@transac-tx-deny-color, 20%);
-    }
+    .tx-icon-deny-once();
   }
 
   .detail {
@@ -117,20 +111,29 @@ transac-tx {
     flex-grow: 2.5;
   }
 
-  .detail_section {
-    max-height: 180px;
-    min-height: 180px;
-    overflow: auto;
+  .detail_changes {
+    // overflow: auto;
+    // max-height: 260px;
   }
 
-  .detail_section_title {
+  // Select apps & actions
+  .detail > div:last-child {
+    border-top: 1px solid #eae8e8;
+  }
+
+  .detail_apps {
+    // min-height: 190px;
+    margin-bottom: 10px;
+  }
+
+  .detail_apps_title {
     padding-left: 10px;
     h5 {
       .transac-subtitle();
     }
   }
 
-  .detail_section_app {
+  .detail_apps_app {
     display: flex;
     padding: 10px;
     .transac-list-on-hover(@transac-tx-hover-background-color);
@@ -143,45 +146,47 @@ transac-tx {
     }
   }
 
-  .detail_section_action_approve {
-    .transac-action-button-labeled--label-left(@transac-tx-approve-color);
-  }
-
-  .detail_section_action_deny {
-    .transac-action-button-labeled--label-left(@transac-tx-deny-color);
-    .action-button {
-      position: relative;
-      width: 51px;
-      height: 30px;
-      i.first {
-        position: absolute;
-        top: 0;
-        left: 9px;
-      }
-      i.second {
-        position: absolute;
-        top: 5px;
-        left: 25px;
-      }
-    }
-  }
-
-  .detail_section_action_duplicate {
-    .transac-action-button-labeled--label-left(@transac-tx-duplicate-color);
-  }
-
-  .detail_section_action {
-    display: flex;
-    justify-content: flex-end;
-    margin: 5px;
-    div.action-button {
-      padding: 0 0 0 10px;
-    }
-  }
-
   .detail_section_matches {
+    // overflow: auto;
     min-height: 70px;
-    max-height: 120px;
+    // max-height: 130px;
+  }
+
+  .detail_actions-bar {
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 10px 0;
+  }
+
+  .detail_actions-bar_wrapper {
+    display: flex;
+    justify-content: center;
+    // margin-right: 15px;
+  }
+
+  .detail_actions-bar_action--approve {
+    .tx-btn-approve();
+    // .tx-icon-approve();
+  }
+
+  .detail_actions-bar_action--approve-once {
+    .tx-btn-approve-once();
+    // .tx-action-icon-once();
+  }
+
+  .detail_actions-bar_action--deny {
+    .tx-btn-deny();
+    // .tx-icon-deny();
+  }
+
+  .detail_actions-bar_action--deny-once {
+    .tx-btn-deny-once();
+    // .tx-action-icon-once();
+  }
+
+  .detail_actions-bar_action--dups {
+    .tx-btn-merge();
+    // .tx-icon-merge();
   }
 
 }

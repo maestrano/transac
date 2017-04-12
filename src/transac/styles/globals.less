@@ -4,6 +4,7 @@
 
 // TX ICON / BUTTONS !
 .tx-icon {
+  position: relative;
   outline: 0;
   border: none;
   max-width: 60px;
@@ -34,8 +35,45 @@
   }
 }
 
-.tx-button {}
-.tx-button.tx-raised {}
+.tx-btn {
+  position: relative;
+  outline: 0;
+  border: none;
+  background-color: inherit;
+  border-radius: 2px;
+  text-transform: uppercase;
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+  margin: 16px 8px;
+  padding: 0 6px;
+  i {
+    font-size: 17px;
+    padding: 0 5px;
+  }
+}
+.tx-btn.tx-raised {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+}
+.tx-btn,
+.tx-raised {
+  &:focus {
+    box-shadow: 0 1px 14px 0 rgba(0, 0, 0, 0.36);
+  }
+  &:active {
+    box-shadow: none;
+  }
+}
+
+// BOOTSTRAP COLUMN FLEX - columns with an even height.
+.row.is-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.row.is-flex > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+}
 
 /*
 **  Animations

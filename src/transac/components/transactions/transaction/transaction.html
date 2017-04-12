@@ -12,14 +12,14 @@
           <span>{{::$ctrl.subtitle()}}</span>
         </div>
       </div>
-      <div class="summary_content_warning" ng-if="$ctrl.hasMatches()">
+      <div class="summary_content_warning" ng-if="$ctrl.hasMatches()" ng-class="{ 'hide': $ctrl.isSelected }">
         <div>
           <i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>
           <span>This record may be a duplicate</span>
         </div>
       </div>
     </a>
-    <div class="summary_actions">
+    <div class="summary_actions" ng-class="{ 'hide': $ctrl.isSelected }">
       <!-- move to component -->
       <div type="button" class="tx-icon tx-fab summary_actions_action--deny" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
         <i class="fa fa-times fa-2x fa-fw"></i>
@@ -30,59 +30,108 @@
     </div>
   </div>
   <div class="detail" ng-if="$ctrl.isSelected">
-    <div class="row">
-      <div class="col-md-6 detail_section no-gutters">
+    <div class="row is-flex">
+
+      <div class="col-md-8 col-xs-12 detail_changes no-gutters">
         <transac-tx-changes changes="$ctrl.formattedChanges"></transac-tx-changes>
       </div>
-      <div class="col-md-3 detail_section no-gutters">
-        <div class="detail_section_title">
-          <h5>Select apps to share with:</h5>
-        </div>
-        <div class="detail_section_app" ng-repeat="mapping in ::$ctrl.transaction.mappings" ng-click="$ctrl.selectAppOnClick($event, mapping)">
-          <span>{{::mapping.app_name}}</span>
-          <input type="checkbox" ng-checked="mapping.sharedWith">
-        </div>
-      </div>
-      <div class="col-md-3 detail_section no-gutters">
-        <div class="detail_section_action">
-          <div class="detail_section_action_approve" ng-click="$ctrl.approveOnClick()">
-            <span class="action-label">Approve only this time</span>
-            <div class="action-button"><i class="fa fa-check fa-2x"></i><span>x1</span></div>
+      <div class="col-md-4 col-xs-12 no-gutters">
+        <div class="row detail_apps no-gutters">
+          <div class="detail_apps_title">
+            <h5>Select apps to share with:</h5>
+          </div>
+          <div class="detail_apps_app" ng-repeat="mapping in ::$ctrl.transaction.mappings" ng-click="$ctrl.selectAppOnClick($event, mapping)">
+            <span>{{::mapping.app_name}}</span>
+            <input type="checkbox" ng-checked="mapping.sharedWith">
           </div>
         </div>
-        <div class="detail_section_action">
-          <div class="detail_section_action_deny" ng-click="$ctrl.denyOnClick(true)">
-            <span class="action-label">Never share this record</span>
-            <div class="action-button">
-              <i class="fa fa-times fa-2x first"/>
-              <i class="fa fa-times fa-2x second"/>
+      </div>
+
+      <!-- <div class="col-md-12 col-xs-12 detail_changes no-gutters">
+        <transac-tx-changes changes="$ctrl.formattedChanges"></transac-tx-changes>
+      </div> -->
+
+    </div>
+    <div class="row" ng-if="$ctrl.hasMatches() && !$ctrl.historical">
+      <div class="col-md-12 col-xs-12">
+        <div class="row detail_dup-line-break">
+          <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>
+          <div class="detail_dup-line-break_title">
+            <div>
+              <i class="fa fa-exclamation fa-lg" aria-hidden="true"></i>
+              <span>Potential Duplicates</span>
             </div>
           </div>
+          <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--right"></div>
         </div>
-        <div class="detail_section_action" ng-if="$ctrl.hasMatches()">
-          <div class="detail_section_action_duplicate" ng-click="$ctrl.reconcileOnClick()">
-            <span class="action-label">This record is a duplicate</span>
-            <div class="action-button"><i class="fa fa-link fa-2x"></i></div>
+        <div class="row">
+          <div class="col-md-12 col-xs-12 detail_section detail_section_matches">
+            <transac-tx-matches matches="::$ctrl.matches"></transac-tx-matches>
           </div>
         </div>
       </div>
     </div>
-    <div ng-if="$ctrl.hasMatches()">
-      <div class="row detail_dup-line-break">
-        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>
-        <div class="detail_dup-line-break_title">
-          <div>
-            <i class="fa fa-exclamation fa-lg" aria-hidden="true"></i>
-            <span>Potential Duplicates</span>
-          </div>
+
+    <div class="row details_actions-bar">
+      <div class="detail_actions-bar_wrapper">
+        <div type="button" class="tx-btn tx-raised detail_actions-bar_action--approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
+          <span>Always share</span>
+          <i class="fa fa-check fa-fw"></i>
         </div>
-        <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--right"></div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 col-xs-12 detail_section detail_section_matches">
-          <transac-tx-matches matches="::$ctrl.matches"></transac-tx-matches>
+        <div type="button" class="tx-btn tx-raised detail_actions-bar_action--deny-once" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
+          <span>Do not share</span>
+          <i class="fa fa-times fa-2x fa-fw"></i>
+        </div>
+        <div type="button" class="tx-btn tx-raised detail_actions-bar_action--approve-once" ng-click="$ctrl.approveOnClick()" uib-tooltip="Approve only this time" tooltip-popup-delay="300">
+          <span>Share once</span>
+          <i class="fa fa-check fa-2x"></i><span class="icon-text">x1</span>
+        </div>
+        <div type="button" class="tx-btn tx-raised detail_actions-bar_action--deny" ng-click="$ctrl.denyOnClick(true)" uib-tooltip="Never share this record" tooltip-popup-delay="300">
+          <span>Never share</span>
+          <i class="fa fa-times fa-2x first"/><i class="fa fa-times fa-2x second"/>
+        </div>
+        <div type="button" class="tx-btn tx-raised detail_actions-bar_action--dups" ng-if="$ctrl.hasMatches()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">
+          <span>Merge Duplicates</span>
+          <i class="fa fa-link fa-2x fa-fw"></i>
         </div>
       </div>
     </div>
+
+    <!-- <div class="row is-flex"> -->
+
+      <!-- <div class="col-md-6 col-xs-12 no-gutters">
+        <div class="row detail_apps no-gutters">
+          <div class="detail_apps_title">
+            <h5>Select apps to share with:</h5>
+          </div>
+          <div class="detail_apps_app" ng-repeat="mapping in ::$ctrl.transaction.mappings" ng-click="$ctrl.selectAppOnClick($event, mapping)">
+            <span>{{::mapping.app_name}}</span>
+            <input type="checkbox" ng-checked="mapping.sharedWith">
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div class="col-md-12 col-xs-12 no-gutters detail_actions-bar">
+        <div class="detail_actions-bar_wrapper">
+          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--dups" ng-if="$ctrl.hasMatches()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">
+            <i class="fa fa-link fa-2x fa-fw"></i>
+          </div>
+          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--deny" ng-click="$ctrl.denyOnClick(true)" uib-tooltip="Never share this record" tooltip-popup-delay="300">
+            <i class="fa fa-times fa-2x first"/><i class="fa fa-times fa-2x second"/>
+          </div>
+          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--approve-once" ng-click="$ctrl.approveOnClick()" uib-tooltip="Approve only this time" tooltip-popup-delay="300">
+            <i class="fa fa-check fa-2x"></i><span>x1</span>
+          </div>
+          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--deny-once" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
+            <i class="fa fa-times fa-2x fa-fw"></i>
+          </div>
+          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
+            <i class="fa fa-check fa-2x fa-fw"></i>
+          </div>
+        </div>
+      </div> -->
+
+    <!-- </div> -->
+
   </div>
 </div>
