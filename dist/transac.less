@@ -2,7 +2,7 @@
 @transac-darkgrey: #676767;
 @transac-grey: #d9d9d9;
 @transac-lightgrey: #f2f2f2;
-@transac-green: #29b528;
+@transac-green: #27ab26;
 @transac-red: #d41414;
 @transac-orange: #ffb032;
 @transac-blue: #4053c3;
@@ -44,7 +44,81 @@
 ** Transac! Global Classes
 */
 
+// TX ICON / BUTTONS !
+.tx-icon {
+  position: relative;
+  outline: 0;
+  border: none;
+  max-width: 60px;
+  background-color: inherit;
+  border-radius: 2px;
+  margin: 6px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tx-icon.tx-raised {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+}
+.tx-icon.tx-fab {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+  border-radius: 50px;
+  &.tx-flat {
+    box-shadow: none;
+  }
+}
+.tx-icon,
+.tx-icon.tx-raised,
+.tx-icon.tx-fab {
+  &:focus {
+    box-shadow: 0 1px 14px 0 rgba(0, 0, 0, 0.36);
+  }
+  &:active {
+    box-shadow: none;
+  }
+}
 
+.tx-btn {
+  position: relative;
+  outline: 0;
+  border: none;
+  background-color: inherit;
+  border-radius: 2px;
+  text-transform: uppercase;
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+  margin: 16px 8px;
+  padding: 0 6px;
+  i {
+    font-size: 17px;
+    padding: 0 5px;
+  }
+}
+.tx-btn.tx-raised {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+}
+.tx-btn,
+.tx-raised {
+  &:focus {
+    box-shadow: 0 1px 14px 0 rgba(0, 0, 0, 0.36);
+  }
+  &:active {
+    box-shadow: none;
+  }
+}
+
+// BOOTSTRAP COLUMN FLEX - columns with an even height.
+.row.is-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.row.is-flex > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+}
 
 /*
 **  Animations
@@ -140,7 +214,9 @@
   }
 }
 
-// Should be mixed into a <button>
+// To be replaced by tx-icon / tx-button classes
+// ---
+// Should be mixed into a <button> or <div type="button">
 .transac-action-button(@color: @transac-blue, @margin: 1px, @padding: 10px 18px) {
   color: @color;
   border: none;
@@ -182,7 +258,6 @@
     .transac-action-button(@btn-color, 10px);
     // Adjustments for <span> label
     padding: 10px 18px 10px 12px;
-    margin: 10px 10px 10px 0px;
   }
   span.action-label {
     display: flex;
@@ -195,6 +270,119 @@
     span.action-label { color: lighten(@label-color, 15%); }
   }
 }
+// ---------------------
+
+// TX BTN MIXINS
+// ---------------------
+.tx-btn-approve() {
+  color: @transac-tx-approve-color;
+  // color: white;
+  &:hover {
+    background-color: @transac-tx-approve-color;
+    color: white;
+  }
+}
+
+.tx-btn-approve-once() {
+  .tx-btn-approve();
+  span.icon-text {
+    font-size: 10px;
+    text-transform: initial;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+  }
+}
+
+.tx-btn-deny-once() {
+  color: @transac-tx-deny-color;
+  &:hover {
+    background-color: @transac-tx-deny-color;
+    color: white;
+  }
+}
+
+.tx-btn-deny() {
+  .tx-btn-deny-once();
+  padding-right: 29px;
+  i.first {
+    position: absolute;
+    right: 9px;
+    bottom: 11px;
+    font-size: 15px;
+  }
+  i.second {
+    position: absolute;
+    right: -1px;
+    bottom: 8px;
+    font-size: 15px;
+  }
+}
+
+.tx-btn-merge() {
+  color: @transac-tx-duplicate-color;
+  &:hover {
+    background-color: @transac-tx-duplicate-color;
+    color: white;
+  }
+}
+// ---------------------
+
+// TX FAB ICON MIXINS
+// ---------------------
+.tx-icon-approve() {
+  color: @transac-tx-approve-color;
+  &:hover {
+    color: lighten(@transac-tx-approve-color, 20%);
+  }
+}
+
+.tx-icon-approve-once() {
+  .tx-icon-approve();
+  i {
+    font-size: 27px;
+    position: absolute;
+    top: 12px;
+    left: 10px;
+  }
+  span {
+    position: absolute;
+    font-size: 12px;
+    top: 24px;
+    left: 28px;
+  }
+}
+
+.tx-icon-deny-once() {
+  color: @transac-tx-deny-color;
+  &:hover {
+    color: lighten(@transac-tx-deny-color, 20%);
+  }
+}
+
+.tx-icon-deny() {
+  .tx-icon-deny-once();
+  i.first {
+    position: absolute;
+    top: 11px;
+    left: 9px;
+    font-size: 25px;
+  }
+  i.second {
+    position: absolute;
+    top: 16px;
+    left: 23px;
+    font-size: 25px;
+  }
+}
+
+.tx-icon-merge() {
+  color: @transac-tx-duplicate-color;
+  &:hover {
+    color: lighten(@transac-tx-duplicate-color, 20%);
+  }
+}
+// ------------
 
 .transac-subtitle(@font-size: 13px, @color: lighten(@transac-darkgrey, 15%)) {
   font-size: @font-size;
@@ -244,6 +432,13 @@ transac-top-bar {
   .top-bar {
     display: flex;
     flex-direction: row;
+  }
+
+  .top-bar_refresh-txs_btn {
+    .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
+    &.loading {
+      cursor: not-allowed;
+    }
   }
 
   .top-bar_menu {
@@ -356,8 +551,10 @@ transac-tx {
   }
 
   .selected {
-    box-shadow: 0px 5px 10px -4px;
+    // box-shadow: 0px 5px 10px -4px;
+    box-shadow: 0px 0px 30px -7px;
     border-bottom: 1px solid @transac-lightgrey;
+    position: relative;
     .summary {
       background-color: @transac-tx-hover-background-color;
       border-bottom: 2px solid @transac-grey;
@@ -367,11 +564,13 @@ transac-tx {
   .summary {
     height: @transac-tx-height;
     width: 100%;
+    display: flex;
   }
 
   .summary_content {
     height: 100%;
     display: flex;
+    flex-grow: 1;
     padding: 0px 10px;
     color: inherit;
     text-decoration: none;
@@ -417,14 +616,15 @@ transac-tx {
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
+    margin-right: 15px;
   }
 
   .summary_actions_action--approve {
-    .transac-action-button(@transac-tx-approve-color);
+    .tx-icon-approve();
   }
 
   .summary_actions_action--deny {
-    .transac-action-button(@transac-tx-deny-color);
+    .tx-icon-deny-once();
   }
 
   .detail {
@@ -452,20 +652,29 @@ transac-tx {
     flex-grow: 2.5;
   }
 
-  .detail_section {
-    max-height: 180px;
-    min-height: 180px;
-    overflow: auto;
+  .detail_changes {
+    // overflow: auto;
+    // max-height: 260px;
   }
 
-  .detail_section_title {
+  // Select apps & actions
+  .detail > div:last-child {
+    border-top: 1px solid #eae8e8;
+  }
+
+  .detail_apps {
+    // min-height: 190px;
+    margin-bottom: 10px;
+  }
+
+  .detail_apps_title {
     padding-left: 10px;
     h5 {
       .transac-subtitle();
     }
   }
 
-  .detail_section_app {
+  .detail_apps_app {
     display: flex;
     padding: 10px;
     .transac-list-on-hover(@transac-tx-hover-background-color);
@@ -478,39 +687,55 @@ transac-tx {
     }
   }
 
-  .detail_section_action_approve {
-    .transac-action-button-labeled--label-left(@transac-tx-approve-color);
-  }
-
-  .detail_section_action_deny {
-    .transac-action-button-labeled--label-left(@transac-tx-deny-color);
-  }
-
-  .detail_section_action_duplicate {
-    .transac-action-button-labeled--label-left(@transac-tx-duplicate-color);
-  }
-
-  .detail_section_action {
-    display: flex;
-    justify-content: flex-end;
-    margin: 5px;
-    div.action-button {
-      padding: 0 0 0 10px;
-    }
-  }
-
   .detail_section_matches {
+    // overflow: auto;
     min-height: 70px;
-    max-height: 120px;
+    // max-height: 130px;
+  }
+
+  .detail_actions-bar {
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 10px 0;
+  }
+
+  .detail_actions-bar_wrapper {
+    display: flex;
+    justify-content: center;
+    // margin-right: 15px;
+  }
+
+  .detail_actions-bar_action--approve {
+    .tx-btn-approve();
+    // .tx-icon-approve();
+  }
+
+  .detail_actions-bar_action--approve-once {
+    .tx-btn-approve-once();
+    // .tx-action-icon-once();
+  }
+
+  .detail_actions-bar_action--deny {
+    .tx-btn-deny();
+    // .tx-icon-deny();
+  }
+
+  .detail_actions-bar_action--deny-once {
+    .tx-btn-deny-once();
+    // .tx-action-icon-once();
+  }
+
+  .detail_actions-bar_action--dups {
+    .tx-btn-merge();
+    // .tx-icon-merge();
   }
 
 }
 
 transac-tx-changes {
+  display: block;
 
   .table-responsive {
-    height: 500px;
-
     table {
       margin-bottom: 0;
     }
@@ -667,6 +892,12 @@ transac-tx-tile {
       .transac-subtitle();
       .transac-ellipsis();
     }
+  }
+
+  transac-tx-changes {
+    min-height: 500px;
+    max-height: 500px;
+    overflow: auto;
   }
 }
 
