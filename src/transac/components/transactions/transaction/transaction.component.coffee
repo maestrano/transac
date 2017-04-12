@@ -51,7 +51,10 @@ angular.module('transac.transactions').component('transacTx', {
       date = _.get(ctrl.formattedChanges, "#{action}d_at")
       fromApps = _.compact(_.map(ctrl.transaction.mappings, (m)-> m.app_name if !m.pending))
       toApps = _.compact(_.map(ctrl.transaction.mappings, (m)-> m.app_name if m.pending))
-      "#{date}, from #{fromApps.join(', ')} to #{toApps.join(', ')}"
+      fromStr = "" + unless _.isEmpty(fromApps) then ", from #{fromApps.join(', ')}" else ""
+      toStr = "" + unless _.isEmpty(toApps) || !fromStr then " to #{toApps.join(', ')}" else ""
+      "#{date}#{fromStr}#{toStr}"
+
 
     ctrl.icon = ()->
       switch ctrl.transaction.transaction_log.action.toLowerCase()
