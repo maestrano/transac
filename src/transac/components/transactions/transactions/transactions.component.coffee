@@ -20,8 +20,15 @@ angular.module('transac.transactions').component('transacTxs', {
     onLoadingChange: '&?'
   }
   templateUrl: 'components/transactions/transactions'
-  controller: ($q, $element, $document, $timeout, EventEmitter, TransacTxsDispatcher, TransacTxsStore, TransacAlertsService)->
+  controller: ($q, $element, $document, $window, $scope, $timeout, EventEmitter, TransacTxsDispatcher, TransacTxsStore, TransacAlertsService, TXS_EVENTS)->
     ctrl = this
+
+    # Esc key to close all expanded txs & navigate to top
+    $document[0].addEventListener('keydown', (e)->
+      if e.keyCode == 27
+        $scope.$broadcast(TXS_EVENTS.closeAllTxs)
+        $window.scrollTo(0, 0)
+    , false)
 
     # Public
 

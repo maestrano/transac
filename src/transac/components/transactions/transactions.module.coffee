@@ -11,6 +11,9 @@ angular.module('transac.transactions',
   ])
   # EventEmitter wrapper for emitting events through component '&' callbacks.
   .value('EventEmitter', (payload)-> { $event: payload })
+  .constant('TXS_EVENTS',
+    closeAllTxs: 'close-all-txs'
+  )
   # Configure infinite-scroll to process scroll events a maximum of once every x milliseconds
   .value('THROTTLE_MILLISECONDS', 1000)
   # Add Connec API! basic auth keys - DO NOT COMMIT.

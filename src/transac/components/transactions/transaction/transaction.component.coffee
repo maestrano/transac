@@ -12,7 +12,7 @@ angular.module('transac.transactions').component('transacTx', {
     onReconcile: '&'
   }
   templateUrl: 'components/transactions/transaction'
-  controller: ($element, $timeout, EventEmitter, TransacTxsService)->
+  controller: ($element, $timeout, $document, $scope, EventEmitter, TransacTxsService, TXS_EVENTS)->
     ctrl = this
 
     # Action Tx Mapping Recipies
@@ -38,6 +38,10 @@ angular.module('transac.transactions').component('transacTx', {
         (response)->
           ctrl.matches = response.matches
       )
+      # Broadcasted from txs component on global 'Esc' key
+      $scope.$on(TXS_EVENTS.closeAllTxs, ->
+        ctrl.isSelected = false
+      )
 
     ctrl.title = ()->
       TransacTxsService.formatTitle(ctrl.transaction)
@@ -61,6 +65,7 @@ angular.module('transac.transactions').component('transacTx', {
 
     ctrl.selectOnClick = ()->
       ctrl.isSelected = !ctrl.isSelected
+      angular.element($document[0].body).animate(scrollTop: $element.offset().top) if ctrl.isSelected
 
     ctrl.approveOnClick = (auto=false)->
       # Animate the commiting action
