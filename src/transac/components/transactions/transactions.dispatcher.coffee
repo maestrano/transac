@@ -11,7 +11,7 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
   #   @param {string} [options.url=] A custom url for the request (a pagination url)
   #   @param {string} [options.type=] Type of transactions e.g 'pending', 'historical'
   #   @param {Object} [options.params=] Pagination & filter params for the request
-  #   @param {boolean} [options.excludeParams=] Prevent option.params being passed onto TransacTxsService
+  #   @param {boolean} [options.excludeParams=] Prevent option.params being passed onto TransacTxsService, typically for using api url links instead of state pagination params.
   #   @returns {Promise<Object>} whether the load was successful or not
   ###
   @loadTxs = (options={})->

@@ -10,6 +10,13 @@ transac-top-bar {
     flex-direction: row;
   }
 
+  .top-bar_refresh-txs_btn {
+    .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
+    &.loading {
+      cursor: not-allowed;
+    }
+  }
+
   .top-bar_menu {
     display: flex;
     flex-direction: row;

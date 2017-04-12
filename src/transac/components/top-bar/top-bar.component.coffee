@@ -12,6 +12,7 @@ angular.module('transac.top-bar').component('transacTopBar', {
   bindings: {
     onInit: '&?'
     onFilter: '&'
+    onRefresh: '&'
     menusItemsCount: '<?'
     isMenuLoading: '<?'
   },
@@ -42,6 +43,15 @@ angular.module('transac.top-bar').component('transacTopBar', {
     ctrl.toggleSearch = ($event)->
       return ctrl.searchBarApi.clearSearchText() if ctrl.isEditingSearchBar
       if ctrl.isSearchBarShown then contractSearchBar($event) else expandSearchBar($event)
+
+    ctrl.onRefreshTxsClick = ()->
+      return if ctrl.isMenuLoading
+      state = TransacTopBarStore.getState()
+      type = state.selectedMenu.type
+      ctrl.onRefresh(EventEmitter({type: type})).then(->
+        menu = _.find(state.menus, (m)-> m.type == type)
+        TransacTopBarDispatcher.selectMenu(menu)
+      )
 
     ctrl.onSearchBarInit = ({api})->
       ctrl.searchBarApi = api
