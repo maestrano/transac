@@ -8,6 +8,7 @@
 angular.module('transac.transactions').component('transacTx', {
   bindings: {
     transaction: '<'
+    historical: '<?'
     onCommit: '&'
     onReconcile: '&'
   }
@@ -22,6 +23,8 @@ angular.module('transac.transactions').component('transacTx', {
     # “deny once” = `commit: false, auto_commit: false, push_disabled: false, pull_disabled: false`
 
     ctrl.$onInit = ->
+      ctrl.historical ||= false
+      $element.addClass('historical') if ctrl.historical
       # Formats transaction changes for display
       ctrl.formattedChanges = TransacTxsService.formatAttributes(
         ctrl.transaction.changes
@@ -31,17 +34,18 @@ angular.module('transac.transactions').component('transacTx', {
       _.each(ctrl.transaction.mappings, (m)-> m.sharedWith = true)
       # Match transaction for potential duplicates
       # TODO: Move to API
-      TransacTxsService.matches(
-        ctrl.transaction.links.matches,
-        ctrl.transaction.transaction_log.resource_type
-      ).then(
-        (response)->
-          ctrl.matches = response.matches
-      )
-      # Broadcasted from txs component on global 'Esc' key
-      $scope.$on(TXS_EVENTS.closeAllTxs, ->
-        ctrl.isSelected = false
-      )
+      unless ctrl.historical
+        TransacTxsService.matches(
+          ctrl.transaction.links.matches,
+          ctrl.transaction.transaction_log.resource_type
+        ).then(
+          (response)->
+            ctrl.matches = response.matches
+        )
+        # Broadcasted from txs component on global 'Esc' key
+        $scope.$on(TXS_EVENTS.closeAllTxs, ->
+          ctrl.isSelected = false
+        )
 
     ctrl.title = ()->
       TransacTxsService.formatTitle(ctrl.transaction)
@@ -70,6 +74,7 @@ angular.module('transac.transactions').component('transacTx', {
       ctrl.matches && ctrl.matches.length
 
     ctrl.selectOnClick = ()->
+      return if ctrl.historical
       ctrl.isSelected = !ctrl.isSelected
       angular.element($document[0].body).animate(scrollTop: $element.offset().top) if ctrl.isSelected
 

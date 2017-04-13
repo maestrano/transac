@@ -32,8 +32,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
     orgUid = DEV_AUTH.orgUid || TransacUserService.getCurrentOrg().uid
     url = options.url || "https://api-connec-sit.maestrano.io/api/v2/#{orgUid}/transaction_logs/#{type}"
     params = angular.merge({}, _self.getHttpConfig(), options)
-    promise = if type == 'pending' then $http.get(url, params) else $q.reject()
-    promise.then(
+    $http.get(url, params).then(
       (response)->
         unless response.status == 200 && response.data?
           $log.error('TransacTxsService Error - no data found: ', response)

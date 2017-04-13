@@ -4,6 +4,13 @@ transac-tx {
 
   .transac-list-on-hover(@transac-tx-hover-background-color);
 
+  // Remove hover effect on historical records as they are not clickable at the moment.
+  &.historical {
+    &:hover {
+      background-color: inherit;
+    }
+  }
+
   &.commiting {
     display: none;
     // TODO: work on an enjoyable animation for this action
@@ -76,6 +83,8 @@ transac-tx {
     flex-direction: row-reverse;
     align-items: center;
     margin-right: 15px;
+    min-width: 130px;
+    justify-content: center;
   }
 
   .summary_actions_action--approve {
@@ -84,6 +93,37 @@ transac-tx {
 
   .summary_actions_action--deny {
     .tx-icon-deny-once();
+  }
+
+  .summary_actions_action--merge {
+    .tx-icon-merge();
+  }
+
+  .summary_actions_action--merge-hist {
+    color: white;
+    background-color: @transac-tx-duplicate-color;
+    &:hover {
+      color: white;
+      background-color: @transac-tx-duplicate-color;
+    }
+  }
+
+  .summary_actions_action--approve-hist {
+    color: white;
+    background-color: @transac-tx-approve-color;
+    &:hover {
+      color: white;
+      background-color: @transac-tx-approve-color;
+    }
+  }
+
+  .summary_actions_action--deny-hist {
+    color: white;
+    background-color: @transac-tx-deny-color;
+    &:hover {
+      color: white;
+      background-color: @transac-tx-deny-color;
+    }
   }
 
   .detail {

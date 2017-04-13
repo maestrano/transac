@@ -1,6 +1,6 @@
 <div ng-class="{ 'selected': $ctrl.isSelected }">
   <div class="summary">
-    <a href="" class="summary_content" ng-click="$ctrl.selectOnClick()">
+    <a href="" class="summary_content" ng-click="$ctrl.selectOnClick()" ng-class="{ 'no-pointer': $ctrl.historical }">
       <div class="summary_content_icon">
         <i class="fa {{$ctrl.icon()}} fa-2x" aria-hidden="true"></i>
       </div>
@@ -19,14 +19,16 @@
         </div>
       </div>
     </a>
-    <div class="summary_actions" ng-class="{ 'hide': $ctrl.isSelected }">
-      <!-- move to component -->
-      <div type="button" class="tx-icon tx-fab summary_actions_action--deny" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
+    <div class="summary_actions" ng-class="{ 'hide': $ctrl.isSelected }" ng-if="!$ctrl.historical">
+      <div type="button" class="tx-icon tx-fab summary_actions_action--deny" ng-class="{'tx-flat summary_actions_action--deny-hist': false}" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
         <i class="fa fa-times fa-2x fa-fw"></i>
       </div>
-      <div type="button" class="tx-icon tx-fab summary_actions_action--approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
+      <div type="button" class="tx-icon tx-fab summary_actions_action--approve" ng-class="{'tx-flat summary_actions_action--approve-hist': false}" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
         <i class="fa fa-check fa-2x fa-fw"></i>
       </div>
+      <!-- <div type="button" class="tx-icon tx-fab summary_actions_action--merge" ng-class="{'tx-flat summary_actions_action--merge-hist': $ctrl.historical}" ng-if="$ctrl.isActionMade('merge')">
+        <i class="fa fa-link fa-2x fa-fw"></i>
+      </div> -->
     </div>
   </div>
   <div class="detail" ng-if="$ctrl.isSelected">

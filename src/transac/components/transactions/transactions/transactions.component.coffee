@@ -54,6 +54,9 @@ angular.module('transac.transactions').component('transacTxs', {
     ctrl.noTxsFound = ->
       !ctrl.loading && !ctrl.transactions.length && !ctrl.pagination.total
 
+    ctrl.isHistorical = ->
+      ctrl.txsType == 'historical'
+
     ctrl.onTransactionCommit = ({transaction, action, auto})->
       TransacTxsDispatcher.commitTx(
         transaction.links.commit
