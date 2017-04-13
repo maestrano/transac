@@ -102,7 +102,7 @@ transac-tx {
   .detail_dup-line-break_title {
     padding: 0px 12px;
     color: @transac-tx-details-duplicate-warning-color;
-    i { padding: 0 3px }
+    i { padding: 0 3px; }
   }
   .detail_dup-line-break_spacer--left {
     flex-grow: 1;
@@ -160,33 +160,28 @@ transac-tx {
 
   .detail_actions-bar_wrapper {
     display: flex;
-    justify-content: center;
-    // margin-right: 15px;
+    justify-content: flex-end;
+    margin-right: 15px;
   }
 
   .detail_actions-bar_action--approve {
-    .tx-btn-approve();
-    // .tx-icon-approve();
+    .tx-icon-approve();
   }
 
   .detail_actions-bar_action--approve-once {
-    .tx-btn-approve-once();
-    // .tx-action-icon-once();
+    .tx-icon-approve-once();
   }
 
   .detail_actions-bar_action--deny {
-    .tx-btn-deny();
-    // .tx-icon-deny();
+    .tx-icon-deny();
   }
 
   .detail_actions-bar_action--deny-once {
-    .tx-btn-deny-once();
-    // .tx-action-icon-once();
+    .tx-icon-deny-once();
   }
 
   .detail_actions-bar_action--dups {
-    .tx-btn-merge();
-    // .tx-icon-merge();
+    .tx-icon-merge();
   }
 
 }
