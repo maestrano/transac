@@ -2,7 +2,6 @@
 
 ## Todo (ordered)
 
-- history view (connect to API)
 - Improve filters UI
 - merge view field selection
 - align merge view transaction attributes for easier comparison?
