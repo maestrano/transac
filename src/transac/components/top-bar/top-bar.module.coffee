@@ -18,6 +18,9 @@ angular.module('transac.top-bar',
     {label: 'Create', type: '$filter', attr: 'action', cmd: 'eq', value: "'CREATE'", selected: false}
     {label: 'Update', type: '$filter', attr: 'action', cmd: 'eq', value: "'UPDATE'", selected: false}
     {divider: true}
+    {label: 'Only Duplicates', type:'duplicates', value: 'include', selected: false}
+    {label: 'No Duplicates', type:'duplicates', value: 'exclude', selected: false}
+    {divider: true}
     # Entities
     {label: 'Items', type: '$filter', attr: 'entity_type', cmd: 'match', value: "/Item/", selected: false}
     {label: 'Purchase Orders', type: '$filter', attr: 'entity_type', cmd: 'match', value: "/PurchaseOrder/", selected: false}

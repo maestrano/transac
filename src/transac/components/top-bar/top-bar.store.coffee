@@ -40,9 +40,9 @@ angular.module('transac.top-bar').service('TransacTopBarStore', ($q, MENUS, FILT
       when 'updateSearchFilter'
         state.filters.$filter = buildFilterQuery(payload)
       when 'selectFilter'
-        # Only one $orderby filter can be selected
-        if payload.type == '$orderby'
-          filters = _.filter(state.filtersMenu, 'type', '$orderby')
+        # Only one $orderby / duplicates filter can be selected
+        if payload.type == '$orderby' || payload.type == 'duplicates'
+          filters = _.filter(state.filtersMenu, 'type', payload.type)
           _.each(filters, (f)->
             f.selected = false
             return
@@ -52,7 +52,9 @@ angular.module('transac.top-bar').service('TransacTopBarStore', ($q, MENUS, FILT
           payload.selected = !payload.selected
       when 'applyFilters'
         orderbyFilter = _.find(_.filter(state.filtersMenu, 'type': '$orderby'), 'selected')
+        duplicatesFilter = _.find(_.filter(state.filtersMenu, 'type': 'duplicates'), 'selected')
         state.filters.$orderby = "#{orderbyFilter.attr} #{orderbyFilter.value}"
+        state.filters.duplicates = "#{duplicatesFilter.value}"
         state.filters.$filter = buildFilterQuery()
     notify()
     _self.getState()
