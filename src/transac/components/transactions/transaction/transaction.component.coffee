@@ -13,7 +13,7 @@ angular.module('transac.transactions').component('transacTx', {
     onReconcile: '&'
   }
   templateUrl: 'components/transactions/transaction'
-  controller: ($element, $timeout, $document, $scope, EventEmitter, TransacTxsService, TXS_EVENTS)->
+  controller: ($element, $timeout, $document, $scope, EventEmitter, TransacTxsService, TransacAlertsService, TXS_EVENTS)->
     ctrl = this
 
     # Action Tx Mapping Recipies
@@ -30,26 +30,17 @@ angular.module('transac.transactions').component('transacTx', {
         ctrl.transaction.changes
         ctrl.transaction.transaction_log.resource_type
       )
-      # Select to share with all apps by default
+      # Add shareWith attribute to mappings, set to true by default (model for ng-checked).
       _.each(ctrl.transaction.mappings, (m)-> m.sharedWith = true)
-      # Match transaction for potential duplicates
-      # TODO: Move to API
-      unless ctrl.historical
-        TransacTxsService.matches(
-          ctrl.transaction.links.matches,
-          ctrl.transaction.transaction_log.resource_type
-        ).then(
-          (response)->
-            ctrl.matches = response.matches
-        )
-        # Broadcasted from txs component on global 'Esc' key
-        $scope.$on(TXS_EVENTS.closeAllTxs, ->
-          ctrl.isSelected = false
-        )
+      # Broadcasted from txs component on global 'Esc' key
+      $scope.$on(TXS_EVENTS.closeAllTxs, ->
+        ctrl.isSelected = false
+      )
 
     ctrl.title = ()->
       TransacTxsService.formatTitle(ctrl.transaction)
 
+    # E.g May 1, 2017 8:20am, from Xero to Vend, SaleForce, Quickbooks
     ctrl.subtitle = ()->
       action = ctrl.transaction.transaction_log.action.toLowerCase()
       date = _.get(ctrl.formattedChanges, "#{action}d_at")
@@ -58,7 +49,6 @@ angular.module('transac.transactions').component('transacTx', {
       fromStr = "" + unless _.isEmpty(fromApps) then ", from #{fromApps.join(', ')}" else ""
       toStr = "" + unless _.isEmpty(toApps) || !fromStr then " to #{toApps.join(', ')}" else ""
       "#{date}#{fromStr}#{toStr}"
-
 
     ctrl.icon = ()->
       switch ctrl.transaction.transaction_log.action.toLowerCase()
@@ -70,13 +60,22 @@ angular.module('transac.transactions').component('transacTx', {
     ctrl.getPendingMappings = ->
       _.select(ctrl.transaction.mappings, pending: true)
 
+    # Transaction is flagged with matches (potential duplicates)
     ctrl.hasMatches = ->
-      ctrl.matches && ctrl.matches.length
+      ctrl.transaction && ctrl.transaction.matching_records && ctrl.transaction.matching_records.length
+
+    # Full matches objects were found, user can progress to reconcile screen.
+    ctrl.canReconcileRecords = ->
+      !_.isEmpty(ctrl.matches)
 
     ctrl.selectOnClick = ()->
       return if ctrl.historical
       ctrl.isSelected = !ctrl.isSelected
-      angular.element($document[0].body).animate(scrollTop: $element.offset().top) if ctrl.isSelected
+      if ctrl.isSelected
+        # Scroll to expanded transaction
+        angular.element($document[0].body).animate(scrollTop: $element.offset().top)
+        # Query for full matches objects
+        loadMatches()
 
     ctrl.approveOnClick = (auto=false)->
       # Animate the commiting action
@@ -119,7 +118,7 @@ angular.module('transac.transactions').component('transacTx', {
       )
 
     ctrl.reconcileOnClick = ()->
-      return unless ctrl.hasMatches()
+      return unless ctrl.hasMatches() && ctrl.canReconcileRecords()
       # Mark transaction as reconciling for scroll back to element on reconcile cancel
       $element.addClass('reconciling')
       # Prepare tx for reconciliation (formats the tx into same object structure as matches
@@ -138,6 +137,21 @@ angular.module('transac.transactions').component('transacTx', {
 
     ctrl.selectAppOnClick = ($event, mapping)->
       mapping.sharedWith = !mapping.sharedWith
+
+
+    # Private
+
+    loadMatches = ->
+      return unless _.isEmpty(ctrl.matches)
+      TransacTxsService.matches(
+        ctrl.transaction.matching_records,
+        ctrl.transaction.transaction_log.resource_type
+      ).then(
+        (response)->
+          ctrl.matches = response.matches
+        ->
+          TransacAlertsService.send('error', 'Failed to load potential duplicates', 'Error')
+      )
 
     return
 })

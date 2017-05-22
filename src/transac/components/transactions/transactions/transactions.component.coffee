@@ -131,7 +131,7 @@ angular.module('transac.transactions').component('transacTxs', {
     # Scroll back to transaction on merge cancel, and remove reconciling class.
     scrollToReconcilingTx = ->
       selectedTxEl = $element.find('.reconciling .selected')
-      return unless selectedTxEl?
+      return if _.isEmpty selectedTxEl.get()
       angular.element($document[0].body).animate(scrollTop: selectedTxEl.offset().top)
       selectedTxEl.parent().removeClass('reconciling')
       return

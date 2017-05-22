@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div class="row" ng-if="$ctrl.hasMatches() && !$ctrl.historical">
+    <div class="row" ng-if="$ctrl.canReconcileRecords() && !$ctrl.historical">
       <div class="col-md-12 col-xs-12">
         <div class="row detail_dup-line-break">
           <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>
@@ -70,7 +70,7 @@
     <div class="row details_actions-bar">
       <div class="col-md-12 col-xs-12 no-gutters detail_actions-bar">
         <div class="detail_actions-bar_wrapper">
-          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--dups" ng-if="$ctrl.hasMatches()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">
+          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--dups" ng-if="$ctrl.canReconcileRecords()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">
             <i class="fa fa-link fa-2x fa-fw"></i>
           </div>
           <div type="button" class="tx-icon tx-fab detail_actions-bar_action--deny" ng-click="$ctrl.denyOnClick(true)" uib-tooltip="Never share this record" tooltip-popup-delay="300">

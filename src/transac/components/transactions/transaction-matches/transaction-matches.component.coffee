@@ -16,10 +16,9 @@ angular.module('transac.transactions').component('transacTxMatches', {
       TransacTxsService.formatMatchTitle(match)
 
     ctrl.subtitle = (match)->
-      matchTxLog = match.transaction_logs[0]
-      appName = _.get(matchTxLog, 'app_name')
-      date = TransacTxsService.formatDisplayDate(_.get(matchTxLog, 'created_at'))
-      if appName then "#{date}, from #{appName}" else date
+      # appName = _.get(match, 'app_name')
+      date = TransacTxsService.formatDisplayDate(_.get(match, 'created_at'))
+      # if appName then "#{date}, from #{appName}" else date
 
     return
 })

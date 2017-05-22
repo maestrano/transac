@@ -10,6 +10,7 @@
 angular.module('transac.transactions').component('transacTxTile', {
   bindings: {
     transaction: '<'
+    resourceType: '<'
     title: '<?'
     subtitle: '<?'
     checked: '<?'
@@ -23,14 +24,14 @@ angular.module('transac.transactions').component('transacTxTile', {
     ctrl.$onInit = ->
       ctrl.title ||= 'Transaction'
       ctrl.subtitle ||= ctrl.buildSubtitle()
-      ctrl.formattedTxAttrs = TransacTxsService.formatAttributes(ctrl.transaction, ctrl.transaction.resource_type)
+      ctrl.formattedTxAttrs = TransacTxsService.formatAttributes(ctrl.transaction, ctrl.resourceType)
 
     ctrl.buildSubtitle = ->
       # For when transaction is a transaction
       return "From #{ctrl.transaction.app_name}" if ctrl.transaction.app_name
       # For when transaction is a match
-      matchTxLogs = ctrl.transaction.transaction_logs
-      if _.isEmpty(matchTxLogs) then '' else "From #{matchTxLogs[0].app_name}"
+      # matchTxLogs = ctrl.transaction.transaction_logs
+      # if _.isEmpty(matchTxLogs) then '' else "From #{matchTxLogs[0].app_name}"
 
     ctrl.isOnSelectDefined = ->
       !_.isUndefined(ctrl.onSelect)

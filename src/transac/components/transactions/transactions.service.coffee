@@ -41,7 +41,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
           transactions: response.data.transactions || []
           pagination: response.data.pagination || {}
       (err)->
-        $log.error('TransacTxsService Error: ', err)
+        $log.error('TransacTxsService Error: failed to get transactions', err)
         $q.reject(err)
     )
 
@@ -78,26 +78,46 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
       (response)->
         transaction: response.data[resource]
       (err)->
-        $log.error('TransacTxsService Error: ', err)
+        $log.error('TransacTxsService Error: failed to commit transaction', err)
         $q.reject(err)
     )
 
   ###
-  #   @desc Find matching transacations rated with a score representing duplicate likelyhood.
+  #   @desc [DEPRECIATED] Find matching transacations rated with a score representing
+  #   duplicate likelyhood.
   #   @http GET /api/v2/org-fbcy/organizations/b1733560-d577-0134-317d-74d43510c326/matches
   #   @param {string} [url] Transaction links matches URL.
   #   @param {string} [resource] Transaction resource type.
   #   @param {Object} [params] Params to serialise into GET request URL.
   #   @returns {Promise<Object>} A promise to the matching transactions & pagination data.
   ###
-  @matches = (url, resource, params={})->
+  # @_matches = (url, resource, params={})->
+  #   params = angular.merge({}, _self.getHttpConfig(), params)
+  #   $http.get(url, params).then(
+  #     (response)->
+  #       matches: response.data[resource] || []
+  #       pagination: response.data.pagination
+  #     (err)->
+  #       $log.error('TransacTxsService Error: ', err)
+  #       $q.reject(err)
+  #   )
+
+  ###
+  #   @desc Take transaction_matches and queries for the full objects for display.
+  #   @http /api/v2/org-fbcy/organizations/b1733560-d577-0134-317d-74d43510c326
+  #   @param {Array<Object>} Transaction matches.
+  #   @param {string} Transaction resource type.
+  #   @param {Object} [params] Params to serialise into GET request URL.
+  #   @returns {Promise<Array>} A promise to the matching transactions.
+  ###
+  @matches = (txMatches, resource, params={})->
     params = angular.merge({}, _self.getHttpConfig(), params)
-    $http.get(url, params).then(
-      (response)->
-        matches: response.data[resource] || []
-        pagination: response.data.pagination
+    queries = _.map(txMatches, (match)-> $http.get(match.links.show, params))
+    $q.all(queries).then(
+      (responses)->
+        matches: _.compact _.map(responses, (response)-> response.data && response.data[resource])
       (err)->
-        $log.error('TransacTxsService Error: ', err)
+        $log.error('TransacTxsService Error: failed to load matches', err)
         $q.reject(err)
     )
 
@@ -122,7 +142,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
       (response)->
         transaction: response.data[resource]
       (err)->
-        $log.error('TransacTxsService Error: ', err)
+        $log.error('TransacTxsService Error: failed to merge transactions', err)
         $q.reject(err)
     )
 
@@ -158,7 +178,6 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @returns {string} A formatted matching tx title.
   ###
   @formatMatchTitle = (match)->
-    mostRecentTxLog = match.transaction_logs[match.transaction_logs.length - 1]
     title = switch match.resource_type
       when 'organizations'
         # Determine type of organization (e.g customer, supplier)
@@ -168,10 +187,8 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
         key = _.compact(key)[0]
         type = key.split('_').slice(-1)
         "#{type}: #{match.name}"
-      when 'invoices'
-        "#{_.get(mostRecentTxLog, 'reference', 'No reference found')} (#{_.get(match, 'type', '-')})"
       else
-        _.get(mostRecentTxLog, 'reference', 'No reference found')
+        _.get(match, 'name', 'No name found')
     title
 
   ###
@@ -220,7 +237,7 @@ angular.module('transac.transactions').service('TransacTxsService', ($log, $http
   #   @return {string} A formatted date string
   ###
   @formatDisplayDate = (date)->
-    $window.moment(date).format('MMM d, Y h:m')
+    $window.moment(date).format('MMM d, Y h:mma')
 
   ###
   #   @desc Flatten nested objects to display all changes fields simply.
