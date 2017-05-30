@@ -109,5 +109,13 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
         )
     deferred.promise
 
+  ###
+  #   @desc Reset Transactions store state
+  ###
+  @resetTxsState = ->
+    TransacTxsStore.dispatch('removeAllTxs')
+    TransacTxsStore.dispatch('resetPgnSkip')
+    return
+
   return @
 )

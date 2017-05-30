@@ -6,9 +6,9 @@ angular.module('transac.top-bar').service('TransacTopBarStore', ($q, MENUS, FILT
   _self = @
 
   state =
-    menus: MENUS
+    menus: angular.copy(MENUS)
     selectedMenu: _.find(MENUS, 'active')
-    filtersMenu: FILTERS_MENU
+    filtersMenu: angular.copy(FILTERS_MENU)
     filters: {}
     lastSearchQuery: ''
 
@@ -64,6 +64,10 @@ angular.module('transac.top-bar').service('TransacTopBarStore', ($q, MENUS, FILT
         if duplicatesFilter? then state.filters.duplicates = "#{duplicatesFilter.value}" else delete state.filters.duplicates
         # Set $filter
         state.filters.$filter = buildFilterQuery()
+      when 'clearAllFilters'
+        state.filtersMenu = angular.copy(FILTERS_MENU)
+        state.filters = {}
+        state.lastSearchQuery = ''
     notify()
     _self.getState()
 

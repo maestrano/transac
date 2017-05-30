@@ -41,6 +41,9 @@ angular.module('transac.transactions').component('transacTxs', {
           onTxsChange()
       )
 
+    ctrl.$onDestroy = ->
+      TransacTxsDispatcher.resetTxsState()
+
     ctrl.loadMore = ->
       return if ctrl.isPaginationDisabled()
       TransacTxsDispatcher.paginateTxs(ctrl.pagination.next)

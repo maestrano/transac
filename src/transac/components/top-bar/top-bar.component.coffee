@@ -22,13 +22,16 @@ angular.module('transac.top-bar').component('transacTopBar', {
 
     # Public
 
-    ctrl.$onInit = ()->
+    ctrl.$onInit = ->
       ctrl.isSearchBarShown = false
       initTopBarState()
       # Emit default active menu on init
       ctrl.onInit(
         EventEmitter(api: selectedMenu: ctrl.selectedMenu, updateMenusItemsCount: updateMenusItemsCount)
       ) if ctrl.onInit?
+
+    ctrl.$onDestroy = ->
+      TransacTopBarDispatcher.resetTopBarState()
 
     ctrl.$onChanges = (changes)->
       # update $scope.isMenuLoading for the $compiled search-bar cmp scope

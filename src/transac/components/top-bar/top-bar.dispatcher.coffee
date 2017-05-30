@@ -24,5 +24,12 @@ angular.module('transac.transactions').service('TransacTopBarDispatcher', ($q, T
     state = TransacTopBarStore.dispatch('applyFilters')
     state.filters
 
+  ###
+  #   @desc Reset Top Bar store state
+  ###
+  @resetTopBarState = ->
+    TransacTopBarStore.dispatch('clearAllFilters')
+    return
+
   return @
 )
