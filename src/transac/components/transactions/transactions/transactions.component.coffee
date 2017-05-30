@@ -89,7 +89,10 @@ angular.module('transac.transactions').component('transacTxs', {
         (res)->
           TransacAlertsService.send(res.message.type, res.message.text)
           # Reload transactions, applying most current filters.
-          TransacTxsDispatcher.reloadTxs(ctrl.txsType, ctrl.filters)
+          TransacTxsDispatcher.reloadTxs({
+            type: ctrl.txsType
+            params: ctrl.filters
+          })
           res
         (err)->
           TransacAlertsService.send(err.message.type, err.message.text)
@@ -119,8 +122,8 @@ angular.module('transac.transactions').component('transacTxs', {
         ctrl.onLoadingChange(EventEmitter(loading: ctrl.loading))
       )
 
-    onFilterTxs = (type, params)->
-      TransacTxsDispatcher.reloadTxs(type, params).then(
+    onFilterTxs = (options)->
+      TransacTxsDispatcher.reloadTxs(options).then(
         ->
           onTxsChange()
       )

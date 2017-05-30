@@ -25,10 +25,16 @@ angular.module('maestrano.transac').component('transac', {
 
     ctrl.onTopBarFilter = ({selectedMenu, filters})->
       ctrl.filters = filters
-      ctrl.txsCmpApi.filterTxs(selectedMenu.type, filters)
+      ctrl.txsCmpApi.filterTxs({
+        type: selectedMenu.type
+        params: filters
+      })
 
     ctrl.onRefreshTxs = ({type})->
-      TransacTxsDispatcher.reloadTxs(type, ctrl.filters)
+      TransacTxsDispatcher.reloadTxs({
+        type: type
+        params: ctrl.filters
+      })
 
     ctrl.updateTransactionsCount = (paginationTotals)->
       ctrl.topBarCmpApi.updateMenusItemsCount(paginationTotals)

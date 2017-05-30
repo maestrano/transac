@@ -1,7 +1,7 @@
 ###
 #   @desc Service responsible for dispatching messages to retrieve data and/or alter the Transactions state in methods that represent actions made from the view layer.
 ###
-angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $timeout, TransacTxsStore, TransacTxsService, TransacAlertsService)->
+angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $log, $timeout, TransacTxsStore, TransacTxsService, TransacAlertsService)->
 
   _self = @
 
@@ -45,15 +45,26 @@ angular.module('transac.transactions').service('TransacTxsDispatcher', ($q, $tim
 
   ###
   #   @desc Load transactions & set pagination total
-  #   @param {string} [type] Type of transaction
-  #   @param {Object} [params=] pagination & filter parameters for the request
+  #   @param {Object} [options]
+  #   @param {Object} [option.type=] Type of transaction
+  #   @param {Object} [options.params=] pagination & filter parameters for the request
   #   @returns {Promise<Object>} whether the load was successful or not
   ###
-  @reloadTxs = (type, params=null)->
-    TransacTxsStore.dispatch('loadingTxs', true)
-    TransacTxsStore.dispatch('removeAllTxs')
-    TransacTxsStore.dispatch('resetPgnSkip')
-    _self.loadTxs(type: type, params: params)
+  @reloadTxs = (options={})->
+    # Prevent parent application reloading while a previous reload is still running.
+    unless _self.reloadLocked
+      _self.reloadLocked = true
+      TransacTxsStore.dispatch('loadingTxs', true)
+      TransacTxsStore.dispatch('removeAllTxs')
+      TransacTxsStore.dispatch('resetPgnSkip')
+      _self.loadTxs(options).then(->
+        _self.reloadLocked = false
+      )
+    else
+      $timeout(->
+        $log.warn("Reload Transactions locked: retrying in 5sec")
+        _self.reloadTxs(options)
+      ,500)
 
   ###
   #   @desc Commit a transaction & update pagination total
