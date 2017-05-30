@@ -40,21 +40,29 @@ angular.module('transac.top-bar').service('TransacTopBarStore', ($q, MENUS, FILT
       when 'updateSearchFilter'
         state.filters.$filter = buildFilterQuery(payload)
       when 'selectFilter'
-        # Only one $orderby / duplicates filter can be selected
-        if payload.type == '$orderby' || payload.type == 'duplicates'
+        # Only one $orderby filter can be selected, and atleast one is always selected
+        if payload.type == '$orderby'
           filters = _.filter(state.filtersMenu, 'type', payload.type)
-          _.each(filters, (f)->
-            f.selected = false
-            return
-          )
+          _.each(filters, (f)-> f.selected = false & undefined)
           payload.selected = true
+        # Only one duplicates filter can be selected
+        else if payload.type == 'duplicates'
+          if payload.selected
+            payload.selected = !payload.selected
+          else
+            filters = _.filter(state.filtersMenu, 'type', payload.type)
+            _.each(filters, (f)-> f.selected = false & undefined)
+            payload.selected = true
         else
           payload.selected = !payload.selected
       when 'applyFilters'
+        # Set $orderby
         orderbyFilter = _.find(_.filter(state.filtersMenu, 'type': '$orderby'), 'selected')
-        duplicatesFilter = _.find(_.filter(state.filtersMenu, 'type': 'duplicates'), 'selected')
         state.filters.$orderby = "#{orderbyFilter.attr} #{orderbyFilter.value}"
-        state.filters.duplicates = "#{duplicatesFilter.value}"
+        # Set duplicates
+        duplicatesFilter = _.find(_.filter(state.filtersMenu, 'type': 'duplicates'), 'selected')
+        if duplicatesFilter? then state.filters.duplicates = "#{duplicatesFilter.value}" else delete state.filters.duplicates
+        # Set $filter
         state.filters.$filter = buildFilterQuery()
     notify()
     _self.getState()
