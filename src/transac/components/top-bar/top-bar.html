@@ -1,7 +1,7 @@
 <div class="top-bar">
   <transac-filters-selector filters-menu="$ctrl.filtersMenu" on-select="$ctrl.onFilterSelect($event)" on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>
   <div class="top-bar_refresh-txs">
-    <div type="button" class="top-bar_refresh-txs_btn" ng-click="$ctrl.onRefreshTxsClick()">
+    <div type="button" class="top-bar_refresh-txs_btn" ng-class="{'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.onRefreshTxsClick()">
       <i class="fa fa-refresh fa-2x fa-fw"></i>
     </div>
   </div>

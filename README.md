@@ -2,7 +2,7 @@
 
 ## Todo (ordered)
 
-- disable pointer for refresh button
+- add app_name to transaction matches in reconcile view
 - fix main responsiveness issue (items extending viewport <= 680px)
 - docs for top-bar dispatcher
 - create dates angular filter
