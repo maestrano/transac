@@ -14,8 +14,7 @@ angular.module('maestrano.transac').component('transac', {
       ctrl.transacReady = false
       ctrl.isTopBarShown = true
       ctrl.filters = null
-      loadUser()
-      loadPaginationTotals()
+      loadUser().then(-> loadPaginationTotals())
 
     ctrl.onTxsCmpInit = ({api})->
       ctrl.txsCmpApi = api
@@ -53,8 +52,9 @@ angular.module('maestrano.transac').component('transac', {
           TransacAlertsService.send(err.message.type, err.message.text)
           # TODO: display error message
           ctrl.transacLoadError = true
+      ).finally(->
+        ctrl.transacReady = true
       )
-      .finally(-> ctrl.transacReady = true)
 
     # Load pagination totals to populate top-bar menu tab counts quickly and before full txs load.
     loadPaginationTotals = ->
