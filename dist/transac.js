@@ -230,12 +230,18 @@
         var filters, selectedMenu;
         selectedMenu = arg.selectedMenu, filters = arg.filters;
         ctrl.filters = filters;
-        return ctrl.txsCmpApi.filterTxs(selectedMenu.type, filters);
+        return ctrl.txsCmpApi.filterTxs({
+          type: selectedMenu.type,
+          params: filters
+        });
       };
       ctrl.onRefreshTxs = function(arg) {
         var type;
         type = arg.type;
-        return TransacTxsDispatcher.reloadTxs(type, ctrl.filters);
+        return TransacTxsDispatcher.reloadTxs({
+          type: type,
+          params: ctrl.filters
+        });
       };
       ctrl.updateTransactionsCount = function(paginationTotals) {
         return ctrl.topBarCmpApi.updateMenusItemsCount(paginationTotals);
@@ -303,7 +309,7 @@
 }).call(this);
 
 angular.module('maestrano.transac').run(['$templateCache', function($templateCache) {$templateCache.put('transac','<div ng-if="$ctrl.transacReady">\n  <transac-top-bar ng-show="$ctrl.isTopBarShown" is-menu-loading="$ctrl.isTxsLoading" on-init="$ctrl.onTopBarCmpInit($event)" on-filter="$ctrl.onTopBarFilter($event)" on-refresh="$ctrl.onRefreshTxs($event)"></transac-top-bar>\n\n  <transac-txs on-init="$ctrl.onTxsCmpInit($event)" filters="$ctrl.filters" on-transactions-change="$ctrl.updateTransactionsCount($event)" on-reconciling="$ctrl.toggleTopBar($event)" on-loading-change="$ctrl.updateTxsLoadingStatus($event)"></transac-txs>\n</div>\n<div ng-if="!$ctrl.transacReady">\n  <p>Loading...</p>\n</div>\n');
-$templateCache.put('components/top-bar','<div class="top-bar">\n  <transac-filters-selector filters-menu="$ctrl.filtersMenu" on-select="$ctrl.onFilterSelect($event)" on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>\n  <div class="top-bar_refresh-txs">\n    <div type="button" class="top-bar_refresh-txs_btn" ng-click="$ctrl.onRefreshTxsClick()">\n      <i class="fa fa-refresh fa-2x fa-fw"></i>\n    </div>\n  </div>\n  <div class="top-bar_menu">\n    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ \'active\': menu.active, \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">\n      <h5>{{::menu.title}} ({{menu.itemsCount}})</h5>\n      <div class="top-bar_menu_tab-line"></div>\n    </a>\n    <!-- $compiles transac-search-bar cmp here (see controller) -->\n  </div>\n  <button class="top-bar_toggle-search-btn" ng-class="{ \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.toggleSearch($event)" ng-disabled="$ctrl.isMenuLoading">\n    <i class="fa fa-2x fa-fw" ng-class="{ \'fa-search\': !$ctrl.isEditingSearchBar, \'fa-times\': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>\n  </button>\n</div>\n');
+$templateCache.put('components/top-bar','<div class="top-bar">\n  <transac-filters-selector filters-menu="$ctrl.filtersMenu" on-select="$ctrl.onFilterSelect($event)" on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>\n  <div class="top-bar_refresh-txs">\n    <div type="button" class="top-bar_refresh-txs_btn" ng-class="{\'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.onRefreshTxsClick()">\n      <i class="fa fa-refresh fa-2x fa-fw"></i>\n    </div>\n  </div>\n  <div class="top-bar_menu">\n    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ \'active\': menu.active, \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">\n      <h5>{{::menu.title}} ({{menu.itemsCount}})</h5>\n      <div class="top-bar_menu_tab-line"></div>\n    </a>\n    <!-- $compiles transac-search-bar cmp here (see controller) -->\n  </div>\n  <button class="top-bar_toggle-search-btn" ng-class="{ \'loading\': $ctrl.isMenuLoading }" ng-click="$ctrl.toggleSearch($event)" ng-disabled="$ctrl.isMenuLoading">\n    <i class="fa fa-2x fa-fw" ng-class="{ \'fa-search\': !$ctrl.isEditingSearchBar, \'fa-times\': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>\n  </button>\n</div>\n');
 $templateCache.put('components/top-bar/filters-selector','<div class="filters-selector">\n  <div class="btn-group" uib-dropdown on-toggle="$ctrl.toggleSelector(open)" auto-close="outsideClick">\n    <button id="filters-selector_selector-btn" type="button" class="btn btn-primary" ng-class="{ \'disabled\': $ctrl.isDisabled }" ng-click="$ctrl.toggleSelector()" uib-dropdown-toggle>\n      <i class="fa fa-filter fa-2x fa-fw" aria-hidden="true"></i>\n    </button>\n    <ul class="dropdown-menu filters-selector_selector-dropdown" uib-dropdown-menu role="menu" aria-labelledby="filters-selector_selector-btn">\n      <li role="{{!item.divider ? \'menuitem\' : \'\'}}" ng-repeat="item in $ctrl.filtersMenu" ng-class="{ \'divider\': item.divider }">\n        <a href="" ng-if="!$ctrl.divider" ng-class="{ \'selected\': item.selected }" ng-click="$ctrl.selectFilterOnClick(item)">{{item.label}}</a>\n      </li>\n    </ul>\n  </div>\n</div>\n');
 $templateCache.put('components/top-bar/search-bar','<input type="text" placeholder="Search transactions..." ng-model="$ctrl.search.text" ng-keypress="$ctrl.submitOnKeypress($event)" ng-change="$ctrl.onSearchChange()">\n');
 $templateCache.put('components/transactions/transaction','<div ng-class="{ \'selected\': $ctrl.isSelected }">\n  <div class="summary">\n    <a href="" class="summary_content" ng-click="$ctrl.selectOnClick()" ng-class="{ \'no-pointer\': $ctrl.historical }">\n      <div class="summary_content_icon">\n        <i class="fa {{$ctrl.icon()}} fa-2x" aria-hidden="true"></i>\n      </div>\n      <div class="summary_content_caption">\n        <div class="summary_content_caption_title">\n          <span>{{::$ctrl.title()}}</span>\n        </div>\n        <div class="summary_content_caption_subtitle">\n          <span>{{::$ctrl.subtitle()}}</span>\n        </div>\n      </div>\n      <div class="summary_content_warning" ng-if="$ctrl.hasMatches()" ng-class="{ \'hide\': $ctrl.isSelected }">\n        <div>\n          <i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>\n          <span>This record may be a duplicate</span>\n        </div>\n      </div>\n    </a>\n    <div class="summary_actions" ng-class="{ \'hide\': $ctrl.isSelected }" ng-if="!$ctrl.historical">\n      <div type="button" class="tx-icon tx-fab summary_actions_action--deny" ng-class="{\'tx-flat summary_actions_action--deny-hist\': false}" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">\n        <i class="fa fa-times fa-2x fa-fw"></i>\n      </div>\n      <div type="button" class="tx-icon tx-fab summary_actions_action--approve" ng-class="{\'tx-flat summary_actions_action--approve-hist\': false}" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">\n        <i class="fa fa-check fa-2x fa-fw"></i>\n      </div>\n      <!-- <div type="button" class="tx-icon tx-fab summary_actions_action--merge" ng-class="{\'tx-flat summary_actions_action--merge-hist\': $ctrl.historical}" ng-if="$ctrl.isActionMade(\'merge\')">\n        <i class="fa fa-link fa-2x fa-fw"></i>\n      </div> -->\n    </div>\n  </div>\n  <div class="detail" ng-if="$ctrl.isSelected">\n    <div class="row is-flex">\n      <div class="col-md-8 col-xs-12 detail_changes no-gutters">\n        <transac-tx-changes changes="$ctrl.formattedChanges"></transac-tx-changes>\n      </div>\n      <div class="col-md-4 col-xs-12 no-gutters">\n        <div class="row detail_apps no-gutters">\n          <div class="detail_apps_title">\n            <h5>Select apps to share with:</h5>\n          </div>\n          <div class="detail_apps_app" ng-repeat="mapping in ::$ctrl.getPendingMappings()" ng-click="$ctrl.selectAppOnClick($event, mapping)">\n            <span>{{::mapping.app_name}}</span>\n            <input type="checkbox" ng-checked="mapping.sharedWith">\n          </div>\n        </div>\n      </div>\n    </div>\n    <div class="row" ng-if="$ctrl.canReconcileRecords() && !$ctrl.historical">\n      <div class="col-md-12 col-xs-12">\n        <div class="row detail_dup-line-break">\n          <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>\n          <div class="detail_dup-line-break_title">\n            <div>\n              <i class="fa fa-exclamation fa-lg" aria-hidden="true"></i>\n              <span>Potential Duplicates</span>\n            </div>\n          </div>\n          <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--right"></div>\n        </div>\n        <div class="row">\n          <div class="col-md-12 col-xs-12 detail_section detail_section_matches">\n            <transac-tx-matches matches="::$ctrl.matches"></transac-tx-matches>\n          </div>\n        </div>\n      </div>\n    </div>\n    <div class="row details_actions-bar">\n      <div class="col-md-12 col-xs-12 no-gutters detail_actions-bar">\n        <div class="detail_actions-bar_wrapper">\n          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--dups" ng-if="$ctrl.canReconcileRecords()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">\n            <i class="fa fa-link fa-2x fa-fw"></i>\n          </div>\n          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--deny" ng-click="$ctrl.denyOnClick(true)" uib-tooltip="Never share this record" tooltip-popup-delay="300">\n            <i class="fa fa-times fa-2x first"/><i class="fa fa-times fa-2x second"/>\n          </div>\n          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--approve-once" ng-click="$ctrl.approveOnClick()" uib-tooltip="Approve only this time" tooltip-popup-delay="300">\n            <i class="fa fa-check fa-2x"></i><span>x1</span>\n          </div>\n          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--deny-once" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">\n            <i class="fa fa-times fa-2x fa-fw"></i>\n          </div>\n          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">\n            <i class="fa fa-check fa-2x fa-fw"></i>\n          </div>\n        </div>\n        <!-- Button style action, kept incase we want to go back to this. -->\n        <!-- <div class="detail_actions-bar_wrapper">\n          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">\n            <span>Always share</span>\n            <i class="fa fa-check fa-fw"></i>\n          </div>\n          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--deny-once" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">\n            <span>Do not share</span>\n            <i class="fa fa-times fa-2x fa-fw"></i>\n          </div>\n          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--approve-once" ng-click="$ctrl.approveOnClick()" uib-tooltip="Approve only this time" tooltip-popup-delay="300">\n            <span>Share once</span>\n            <i class="fa fa-check fa-2x"></i><span class="icon-text">x1</span>\n          </div>\n          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--deny" ng-click="$ctrl.denyOnClick(true)" uib-tooltip="Never share this record" tooltip-popup-delay="300">\n            <span>Never share</span>\n            <i class="fa fa-times fa-2x first"/><i class="fa fa-times fa-2x second"/>\n          </div>\n          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--dups" ng-if="$ctrl.hasMatches()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">\n            <span>Merge Duplicates</span>\n            <i class="fa fa-link fa-2x fa-fw"></i>\n          </div>\n        </div> -->\n\n      </div>\n  </div>\n</div>\n');
@@ -348,6 +354,9 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
             }
           }));
         }
+      };
+      ctrl.$onDestroy = function() {
+        return TransacTopBarDispatcher.resetTopBarState();
       };
       ctrl.$onChanges = function(changes) {
         if (changes.isMenuLoading != null) {
@@ -499,6 +508,13 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
       state = TransacTopBarStore.dispatch('applyFilters');
       return state.filters;
     };
+
+    /*
+     *   @desc Reset Top Bar store state
+     */
+    this.resetTopBarState = function() {
+      TransacTopBarStore.dispatch('clearAllFilters');
+    };
     return this;
   }]);
 
@@ -514,9 +530,9 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
     var _self, buildFilterQuery, callbacks, notify, state;
     _self = this;
     state = {
-      menus: MENUS,
+      menus: angular.copy(MENUS),
       selectedMenu: _.find(MENUS, 'active'),
-      filtersMenu: FILTERS_MENU,
+      filtersMenu: angular.copy(FILTERS_MENU),
       filters: {},
       lastSearchQuery: ''
     };
@@ -555,12 +571,22 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           state.filters.$filter = buildFilterQuery(payload);
           break;
         case 'selectFilter':
-          if (payload.type === '$orderby' || payload.type === 'duplicates') {
+          if (payload.type === '$orderby') {
             filters = _.filter(state.filtersMenu, 'type', payload.type);
             _.each(filters, function(f) {
-              f.selected = false;
+              return f.selected = false & void 0;
             });
             payload.selected = true;
+          } else if (payload.type === 'duplicates') {
+            if (payload.selected) {
+              payload.selected = !payload.selected;
+            } else {
+              filters = _.filter(state.filtersMenu, 'type', payload.type);
+              _.each(filters, function(f) {
+                return f.selected = false & void 0;
+              });
+              payload.selected = true;
+            }
           } else {
             payload.selected = !payload.selected;
           }
@@ -569,12 +595,21 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           orderbyFilter = _.find(_.filter(state.filtersMenu, {
             'type': '$orderby'
           }), 'selected');
+          state.filters.$orderby = orderbyFilter.attr + " " + orderbyFilter.value;
           duplicatesFilter = _.find(_.filter(state.filtersMenu, {
             'type': 'duplicates'
           }), 'selected');
-          state.filters.$orderby = orderbyFilter.attr + " " + orderbyFilter.value;
-          state.filters.duplicates = "" + duplicatesFilter.value;
+          if (duplicatesFilter != null) {
+            state.filters.duplicates = "" + duplicatesFilter.value;
+          } else {
+            delete state.filters.duplicates;
+          }
           state.filters.$filter = buildFilterQuery();
+          break;
+        case 'clearAllFilters':
+          state.filtersMenu = angular.copy(FILTERS_MENU);
+          state.filters = {};
+          state.lastSearchQuery = '';
       }
       notify();
       return _self.getState();
@@ -619,7 +654,7 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
  */
 
 (function() {
-  angular.module('transac.transactions').service('TransacTxsDispatcher', ["$q", "$timeout", "TransacTxsStore", "TransacTxsService", "TransacAlertsService", function($q, $timeout, TransacTxsStore, TransacTxsService, TransacAlertsService) {
+  angular.module('transac.transactions').service('TransacTxsDispatcher', ["$q", "$log", "$timeout", "TransacTxsStore", "TransacTxsService", "TransacAlertsService", function($q, $log, $timeout, TransacTxsStore, TransacTxsService, TransacAlertsService) {
     var _self;
     _self = this;
 
@@ -685,21 +720,29 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
 
     /*
      *   @desc Load transactions & set pagination total
-     *   @param {string} [type] Type of transaction
-     *   @param {Object} [params=] pagination & filter parameters for the request
+     *   @param {Object} [options]
+     *   @param {Object} [option.type=] Type of transaction
+     *   @param {Object} [options.params=] pagination & filter parameters for the request
      *   @returns {Promise<Object>} whether the load was successful or not
      */
-    this.reloadTxs = function(type, params) {
-      if (params == null) {
-        params = null;
+    this.reloadTxs = function(options) {
+      if (options == null) {
+        options = {};
       }
-      TransacTxsStore.dispatch('loadingTxs', true);
-      TransacTxsStore.dispatch('removeAllTxs');
-      TransacTxsStore.dispatch('resetPgnSkip');
-      return _self.loadTxs({
-        type: type,
-        params: params
-      });
+      if (!_self.reloadLocked) {
+        _self.reloadLocked = true;
+        TransacTxsStore.dispatch('loadingTxs', true);
+        TransacTxsStore.dispatch('removeAllTxs');
+        TransacTxsStore.dispatch('resetPgnSkip');
+        return _self.loadTxs(options).then(function() {
+          return _self.reloadLocked = false;
+        });
+      } else {
+        return $timeout(function() {
+          $log.warn("Reload Transactions locked: retrying in 5sec");
+          return _self.reloadTxs(options);
+        }, 500);
+      }
     };
 
     /*
@@ -788,6 +831,14 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
         }
       }
       return deferred.promise;
+    };
+
+    /*
+     *   @desc Reset Transactions store state
+     */
+    this.resetTxsState = function() {
+      TransacTxsStore.dispatch('removeAllTxs');
+      TransacTxsStore.dispatch('resetPgnSkip');
     };
     return this;
   }]);
@@ -1802,6 +1853,9 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           return onTxsChange();
         });
       };
+      ctrl.$onDestroy = function() {
+        return TransacTxsDispatcher.resetTxsState();
+      };
       ctrl.loadMore = function() {
         if (ctrl.isPaginationDisabled()) {
           return;
@@ -1851,7 +1905,10 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
       ctrl.onTransactionReconciled = function(args) {
         return TransacTxsDispatcher.mergeTxs(args).then(function(res) {
           TransacAlertsService.send(res.message.type, res.message.text);
-          TransacTxsDispatcher.reloadTxs(ctrl.txsType, ctrl.filters);
+          TransacTxsDispatcher.reloadTxs({
+            type: ctrl.txsType,
+            params: ctrl.filters
+          });
           return res;
         }, function(err) {
           TransacAlertsService.send(err.message.type, err.message.text);
@@ -1884,8 +1941,8 @@ $templateCache.put('components/transactions/transactions','<div ng-hide="$ctrl.r
           }));
         });
       };
-      onFilterTxs = function(type, params) {
-        return TransacTxsDispatcher.reloadTxs(type, params).then(function() {
+      onFilterTxs = function(options) {
+        return TransacTxsDispatcher.reloadTxs(options).then(function() {
           return onTxsChange();
         });
       };
