@@ -85,38 +85,40 @@ transac-tx {
       justify-content: center;
       .action {
         &.approve {
-          .tx-icon-approve();
+          .transac-icon-approve();
         }
         &.deny {
-          .tx-icon-deny-once();
+          .transac-icon-deny-once();
         }
         &.merge {
-          .tx-icon-merge();
+          .transac-icon-merge();
         }
-        &.approve-hist {
-          color: white;
-          background-color: @transac-tx-approve-color;
-          &:hover {
-            color: white;
-            background-color: @transac-tx-approve-color;
-          }
-        }
-        &.deny-hist {
-          color: white;
-          background-color: @transac-tx-deny-color;
-          &:hover {
-            color: white;
-            background-color: @transac-tx-deny-color;
-          }
-        }
-        &.merge-hist {
-          color: white;
-          background-color: @transac-tx-duplicate-color;
-          &:hover {
-            color: white;
-            background-color: @transac-tx-duplicate-color;
-          }
-        }
+        // History view button styles
+        // ---
+        // &.approve-hist {
+        //   color: white;
+        //   background-color: @transac-tx-approve-color;
+        //   &:hover {
+        //     color: white;
+        //     background-color: @transac-tx-approve-color;
+        //   }
+        // }
+        // &.deny-hist {
+        //   color: white;
+        //   background-color: @transac-tx-deny-color;
+        //   &:hover {
+        //     color: white;
+        //     background-color: @transac-tx-deny-color;
+        //   }
+        // }
+        // &.merge-hist {
+        //   color: white;
+        //   background-color: @transac-tx-duplicate-color;
+        //   &:hover {
+        //     color: white;
+        //     background-color: @transac-tx-duplicate-color;
+        //   }
+        // }
       }
     }
   }
@@ -197,19 +199,19 @@ transac-tx {
 
       .action {
         &.approve {
-          .tx-icon-approve();
+          .transac-icon-approve();
         }
         &.deny {
-          .tx-icon-deny();
+          .transac-icon-deny();
         }
         &.dups {
-          .tx-icon-merge();
+          .transac-icon-merge();
         }
         &.approve-once {
-          .tx-icon-approve-once();
+          .transac-icon-approve-once();
         }
         &.deny-once {
-          .tx-icon-deny-once();
+          .transac-icon-deny-once();
         }
       }
     }

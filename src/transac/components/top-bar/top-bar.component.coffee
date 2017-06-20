@@ -101,7 +101,7 @@ angular.module('transac.top-bar').component('transacTopBar', {
           is-disabled="isMenuLoading">
         </transac-search-bar>
       """
-      $menu = angular.element($event.currentTarget.parentElement).find('.top-bar_menu')
+      $menu = angular.element($event.currentTarget.parentElement).find('.menu')
       # Add relevant ctrl locals onto $compile $scope ($compile requires a $scope object).
       # note: this does not get re-updated when data flows back through the cmp ctrl. Manually re-add it to $scope in the ctrl.$onChanges lifecycle hook.
       angular.merge($scope,

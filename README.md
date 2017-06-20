@@ -1,13 +1,9 @@
 # Transac!
 
-## Todo (ordered)
+## Developement
 
-- add app_name to transaction matches in reconcile view
-- fix main responsiveness issue (items extending viewport <= 680px)
-- docs for top-bar dispatcher
-- create dates angular filter
-- merge view field selection
-- mobile responsive touch-ups
-- bulk transaction actions
-- Add button click animations
-- Improve merge view UI
+1. Bower link transac to mno-enterprise-angular
+
+2. Run `gulp serve` in mno-enterprise-angular
+
+3. Run `gulp watch` for rebuild on changes on transac (refresh mno-enterprise-angular for updated changes)

@@ -45,10 +45,10 @@ transac-top-bar {
         }
         &.active.loading {
           .line {
-            webkit-animation: flickerOpacity 1s infinite;
-            moz-animation: flickerOpacity 1s infinite;
-            o-animation: flickerOpacity 1s infinite;
-            animation: flickerOpacity 1s infinite;
+            webkit-animation: transacFlickerOpacity 1s infinite;
+            moz-animation: transacFlickerOpacity 1s infinite;
+            o-animation: transacFlickerOpacity 1s infinite;
+            animation: transacFlickerOpacity 1s infinite;
           }
         }
         &:hover {
@@ -67,15 +67,15 @@ transac-top-bar {
 
   transac-search-bar {
     flex: .00001;
-    -webkit-animation: flexGrow 200ms ease forwards;
-    -o-animation: flexGrow 200ms ease forwards;
-    animation: flexGrow 200ms ease forwards;
+    -webkit-animation: transacFlexGrow 200ms ease forwards;
+    -o-animation: transacFlexGrow 200ms ease forwards;
+    animation: transacFlexGrow 200ms ease forwards;
 
     &.remove-search-bar {
       flex: 1;
-      -webkit-animation: flexShrink 200ms ease forwards;
-      -o-animation: flexShrink 200ms ease forwards;
-      animation: flexShrink 200ms ease forwards;
+      -webkit-animation: transacFlexShrink 200ms ease forwards;
+      -o-animation: transacFlexShrink 200ms ease forwards;
+      animation: transacFlexShrink 200ms ease forwards;
     }
   }
 }

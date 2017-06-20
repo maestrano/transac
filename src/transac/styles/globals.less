@@ -16,8 +16,10 @@
   justify-content: center;
 }
 
-// TX ICON / BUTTONS !
-.tx-icon {
+/*
+** Transac! base Icons & Buttons
+*/
+.transac-icon {
   position: relative;
   outline: 0;
   border: none;
@@ -31,19 +33,19 @@
   align-items: center;
   justify-content: center;
 }
-.tx-icon.tx-raised {
+.transac-icon.transac-raised {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
 }
-.tx-icon.tx-fab {
+.transac-icon.transac-fab {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
   border-radius: 50px;
-  &.tx-flat {
+  &.transac-flat {
     box-shadow: none;
   }
 }
-.tx-icon,
-.tx-icon.tx-raised,
-.tx-icon.tx-fab {
+.transac-icon,
+.transac-icon.transac-raised,
+.transac-icon.transac-fab {
   &:focus {
     box-shadow: 0 1px 14px 0 rgba(0, 0, 0, 0.36);
   }
@@ -52,7 +54,7 @@
   }
 }
 
-.tx-btn {
+.transac-btn {
   position: relative;
   outline: 0;
   border: none;
@@ -69,11 +71,11 @@
     padding: 0 5px;
   }
 }
-.tx-btn.tx-raised {
+.transac-btn.transac-raised {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
 }
-.tx-btn,
-.tx-raised {
+.transac-btn,
+.transac-raised {
   &:focus {
     box-shadow: 0 1px 14px 0 rgba(0, 0, 0, 0.36);
   }
@@ -82,77 +84,67 @@
   }
 }
 
-// BOOTSTRAP COLUMN FLEX - columns with an even height.
-.row.is-flex {
-    display: flex;
-    flex-wrap: wrap;
-}
-.row.is-flex > [class*='col-'] {
-    display: flex;
-    flex-direction: column;
-}
-
 /*
 **  Animations
 */
-@-webkit-keyframes flexGrow {
+@-webkit-keyframes transacFlexGrow {
   to {
     flex: 1;
   }
 }
-@-moz-keyframes flexGrow {
+@-moz-keyframes transacFlexGrow {
   to {
     flex: 1;
   }
 }
-@-o-keyframes flexGrow {
+@-o-keyframes transacFlexGrow {
   to {
     flex: 1;
   }
 }
-@keyframes flexGrow {
+@keyframes transacFlexGrow {
   to {
     flex: 1;
   }
 }
 
-@-webkit-keyframes flexShrink {
+@-webkit-keyframes transacFlexShrink {
   to {
     flex: .00001;
   }
 }
-@-moz-keyframes flexShrink {
+@-moz-keyframes transacFlexShrink {
   to {
     flex: .00001;
   }
 }
-@-o-keyframes flexShrink {
+@-o-keyframes transacFlexShrink {
   to {
     flex: .00001;
   }
 }
-@keyframes flexShrink {
+@keyframes transacFlexShrink {
   to {
     flex: .00001;
   }
 }
 
-@-webkit-keyframes flickerOpacity{
+@-webkit-keyframes transacFlickerOpacity{
   0%   { opacity:1; }
   50%  { opacity:0; }
   100% { opacity:1; }
 }
-@-moz-keyframes flickerOpacity{
+@-moz-keyframes transacFlickerOpacity{
   0%   { opacity:1; }
   50%  { opacity:0; }
   100% { opacity:1; }
 }
-@-o-keyframes flickerOpacity{
+@-o-keyframes transacFlickerOpacity{
   0%   { opacity:1; }
   50%  { opacity:0; }
   100% { opacity:1; }
 }
-@keyframes flickerOpacity {
+@keyframes transacFlickerOpacity {
   0%   { opacity:1; }
   50%  { opacity:0; }
   100% { opacity:1; }
@@ -161,6 +153,16 @@
 /*
 ** Bootstrap overrides / class customisations
 */
+
+// Column flex; columns with an even height.
+.row.is-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.row.is-flex > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+}
 
 // Remove borders from Bootstrap table
 .table.borderless td, .table.borderless th {
