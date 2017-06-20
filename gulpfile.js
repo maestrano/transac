@@ -86,7 +86,7 @@ gulp.task('styles', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(sourceCoffee.concat(sourceLess).concat(sourceHtml), ['build']);
+  gulp.watch(sourceCoffee.concat(sourceLess).concat(sourceHtml), { interval: 1000 }, ['build']);
 });
 
 // /**
