@@ -7,17 +7,12 @@ angular.module('transac.alerts',
     'toastr'
     'ngAnimate'
   ])
-  .config(['toastrConfig',
-    (toastrConfig)->
-      angular.merge(toastrConfig,
-        # TODO: this timeOut config isn't working?
-        timeOut: 1500
-        positionClass: 'toast-top-right'
-        # TODO: also not working
-        preventDuplicates: false
-        progressBar: true
-      )
-  ])
+  .config((toastrConfig)->
+    toastrConfig.timeOut = 1500
+    toastrConfig.positionClass = 'toast-top-right'
+    toastrConfig.preventDuplicates = false
+    toastrConfig.progressBar = true
+  )
   .constant('TOASTR_OPTS',
     success:
       timeOut: 800
