@@ -1,0 +1,12 @@
+<div class="filters-selector">
+  <div class="btn-group" uib-dropdown on-toggle="$ctrl.toggleSelector(open)" auto-close="outsideClick">
+    <button id="dropdown-toggle-btn" type="button" class="btn btn-primary" ng-class="{ 'disabled': $ctrl.isDisabled }" ng-click="$ctrl.toggleSelector()" uib-dropdown-toggle>
+      <i class="fa fa-filter fa-2x fa-fw" aria-hidden="true"></i>
+    </button>
+    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="dropdown-toggle-btn">
+      <li role="{{!item.divider ? 'menuitem' : ''}}" ng-repeat="item in $ctrl.filtersMenu" ng-class="{ 'divider': item.divider }">
+        <a href="" ng-if="!$ctrl.divider" ng-class="{ 'selected': item.selected }" ng-click="$ctrl.selectFilterOnClick(item)">{{item.label}}</a>
+      </li>
+    </ul>
+  </div>
+</div>

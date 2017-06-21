@@ -1,0 +1,27 @@
+transac-filters-selector {
+
+  & > .filters-selector {
+    min-height: 100%;
+
+    #dropdown-toggle-btn {
+      .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
+      box-shadow: none;
+    }
+
+    .dropdown-menu {
+      & > li > a {
+        &:focus {
+          color: @transac-top-bar-menu-item-color;;
+          background-color: inherit;
+        }
+        &.selected {
+          color: darken(@transac-top-bar-menu-item-color, 30%);
+          background-color: @transac-filters-selector-selected-background-color;
+        }
+      }
+      li > a {
+        color: @transac-top-bar-menu-item-color;
+      }
+    }
+  }
+}

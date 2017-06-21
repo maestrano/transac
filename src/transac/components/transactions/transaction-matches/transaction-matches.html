@@ -1,0 +1,10 @@
+<div ng-repeat="match in ::$ctrl.matches" class="match">
+  <div class="caption">
+    <div class="title">
+      <span ng-bind="::$ctrl.title(match)"></span>
+    </div>
+    <div class="subtitle">
+      <span ng-bind="::$ctrl.subtitle(match)"></span>
+    </div>
+  </div>
+</div>

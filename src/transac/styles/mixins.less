@@ -1,0 +1,210 @@
+.transac-list-on-hover(@color: @transac-lightgrey) {
+  &:hover {
+    background-color: @color;
+  }
+}
+
+.transac-subtitle(@font-size: 13px, @color: lighten(@transac-darkgrey, 15%)) {
+  font-size: @font-size;
+  color: @color;
+}
+
+.transac-title(@font-size: 14px, @font-weight: bold) {
+  font-size: @font-size;
+  font-weight: @font-weight;
+  text-transform: capitalize;
+}
+
+.transac-table() {
+  table {
+    width: 100%;
+  }
+  tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0.5em 0;
+    border: 1px solid rgba(3,3,3,0.2);
+  }
+  td, th {
+    flex: 1 1 150px;
+    border: 0.5px solid rgba(3,3,3,0.2);
+  }
+}
+
+.transac-ellipsis() {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+// .transac-icon & .transac-btn mixins
+// Enhances the base transac-icon & transac-btn classes (see globals.less) with
+// specific customisations
+// ---------------------
+.transac-icon-approve() {
+  color: @transac-tx-approve-color;
+  &:hover {
+    background-color: @transac-tx-approve-color;
+    color: white;
+  }
+}
+
+.transac-icon-approve-once() {
+  .transac-icon-approve();
+  i {
+    font-size: 27px;
+    position: absolute;
+    top: 12px;
+    left: 10px;
+  }
+  span {
+    position: absolute;
+    font-size: 12px;
+    top: 24px;
+    left: 28px;
+  }
+}
+
+.transac-icon-deny-once() {
+  color: @transac-tx-deny-color;
+  &:hover {
+    background-color: @transac-tx-deny-color;
+    color: white;
+  }
+}
+
+.transac-icon-deny() {
+  .transac-icon-deny-once();
+  i.first {
+    position: absolute;
+    top: 11px;
+    left: 9px;
+    font-size: 25px;
+  }
+  i.second {
+    position: absolute;
+    top: 16px;
+    left: 23px;
+    font-size: 25px;
+  }
+}
+
+.transac-icon-merge() {
+  color: @transac-tx-duplicate-color;
+  &:hover {
+    background-color: @transac-tx-duplicate-color;
+    color: white;
+  }
+}
+
+.transac-btn-approve() {
+  color: @transac-tx-approve-color;
+  // color: white;
+  &:hover {
+    background-color: @transac-tx-approve-color;
+    color: white;
+  }
+}
+
+.transac-btn-approve-once() {
+  .transac-btn-approve();
+  span.icon-text {
+    font-size: 10px;
+    text-transform: initial;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+  }
+}
+
+.transac-btn-deny-once() {
+  color: @transac-tx-deny-color;
+  &:hover {
+    background-color: @transac-tx-deny-color;
+    color: white;
+  }
+}
+
+.transac-btn-deny() {
+  .transac-btn-deny-once();
+  padding-right: 29px;
+  i.first {
+    position: absolute;
+    right: 9px;
+    bottom: 11px;
+    font-size: 15px;
+  }
+  i.second {
+    position: absolute;
+    right: -1px;
+    bottom: 8px;
+    font-size: 15px;
+  }
+}
+
+.transac-btn-merge() {
+  color: @transac-tx-duplicate-color;
+  &:hover {
+    background-color: @transac-tx-duplicate-color;
+    color: white;
+  }
+}
+
+// TODO: To be replaced by transac-icon / transac-btn mixins & removed
+// ---
+// Should be mixed into a <button> or <div type="button">
+.transac-action-button(@color: @transac-blue, @margin: 1px, @padding: 10px 18px) {
+  color: @color;
+  border: none;
+  padding: @padding;
+  margin: @margin;
+  max-width: 60px;
+  background-color: inherit;
+  border-radius: 0;
+  &:hover {
+    color: lighten(@color, 15%);
+  }
+}
+
+// Should be mixed into a <div ng-click>
+.transac-action-button-labeled--label-right(@btn-color: @transac-blue, @label-color: lighten(@transac-darkgrey, 15%)) {
+  position: absolute;
+  display: flex;
+  div.action-button {
+    .transac-action-button(@btn-color, 10px);
+    // Adjustments for <span> label
+    padding: 10px 12px 10px 18px;
+    margin: 10px 0 10px 10px;
+  }
+  span.action-label {
+    display: flex;
+    align-items: center;
+    padding-right: 25px;
+    .transac-subtitle(13px, @label-color)
+  }
+  &:hover {
+    div.action-button { color: lighten(@btn-color, 15%); }
+    span.action-label { color: lighten(@label-color, 15%); }
+  }
+}
+
+.transac-action-button-labeled--label-left(@btn-color: @transac-blue, @label-color: lighten(@transac-darkgrey, 15%)) {
+  display: flex;
+  div.action-button {
+    .transac-action-button(@btn-color, 10px);
+    // Adjustments for <span> label
+    padding: 10px 18px 10px 12px;
+  }
+  span.action-label {
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    .transac-subtitle(13px, @label-color)
+  }
+  &:hover {
+    div.action-button { color: lighten(@btn-color, 15%); }
+    span.action-label { color: lighten(@label-color, 15%); }
+  }
+}
+// ---------------------

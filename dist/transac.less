@@ -1,0 +1,979 @@
+// color palette
+@transac-darkgrey: #676767;
+@transac-grey: #d9d9d9;
+@transac-lightgrey: #f2f2f2;
+@transac-green: #27ab26;
+@transac-red: #d41414;
+@transac-orange: #ffb032;
+@transac-blue: #4053c3;
+
+// standard styles
+@transac-whiteframe: 0px 1px 8px -4px;
+@transac-whiteframe-2: 0px 1px 10px -4px;
+
+//
+// Component variables
+//
+
+// top-bar component
+@transac-top-bar-background-color: white;
+@transac-top-bar-menu-item-color: rgba(0,0,0,0.54);
+@transac-top-bar-border: 1px solid @transac-lightgrey;
+@transac-top-bar-box-shadow: @transac-whiteframe;
+@transac-top-bar-menu-item-active-line-color: black;
+
+// top-bar filters-selector
+@transac-filters-selector-selected-background-color: rgb(213, 216, 255);
+
+// transaction component
+@transac-tx-height: 60px;
+@transac-tx-background-color: white;
+@transac-tx-approve-color: @transac-green;
+@transac-tx-deny-color: @transac-red;
+@transac-tx-duplicate-color: @transac-darkgrey;
+@transac-tx-hover-background-color: @transac-lightgrey;
+@transac-tx-duplicate-warning-color: lighten(@transac-darkgrey, 15%);
+@transac-tx-details-duplicate-warning-color: @transac-orange;
+
+// transaction-tile component
+@transac-tx-tile-box-shadow: @transac-whiteframe;
+@transac-tx-tile-topbar-selected-background-color: rgba(100, 246, 100, 0.3);
+@transac-tx-tile-deselected-color: rgba(128, 128, 128, 0.5);
+
+/*
+** Transac! Global Classes
+*/
+
+.no-pointer {
+  cursor: default;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+** Transac! base Icons & Buttons
+*/
+.transac-icon {
+  position: relative;
+  outline: 0;
+  border: none;
+  max-width: 60px;
+  background-color: inherit;
+  border-radius: 2px;
+  margin: 6px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.transac-icon.transac-raised {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+}
+.transac-icon.transac-fab {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+  border-radius: 50px;
+  &.transac-flat {
+    box-shadow: none;
+  }
+}
+.transac-icon,
+.transac-icon.transac-raised,
+.transac-icon.transac-fab {
+  &:focus {
+    box-shadow: 0 1px 14px 0 rgba(0, 0, 0, 0.36);
+  }
+  &:active {
+    box-shadow: none;
+  }
+}
+
+.transac-btn {
+  position: relative;
+  outline: 0;
+  border: none;
+  background-color: inherit;
+  border-radius: 2px;
+  text-transform: uppercase;
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+  margin: 16px 8px;
+  padding: 0 6px;
+  i {
+    font-size: 17px;
+    padding: 0 5px;
+  }
+}
+.transac-btn.transac-raised {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+}
+.transac-btn,
+.transac-raised {
+  &:focus {
+    box-shadow: 0 1px 14px 0 rgba(0, 0, 0, 0.36);
+  }
+  &:active {
+    box-shadow: none;
+  }
+}
+
+/*
+**  Animations
+*/
+@-webkit-keyframes transacFlexGrow {
+  to {
+    flex: 1;
+  }
+}
+@-moz-keyframes transacFlexGrow {
+  to {
+    flex: 1;
+  }
+}
+@-o-keyframes transacFlexGrow {
+  to {
+    flex: 1;
+  }
+}
+@keyframes transacFlexGrow {
+  to {
+    flex: 1;
+  }
+}
+
+@-webkit-keyframes transacFlexShrink {
+  to {
+    flex: .00001;
+  }
+}
+@-moz-keyframes transacFlexShrink {
+  to {
+    flex: .00001;
+  }
+}
+@-o-keyframes transacFlexShrink {
+  to {
+    flex: .00001;
+  }
+}
+@keyframes transacFlexShrink {
+  to {
+    flex: .00001;
+  }
+}
+
+@-webkit-keyframes transacFlickerOpacity{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-moz-keyframes transacFlickerOpacity{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-o-keyframes transacFlickerOpacity{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@keyframes transacFlickerOpacity {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+
+/*
+** Bootstrap overrides / class customisations
+*/
+
+// Column flex; columns with an even height.
+.row.is-flex {
+  display: flex;
+  flex-wrap: wrap;
+  // Safari fix for flex-wrap
+  @media (min-width: @screen-md-min) {
+    flex-wrap: initial;
+  }
+}
+.row.is-flex > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+}
+
+// Remove borders from Bootstrap table
+.table.borderless td, .table.borderless th {
+  border: none;
+}
+
+// remove gutters from Boostrap row
+.row.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+// remove gutters from Boostrap column
+[class^="col-"].no-gutters,
+[class*=" col-"].no-gutters {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.transac-list-on-hover(@color: @transac-lightgrey) {
+  &:hover {
+    background-color: @color;
+  }
+}
+
+.transac-subtitle(@font-size: 13px, @color: lighten(@transac-darkgrey, 15%)) {
+  font-size: @font-size;
+  color: @color;
+}
+
+.transac-title(@font-size: 14px, @font-weight: bold) {
+  font-size: @font-size;
+  font-weight: @font-weight;
+  text-transform: capitalize;
+}
+
+.transac-table() {
+  table {
+    width: 100%;
+  }
+  tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0.5em 0;
+    border: 1px solid rgba(3,3,3,0.2);
+  }
+  td, th {
+    flex: 1 1 150px;
+    border: 0.5px solid rgba(3,3,3,0.2);
+  }
+}
+
+.transac-ellipsis() {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+// .transac-icon & .transac-btn mixins
+// Enhances the base transac-icon & transac-btn classes (see globals.less) with
+// specific customisations
+// ---------------------
+.transac-icon-approve() {
+  color: @transac-tx-approve-color;
+  &:hover {
+    background-color: @transac-tx-approve-color;
+    color: white;
+  }
+}
+
+.transac-icon-approve-once() {
+  .transac-icon-approve();
+  i {
+    font-size: 27px;
+    position: absolute;
+    top: 12px;
+    left: 10px;
+  }
+  span {
+    position: absolute;
+    font-size: 12px;
+    top: 24px;
+    left: 28px;
+  }
+}
+
+.transac-icon-deny-once() {
+  color: @transac-tx-deny-color;
+  &:hover {
+    background-color: @transac-tx-deny-color;
+    color: white;
+  }
+}
+
+.transac-icon-deny() {
+  .transac-icon-deny-once();
+  i.first {
+    position: absolute;
+    top: 11px;
+    left: 9px;
+    font-size: 25px;
+  }
+  i.second {
+    position: absolute;
+    top: 16px;
+    left: 23px;
+    font-size: 25px;
+  }
+}
+
+.transac-icon-merge() {
+  color: @transac-tx-duplicate-color;
+  &:hover {
+    background-color: @transac-tx-duplicate-color;
+    color: white;
+  }
+}
+
+.transac-btn-approve() {
+  color: @transac-tx-approve-color;
+  // color: white;
+  &:hover {
+    background-color: @transac-tx-approve-color;
+    color: white;
+  }
+}
+
+.transac-btn-approve-once() {
+  .transac-btn-approve();
+  span.icon-text {
+    font-size: 10px;
+    text-transform: initial;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+  }
+}
+
+.transac-btn-deny-once() {
+  color: @transac-tx-deny-color;
+  &:hover {
+    background-color: @transac-tx-deny-color;
+    color: white;
+  }
+}
+
+.transac-btn-deny() {
+  .transac-btn-deny-once();
+  padding-right: 29px;
+  i.first {
+    position: absolute;
+    right: 9px;
+    bottom: 11px;
+    font-size: 15px;
+  }
+  i.second {
+    position: absolute;
+    right: -1px;
+    bottom: 8px;
+    font-size: 15px;
+  }
+}
+
+.transac-btn-merge() {
+  color: @transac-tx-duplicate-color;
+  &:hover {
+    background-color: @transac-tx-duplicate-color;
+    color: white;
+  }
+}
+
+// TODO: To be replaced by transac-icon / transac-btn mixins & removed
+// ---
+// Should be mixed into a <button> or <div type="button">
+.transac-action-button(@color: @transac-blue, @margin: 1px, @padding: 10px 18px) {
+  color: @color;
+  border: none;
+  padding: @padding;
+  margin: @margin;
+  max-width: 60px;
+  background-color: inherit;
+  border-radius: 0;
+  &:hover {
+    color: lighten(@color, 15%);
+  }
+}
+
+// Should be mixed into a <div ng-click>
+.transac-action-button-labeled--label-right(@btn-color: @transac-blue, @label-color: lighten(@transac-darkgrey, 15%)) {
+  position: absolute;
+  display: flex;
+  div.action-button {
+    .transac-action-button(@btn-color, 10px);
+    // Adjustments for <span> label
+    padding: 10px 12px 10px 18px;
+    margin: 10px 0 10px 10px;
+  }
+  span.action-label {
+    display: flex;
+    align-items: center;
+    padding-right: 25px;
+    .transac-subtitle(13px, @label-color)
+  }
+  &:hover {
+    div.action-button { color: lighten(@btn-color, 15%); }
+    span.action-label { color: lighten(@label-color, 15%); }
+  }
+}
+
+.transac-action-button-labeled--label-left(@btn-color: @transac-blue, @label-color: lighten(@transac-darkgrey, 15%)) {
+  display: flex;
+  div.action-button {
+    .transac-action-button(@btn-color, 10px);
+    // Adjustments for <span> label
+    padding: 10px 18px 10px 12px;
+  }
+  span.action-label {
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    .transac-subtitle(13px, @label-color)
+  }
+  &:hover {
+    div.action-button { color: lighten(@btn-color, 15%); }
+    span.action-label { color: lighten(@label-color, 15%); }
+  }
+}
+// ---------------------
+
+transac {
+  position: relative;
+}
+
+transac-top-bar {
+  display: block;
+  background-color: @transac-top-bar-background-color;
+  border: @transac-top-bar-border;
+  box-shadow: @transac-top-bar-box-shadow;
+  text-transform: uppercase;
+
+  & > .top-bar {
+    display: flex;
+    flex-direction: row;
+
+    .refresh-txs {
+
+      div[type='button'] {
+        .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
+        &.loading {
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+
+      .tab {
+        width: 100%;
+        color: @transac-top-bar-menu-item-color;
+        text-decoration: none;
+        text-align: center;
+        padding-top: 4px;
+        cursor: pointer;
+        flex: 1.5;
+        overflow: hidden;
+        &.loading {
+          cursor: not-allowed;
+        }
+        &.active {
+          .line {
+            width: 100%;
+            height: 2px;
+            background-color: @transac-top-bar-menu-item-active-line-color;
+          }
+        }
+        &.active.loading {
+          .line {
+            webkit-animation: transacFlickerOpacity 1s infinite;
+            moz-animation: transacFlickerOpacity 1s infinite;
+            o-animation: transacFlickerOpacity 1s infinite;
+            animation: transacFlickerOpacity 1s infinite;
+          }
+        }
+        &:hover {
+          color: lighten(@transac-top-bar-menu-item-color, 30%);
+        }
+      }
+    }
+
+    .toggle-search-btn {
+      .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
+      &.loading {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  transac-search-bar {
+    flex: .00001;
+    -webkit-animation: transacFlexGrow 200ms ease forwards;
+    -o-animation: transacFlexGrow 200ms ease forwards;
+    animation: transacFlexGrow 200ms ease forwards;
+
+    &.remove-search-bar {
+      flex: 1;
+      -webkit-animation: transacFlexShrink 200ms ease forwards;
+      -o-animation: transacFlexShrink 200ms ease forwards;
+      animation: transacFlexShrink 200ms ease forwards;
+    }
+  }
+}
+
+transac-filters-selector {
+
+  & > .filters-selector {
+    min-height: 100%;
+
+    #dropdown-toggle-btn {
+      .transac-action-button(@transac-top-bar-menu-item-color, 1px, 5px 10px);
+      box-shadow: none;
+    }
+
+    .dropdown-menu {
+      & > li > a {
+        &:focus {
+          color: @transac-top-bar-menu-item-color;;
+          background-color: inherit;
+        }
+        &.selected {
+          color: darken(@transac-top-bar-menu-item-color, 30%);
+          background-color: @transac-filters-selector-selected-background-color;
+        }
+      }
+      li > a {
+        color: @transac-top-bar-menu-item-color;
+      }
+    }
+  }
+}
+
+transac-search-bar {
+  input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 0px 10px;
+  }
+}
+
+transac-tx {
+  display: block;
+  background-color: @transac-tx-background-color;
+
+  .transac-list-on-hover(@transac-tx-hover-background-color);
+
+  // Remove hover effect on historical records as they are not clickable at the moment.
+  &.historical {
+    &:hover {
+      background-color: inherit;
+    }
+  }
+
+  &.commiting {
+    display: none;
+    // TODO: work on an enjoyable animation for this action
+  }
+
+  .selected {
+    // box-shadow: 0px 5px 10px -4px;
+    box-shadow: 0px 0px 30px -7px;
+    border-bottom: 1px solid @transac-lightgrey;
+    position: relative;
+    background-color: @transac-tx-hover-background-color;
+    .summary {
+      background-color: @transac-tx-hover-background-color;
+      border-bottom: 2px solid @transac-grey;
+    }
+  }
+
+  .tx-summary {
+    height: @transac-tx-height;
+    width: 100%;
+    display: -webkit-box;
+
+    & > .content {
+      height: 100%;
+      display: flex;
+      flex-grow: 1;
+      padding: 0px 10px;
+      color: inherit;
+      text-decoration: none;
+
+      .icon {
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      .warning {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        color: @transac-tx-duplicate-warning-color;
+        span { font-size: 13px; }
+      }
+
+      .caption {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        flex: 2;
+        justify-content: center;
+        .title {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          .transac-title();
+        }
+        .subtitle {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          .transac-subtitle();
+        }
+      }
+    }
+
+    & > .actions {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      margin-right: 15px;
+      min-width: 130px;
+      justify-content: center;
+      .action {
+        &.approve {
+          .transac-icon-approve();
+        }
+        &.deny {
+          .transac-icon-deny-once();
+        }
+        &.merge {
+          .transac-icon-merge();
+        }
+        // History view button styles
+        // ---
+        // &.approve-hist {
+        //   color: white;
+        //   background-color: @transac-tx-approve-color;
+        //   &:hover {
+        //     color: white;
+        //     background-color: @transac-tx-approve-color;
+        //   }
+        // }
+        // &.deny-hist {
+        //   color: white;
+        //   background-color: @transac-tx-deny-color;
+        //   &:hover {
+        //     color: white;
+        //     background-color: @transac-tx-deny-color;
+        //   }
+        // }
+        // &.merge-hist {
+        //   color: white;
+        //   background-color: @transac-tx-duplicate-color;
+        //   &:hover {
+        //     color: white;
+        //     background-color: @transac-tx-duplicate-color;
+        //   }
+        // }
+      }
+    }
+  }
+
+  .tx-detail {
+    padding: 0 15px;
+    background-color: white;
+
+    // Select apps & actions
+    & > div:last-child {
+      border-top: 1px solid #eae8e8;
+    }
+
+    .apps {
+      margin-bottom: 10px;
+
+      .title {
+        padding-left: 10px;
+        h5 {
+          .transac-subtitle();
+        }
+      }
+
+      .app {
+        display: flex;
+        padding: 10px;
+        .transac-list-on-hover(@transac-tx-hover-background-color);
+
+        span {
+          display: flex;
+          flex-grow: 1;
+        }
+
+        input {
+          display: flex;
+        }
+      }
+    }
+
+    .dup-line-break {
+      display: flex;
+
+      .title {
+        padding: 0px 12px;
+        color: @transac-tx-details-duplicate-warning-color;
+        i { padding: 0 3px; }
+      }
+
+      .spacer {
+        display: flex;
+        border-bottom: 2px solid @transac-grey;
+        height: 12px;
+        &.left {
+          flex-grow: 1;
+        }
+        &.right {
+          flex-grow: 2.5;
+        }
+      }
+    }
+
+    .matches {
+      // overflow: auto;
+      min-height: 70px;
+      // max-height: 130px;
+    }
+
+    .actions-bar {
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 10px 0;
+
+      & > .wrapper {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 15px;
+      }
+
+      .action {
+        &.approve {
+          .transac-icon-approve();
+        }
+        &.deny {
+          .transac-icon-deny();
+        }
+        &.dups {
+          .transac-icon-merge();
+        }
+        &.approve-once {
+          .transac-icon-approve-once();
+        }
+        &.deny-once {
+          .transac-icon-deny-once();
+        }
+      }
+    }
+  }
+}
+
+transac-tx-changes {
+  display: block;
+
+  .table-responsive {
+    table {
+      margin-bottom: 0;
+    }
+  }
+}
+
+transac-tx-matches {
+  display: block;
+
+  & > .match {
+
+    .caption {
+      display: flex;
+      align-items: center;
+      padding: 6px 0;
+
+      .title {
+        display: inline-block;
+        .transac-title();
+        margin-right: 10px;
+      }
+
+      .subtitle {
+        flex: 1;
+        .transac-subtitle();
+        .transac-ellipsis();
+      }
+    }
+  }
+}
+
+transac-tx-reconcile {
+  display: block;
+  background-color: white;
+  box-shadow: 0px 1px 8px -4px;
+
+  & > .top-panel {
+    position: relative;
+    margin-bottom: 15px;
+
+    .title {
+      text-align: center;
+      font-size: 16px;
+      padding: 5px;
+      padding-top: 20px;
+    }
+
+    .top-panel-btn {
+
+      &.back {
+        .transac-action-button-labeled--label-right(@transac-darkgrey);
+      }
+
+      &.next {
+        .transac-action-button-labeled--label-left(@transac-darkgrey);
+      }
+
+      &.done {
+        .transac-action-button-labeled--label-left(@transac-green, @transac-green);
+        span {
+          font-weight: bold;
+        }
+      }
+
+      &.align-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+  }
+
+  .edit > .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+    transac-tx-tile {
+      min-width: 48%;
+      max-width: 48%;
+      margin: 1%;
+
+      @media (max-width: @screen-sm-max) {
+        min-width: 100%;
+        max-width: 100%;
+        margin: 0;
+      }
+    }
+  }
+
+  .review > .wrapper {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 40px;
+
+    transac-tx-tile {
+      min-width: 50%;
+      max-width: 50%;
+
+      @media (max-width: @screen-sm-max) {
+        min-width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+
+}
+
+transac-tx-tile {
+
+  & > .tile {
+    width: 100%;
+    box-shadow: @transac-tx-tile-box-shadow;
+    border: 1px solid @transac-grey;
+    &.selected {
+      & > .topbar {
+        background-color: @transac-tx-tile-topbar-selected-background-color;
+      }
+    }
+    &.deselected {
+      color: @transac-tx-tile-deselected-color;
+      // captures subtitle (app name)
+      p { color: @transac-tx-tile-deselected-color }
+    }
+
+    & > .topbar {
+      height: 60px;
+      border-bottom: 1px solid @transac-grey;
+      position: relative;
+
+      &.no-click {
+        cursor: default;
+      }
+
+      .topbar-checkbox {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        padding: 16px;
+        input[type="checkbox"][disabled] {
+          cursor: pointer;
+        }
+      }
+
+      .topbar-text {
+        text-align: center;
+
+        h5 {
+          font-size: 17px;
+          margin-bottom: 2px;
+        }
+      }
+
+      .topbar-text-subtile {
+        margin: 0 50px;
+        p {
+          .transac-subtitle();
+          .transac-ellipsis();
+        }
+      }
+    }
+  }
+
+  transac-tx-changes {
+    min-height: 500px;
+    max-height: 500px;
+    overflow: auto;
+  }
+}
+
+transac-txs {
+  display: block;
+  background-color: white;
+  box-shadow: 0px 1px 8px -4px;
+
+  .loading,
+  .manual-load {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .manual-load {
+    color: darken(@transac-grey, 15%);
+    button {
+      .transac-action-button(@transac-darkgrey);
+      max-width: 200px;
+      &:hover {
+        background-color: @transac-grey;
+      }
+    }
+  }
+}

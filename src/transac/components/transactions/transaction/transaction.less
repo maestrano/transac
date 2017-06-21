@@ -1,0 +1,219 @@
+transac-tx {
+  display: block;
+  background-color: @transac-tx-background-color;
+
+  .transac-list-on-hover(@transac-tx-hover-background-color);
+
+  // Remove hover effect on historical records as they are not clickable at the moment.
+  &.historical {
+    &:hover {
+      background-color: inherit;
+    }
+  }
+
+  &.commiting {
+    display: none;
+    // TODO: work on an enjoyable animation for this action
+  }
+
+  .selected {
+    // box-shadow: 0px 5px 10px -4px;
+    box-shadow: 0px 0px 30px -7px;
+    border-bottom: 1px solid @transac-lightgrey;
+    position: relative;
+    background-color: @transac-tx-hover-background-color;
+    .summary {
+      background-color: @transac-tx-hover-background-color;
+      border-bottom: 2px solid @transac-grey;
+    }
+  }
+
+  .tx-summary {
+    height: @transac-tx-height;
+    width: 100%;
+    display: -webkit-box;
+
+    & > .content {
+      height: 100%;
+      display: flex;
+      flex-grow: 1;
+      padding: 0px 10px;
+      color: inherit;
+      text-decoration: none;
+
+      .icon {
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      .warning {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        color: @transac-tx-duplicate-warning-color;
+        span { font-size: 13px; }
+      }
+
+      .caption {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        flex: 2;
+        justify-content: center;
+        .title {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          .transac-title();
+        }
+        .subtitle {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          .transac-subtitle();
+        }
+      }
+    }
+
+    & > .actions {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      margin-right: 15px;
+      min-width: 130px;
+      justify-content: center;
+      .action {
+        &.approve {
+          .transac-icon-approve();
+        }
+        &.deny {
+          .transac-icon-deny-once();
+        }
+        &.merge {
+          .transac-icon-merge();
+        }
+        // History view button styles
+        // ---
+        // &.approve-hist {
+        //   color: white;
+        //   background-color: @transac-tx-approve-color;
+        //   &:hover {
+        //     color: white;
+        //     background-color: @transac-tx-approve-color;
+        //   }
+        // }
+        // &.deny-hist {
+        //   color: white;
+        //   background-color: @transac-tx-deny-color;
+        //   &:hover {
+        //     color: white;
+        //     background-color: @transac-tx-deny-color;
+        //   }
+        // }
+        // &.merge-hist {
+        //   color: white;
+        //   background-color: @transac-tx-duplicate-color;
+        //   &:hover {
+        //     color: white;
+        //     background-color: @transac-tx-duplicate-color;
+        //   }
+        // }
+      }
+    }
+  }
+
+  .tx-detail {
+    padding: 0 15px;
+    background-color: white;
+
+    // Select apps & actions
+    & > div:last-child {
+      border-top: 1px solid #eae8e8;
+    }
+
+    .apps {
+      margin-bottom: 10px;
+
+      .title {
+        padding-left: 10px;
+        h5 {
+          .transac-subtitle();
+        }
+      }
+
+      .app {
+        display: flex;
+        padding: 10px;
+        .transac-list-on-hover(@transac-tx-hover-background-color);
+
+        span {
+          display: flex;
+          flex-grow: 1;
+        }
+
+        input {
+          display: flex;
+        }
+      }
+    }
+
+    .dup-line-break {
+      display: flex;
+
+      .title {
+        padding: 0px 12px;
+        color: @transac-tx-details-duplicate-warning-color;
+        i { padding: 0 3px; }
+      }
+
+      .spacer {
+        display: flex;
+        border-bottom: 2px solid @transac-grey;
+        height: 12px;
+        &.left {
+          flex-grow: 1;
+        }
+        &.right {
+          flex-grow: 2.5;
+        }
+      }
+    }
+
+    .matches {
+      // overflow: auto;
+      min-height: 70px;
+      // max-height: 130px;
+    }
+
+    .actions-bar {
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 10px 0;
+
+      & > .wrapper {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 15px;
+      }
+
+      .action {
+        &.approve {
+          .transac-icon-approve();
+        }
+        &.deny {
+          .transac-icon-deny();
+        }
+        &.dups {
+          .transac-icon-merge();
+        }
+        &.approve-once {
+          .transac-icon-approve-once();
+        }
+        &.deny-once {
+          .transac-icon-deny-once();
+        }
+      }
+    }
+  }
+}

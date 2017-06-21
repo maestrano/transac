@@ -1,0 +1,22 @@
+transac-txs {
+  display: block;
+  background-color: white;
+  box-shadow: 0px 1px 8px -4px;
+
+  .loading,
+  .manual-load {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .manual-load {
+    color: darken(@transac-grey, 15%);
+    button {
+      .transac-action-button(@transac-darkgrey);
+      max-width: 200px;
+      &:hover {
+        background-color: @transac-grey;
+      }
+    }
+  }
+}

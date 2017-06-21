@@ -1,0 +1,75 @@
+transac-tx-reconcile {
+  display: block;
+  background-color: white;
+  box-shadow: 0px 1px 8px -4px;
+
+  & > .top-panel {
+    position: relative;
+    margin-bottom: 15px;
+
+    .title {
+      text-align: center;
+      font-size: 16px;
+      padding: 5px;
+      padding-top: 20px;
+    }
+
+    .top-panel-btn {
+
+      &.back {
+        .transac-action-button-labeled--label-right(@transac-darkgrey);
+      }
+
+      &.next {
+        .transac-action-button-labeled--label-left(@transac-darkgrey);
+      }
+
+      &.done {
+        .transac-action-button-labeled--label-left(@transac-green, @transac-green);
+        span {
+          font-weight: bold;
+        }
+      }
+
+      &.align-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+  }
+
+  .edit > .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+    transac-tx-tile {
+      min-width: 48%;
+      max-width: 48%;
+      margin: 1%;
+
+      @media (max-width: @screen-sm-max) {
+        min-width: 100%;
+        max-width: 100%;
+        margin: 0;
+      }
+    }
+  }
+
+  .review > .wrapper {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 40px;
+
+    transac-tx-tile {
+      min-width: 50%;
+      max-width: 50%;
+
+      @media (max-width: @screen-sm-max) {
+        min-width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+
+}

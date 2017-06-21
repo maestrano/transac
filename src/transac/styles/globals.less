@@ -1,0 +1,187 @@
+/*
+** Transac! Global Classes
+*/
+
+.no-pointer {
+  cursor: default;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+** Transac! base Icons & Buttons
+*/
+.transac-icon {
+  position: relative;
+  outline: 0;
+  border: none;
+  max-width: 60px;
+  background-color: inherit;
+  border-radius: 2px;
+  margin: 6px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.transac-icon.transac-raised {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+}
+.transac-icon.transac-fab {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+  border-radius: 50px;
+  &.transac-flat {
+    box-shadow: none;
+  }
+}
+.transac-icon,
+.transac-icon.transac-raised,
+.transac-icon.transac-fab {
+  &:focus {
+    box-shadow: 0 1px 14px 0 rgba(0, 0, 0, 0.36);
+  }
+  &:active {
+    box-shadow: none;
+  }
+}
+
+.transac-btn {
+  position: relative;
+  outline: 0;
+  border: none;
+  background-color: inherit;
+  border-radius: 2px;
+  text-transform: uppercase;
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+  margin: 16px 8px;
+  padding: 0 6px;
+  i {
+    font-size: 17px;
+    padding: 0 5px;
+  }
+}
+.transac-btn.transac-raised {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+}
+.transac-btn,
+.transac-raised {
+  &:focus {
+    box-shadow: 0 1px 14px 0 rgba(0, 0, 0, 0.36);
+  }
+  &:active {
+    box-shadow: none;
+  }
+}
+
+/*
+**  Animations
+*/
+@-webkit-keyframes transacFlexGrow {
+  to {
+    flex: 1;
+  }
+}
+@-moz-keyframes transacFlexGrow {
+  to {
+    flex: 1;
+  }
+}
+@-o-keyframes transacFlexGrow {
+  to {
+    flex: 1;
+  }
+}
+@keyframes transacFlexGrow {
+  to {
+    flex: 1;
+  }
+}
+
+@-webkit-keyframes transacFlexShrink {
+  to {
+    flex: .00001;
+  }
+}
+@-moz-keyframes transacFlexShrink {
+  to {
+    flex: .00001;
+  }
+}
+@-o-keyframes transacFlexShrink {
+  to {
+    flex: .00001;
+  }
+}
+@keyframes transacFlexShrink {
+  to {
+    flex: .00001;
+  }
+}
+
+@-webkit-keyframes transacFlickerOpacity{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-moz-keyframes transacFlickerOpacity{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-o-keyframes transacFlickerOpacity{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@keyframes transacFlickerOpacity {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+
+/*
+** Bootstrap overrides / class customisations
+*/
+
+// Column flex; columns with an even height.
+.row.is-flex {
+  display: flex;
+  flex-wrap: wrap;
+  // Safari fix for flex-wrap
+  @media (min-width: @screen-md-min) {
+    flex-wrap: initial;
+  }
+}
+.row.is-flex > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+}
+
+// Remove borders from Bootstrap table
+.table.borderless td, .table.borderless th {
+  border: none;
+}
+
+// remove gutters from Boostrap row
+.row.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+// remove gutters from Boostrap column
+[class^="col-"].no-gutters,
+[class*=" col-"].no-gutters {
+  padding-right: 0;
+  padding-left: 0;
+}

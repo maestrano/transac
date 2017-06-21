@@ -1,0 +1,14 @@
+<div ng-hide="$ctrl.reconciling" infinite-scroll="$ctrl.loadMore()" infinite-scroll-immediate-check="false" infinite-scroll-disabled="$ctrl.isPaginationDisabled()">
+  <transac-tx transaction="transaction" historical="$ctrl.isHistorical()" ng-repeat="transaction in $ctrl.transactions track by transaction.transaction_log.id" on-commit="$ctrl.onTransactionCommit($event)" on-reconcile="$ctrl.onReconcileTransactions($event)"></transac-tx>
+  <div ng-if="$ctrl.loading" class="loading">
+    <i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>
+  </div>
+  <div ng-if="!$ctrl.loading" class="manual-load">
+    <button ng-click="$ctrl.loadMore()" ng-if="!$ctrl.isPaginationDisabled()">Scroll for more</button>
+    <p ng-if="$ctrl.allTxsFound()">All results</p>
+    <p ng-if="$ctrl.noTxsFound()">No results</p>
+  </div>
+</div>
+<div ng-if="$ctrl.reconciling">
+  <transac-tx-reconcile transaction="$ctrl.reconcileData.transaction" matches="$ctrl.reconcileData.matches" apps="$ctrl.reconcileData.apps" on-reconciled="$ctrl.onTransactionReconciled($event)"></transac-tx-reconcile>
+</div>
