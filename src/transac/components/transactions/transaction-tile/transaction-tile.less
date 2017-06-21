@@ -1,11 +1,11 @@
 transac-tx-tile {
 
-  .tx-tile {
+  & > .tile {
     width: 100%;
     box-shadow: @transac-tx-tile-box-shadow;
     border: 1px solid @transac-grey;
     &.selected {
-      .tx-tile_topbar {
+      & > .topbar {
         background-color: @transac-tx-tile-topbar-selected-background-color;
       }
     }
@@ -14,41 +14,42 @@ transac-tx-tile {
       // captures subtitle (app name)
       p { color: @transac-tx-tile-deselected-color }
     }
-  }
 
-  .tx-tile_topbar {
-    height: 60px;
-    border-bottom: 1px solid @transac-grey;
-    position: relative;
+    & > .topbar {
+      height: 60px;
+      border-bottom: 1px solid @transac-grey;
+      position: relative;
 
-    &.no-click {
-      cursor: default;
-    }
-  }
+      &.no-click {
+        cursor: default;
+      }
 
-  .tx-tile_topbar_checkbox {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    padding: 16px;
-    input[type="checkbox"][disabled] {
-      cursor: pointer;
-    }
-  }
+      .topbar-checkbox {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        padding: 16px;
+        input[type="checkbox"][disabled] {
+          cursor: pointer;
+        }
+      }
 
-  .tx-tile_topbar_text {
-    text-align: center;
+      .topbar-text {
+        text-align: center;
 
-    h5 {
-      font-size: 17px;
-      margin-bottom: 2px;
-    }
-  }
-  .tx-tile_topbar_text_subtitle {
-    margin: 0 50px;
-    p {
-      .transac-subtitle();
-      .transac-ellipsis();
+        h5 {
+          font-size: 17px;
+          margin-bottom: 2px;
+        }
+      }
+
+      .topbar-text-subtile {
+        margin: 0 50px;
+        p {
+          .transac-subtitle();
+          .transac-ellipsis();
+        }
+      }
     }
   }
 

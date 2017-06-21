@@ -38,7 +38,7 @@
   white-space: nowrap;
 }
 
-// TODO: To be replaced by tx-icon / tx-button classes
+// TODO: To be replaced by tx-icon / tx-btn mixins & removed
 // ---
 // Should be mixed into a <button> or <div type="button">
 .transac-action-button(@color: @transac-blue, @margin: 1px, @padding: 10px 18px) {
@@ -96,7 +96,7 @@
 }
 // ---------------------
 
-// Tx actions mixins for tx-fab icons
+// Transac! Fab Icons
 // ---------------------
 .tx-icon-approve() {
   color: @transac-tx-approve-color;
@@ -155,60 +155,59 @@
 }
 // ------------
 
-// Tx actions mixins for tx-btn buttons
-// Kept incase we decide to go back to the tx action button style
+// Transac! Buttons
 // ---------------------
-// .tx-btn-approve() {
-//   color: @transac-tx-approve-color;
-//   // color: white;
-//   &:hover {
-//     background-color: @transac-tx-approve-color;
-//     color: white;
-//   }
-// }
+.tx-btn-approve() {
+  color: @transac-tx-approve-color;
+  // color: white;
+  &:hover {
+    background-color: @transac-tx-approve-color;
+    color: white;
+  }
+}
 
-// .tx-btn-approve-once() {
-//   .tx-btn-approve();
-//   span.icon-text {
-//     font-size: 10px;
-//     text-transform: initial;
-//     position: absolute;
-//     right: 5px;
-//     bottom: 5px;
-//   }
-// }
+.tx-btn-approve-once() {
+  .tx-btn-approve();
+  span.icon-text {
+    font-size: 10px;
+    text-transform: initial;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+  }
+}
 
-// .tx-btn-deny-once() {
-//   color: @transac-tx-deny-color;
-//   &:hover {
-//     background-color: @transac-tx-deny-color;
-//     color: white;
-//   }
-// }
+.tx-btn-deny-once() {
+  color: @transac-tx-deny-color;
+  &:hover {
+    background-color: @transac-tx-deny-color;
+    color: white;
+  }
+}
 
-// .tx-btn-deny() {
-//   .tx-btn-deny-once();
-//   padding-right: 29px;
-//   i.first {
-//     position: absolute;
-//     right: 9px;
-//     bottom: 11px;
-//     font-size: 15px;
-//   }
-//   i.second {
-//     position: absolute;
-//     right: -1px;
-//     bottom: 8px;
-//     font-size: 15px;
-//   }
-// }
+.tx-btn-deny() {
+  .tx-btn-deny-once();
+  padding-right: 29px;
+  i.first {
+    position: absolute;
+    right: 9px;
+    bottom: 11px;
+    font-size: 15px;
+  }
+  i.second {
+    position: absolute;
+    right: -1px;
+    bottom: 8px;
+    font-size: 15px;
+  }
+}
 
-// .tx-btn-merge() {
-//   color: @transac-tx-duplicate-color;
-//   &:hover {
-//     background-color: @transac-tx-duplicate-color;
-//     color: white;
-//   }
-// }
+.tx-btn-merge() {
+  color: @transac-tx-duplicate-color;
+  &:hover {
+    background-color: @transac-tx-duplicate-color;
+    color: white;
+  }
+}
 // ---------------------
 

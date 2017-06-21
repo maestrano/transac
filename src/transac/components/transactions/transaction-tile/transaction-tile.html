@@ -1,11 +1,11 @@
-<div class="tx-tile" ng-class="{ 'deselected': $ctrl.deselected, 'selected': $ctrl.checked }">
-  <div class="tx-tile_topbar row no-gutters" ng-class="{'no-click': !$ctrl.isOnSelectDefined()}" ng-click="$ctrl.onSelectTx()">
-    <div class="tx-tile_topbar_checkbox" ng-if="$ctrl.isOnSelectDefined()">
+<div class="tile" ng-class="{ 'deselected': $ctrl.deselected, 'selected': $ctrl.checked }">
+  <div class="topbar row no-gutters" ng-class="{'no-click': !$ctrl.isOnSelectDefined()}" ng-click="$ctrl.onSelectTx()">
+    <div class="topbar-checkbox" ng-if="$ctrl.isOnSelectDefined()">
       <input type="checkbox" ng-checked="$ctrl.checked" disabled>
     </div>
-    <div class="tx-tile_topbar_text">
+    <div class="topbar-text">
       <h5>{{::$ctrl.title}}</h5>
-      <div class="tx-tile_topbar_text_subtitle">
+      <div class="topbar-text-subtitle">
         <p>{{::$ctrl.subtitle}}</p>
       </div>
     </div>

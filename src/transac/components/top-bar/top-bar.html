@@ -1,18 +1,18 @@
 <div class="top-bar">
   <transac-filters-selector filters-menu="$ctrl.filtersMenu" on-select="$ctrl.onFilterSelect($event)" on-submit="$ctrl.onFiltersSubmit($event)" is-disabled="$ctrl.isMenuLoading"></transac-filters-selector>
-  <div class="top-bar_refresh-txs">
-    <div type="button" class="top-bar_refresh-txs_btn" ng-class="{'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.onRefreshTxsClick()">
+  <div class="refresh-txs">
+    <div type="button" ng-class="{'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.onRefreshTxsClick()">
       <i class="fa fa-refresh fa-2x fa-fw"></i>
     </div>
   </div>
-  <div class="top-bar_menu">
-    <a href="" class="top-bar_menu_tab top-bar_menu_flex-item" ng-class="{ 'active': menu.active, 'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">
+  <div class="menu">
+    <a href="" class="tab" ng-class="{ 'active': menu.active, 'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.onMenuItemClick(menu)" ng-repeat="menu in $ctrl.menus track by $index">
       <h5>{{::menu.title}} ({{menu.itemsCount}})</h5>
-      <div class="top-bar_menu_tab-line"></div>
+      <div class="line"></div>
     </a>
     <!-- $compiles transac-search-bar cmp here (see controller) -->
   </div>
-  <button class="top-bar_toggle-search-btn" ng-class="{ 'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.toggleSearch($event)" ng-disabled="$ctrl.isMenuLoading">
+  <button class="toggle-search-btn" ng-class="{ 'loading': $ctrl.isMenuLoading }" ng-click="$ctrl.toggleSearch($event)" ng-disabled="$ctrl.isMenuLoading">
     <i class="fa fa-2x fa-fw" ng-class="{ 'fa-search': !$ctrl.isEditingSearchBar, 'fa-times': $ctrl.isEditingSearchBar }" aria-hidden="true"></i>
   </button>
 </div>

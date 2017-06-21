@@ -1,22 +1,24 @@
 transac-tx-matches {
   display: block;
 
-  .match_caption {
-    display: flex;
-    align-items: center;
-    padding: 6px 0;
-  }
+  & > .match {
 
-  .match_caption_title {
-    display: inline-block;
-    .transac-title();
-    margin-right: 10px;
-  }
+    .caption {
+      display: flex;
+      align-items: center;
+      padding: 6px 0;
 
-  .match_caption_subtitle {
-    flex: 1;
-    .transac-subtitle();
-    .transac-ellipsis();
-  }
+      .title {
+        display: inline-block;
+        .transac-title();
+        margin-right: 10px;
+      }
 
+      .subtitle {
+        flex: 1;
+        .transac-subtitle();
+        .transac-ellipsis();
+      }
+    }
+  }
 }

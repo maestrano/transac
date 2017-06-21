@@ -3,40 +3,43 @@ transac-tx-reconcile {
   background-color: white;
   box-shadow: 0px 1px 8px -4px;
 
-  .top-panel {
+  & > .top-panel {
     position: relative;
     margin-bottom: 15px;
-  }
 
-  .top-panel_title {
-    text-align: center;
-    font-size: 16px;
-    padding: 5px;
-    padding-top: 20px;
-  }
+    .title {
+      text-align: center;
+      font-size: 16px;
+      padding: 5px;
+      padding-top: 20px;
+    }
 
-  .top-panel_btn--back {
-    .transac-action-button-labeled--label-right(@transac-darkgrey);
-  }
+    .top-panel-btn {
 
-  .top-panel_btn--next {
-    .transac-action-button-labeled--label-left(@transac-darkgrey);
-  }
+      &.back {
+        .transac-action-button-labeled--label-right(@transac-darkgrey);
+      }
 
-  .top-panel_btn--done {
-    .transac-action-button-labeled--label-left(@transac-green, @transac-green);
-    span {
-      font-weight: bold;
+      &.next {
+        .transac-action-button-labeled--label-left(@transac-darkgrey);
+      }
+
+      &.done {
+        .transac-action-button-labeled--label-left(@transac-green, @transac-green);
+        span {
+          font-weight: bold;
+        }
+      }
+
+      &.align-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
     }
   }
 
-  .top-panel_btn--align-right {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .edit_tx {
+  .edit > .wrapper {
     display: flex;
     flex-wrap: wrap;
 
@@ -54,7 +57,7 @@ transac-tx-reconcile {
     }
   }
 
-  .review_tx {
+  .review > .wrapper {
     display: flex;
     justify-content: center;
     padding-bottom: 40px;

@@ -1,47 +1,48 @@
 <div ng-class="{ 'selected': $ctrl.isSelected }">
-  <div class="summary">
-    <a href="" class="summary_content" ng-click="$ctrl.selectOnClick()" ng-class="{ 'no-pointer': $ctrl.historical }">
-      <div class="summary_content_icon">
+  <!-- TODO: move to component -->
+  <div class="tx-summary">
+    <a href="" class="content" ng-click="$ctrl.selectOnClick()" ng-class="{ 'no-pointer': $ctrl.historical }">
+      <div class="icon">
         <i class="fa {{$ctrl.icon()}} fa-2x" aria-hidden="true"></i>
       </div>
-      <div class="summary_content_caption">
-        <div class="summary_content_caption_title">
+      <div class="caption">
+        <div class="title">
           <span>{{::$ctrl.title()}}</span>
         </div>
-        <div class="summary_content_caption_subtitle">
+        <div class="subtitle">
           <span>{{::$ctrl.subtitle()}}</span>
         </div>
       </div>
-      <div class="summary_content_warning" ng-if="$ctrl.hasMatches()" ng-class="{ 'hide': $ctrl.isSelected }">
+      <div class="warning" ng-if="$ctrl.hasMatches()" ng-class="{ 'hide': $ctrl.isSelected }">
         <div>
           <i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>
           <span>This record may be a duplicate</span>
         </div>
       </div>
     </a>
-    <div class="summary_actions" ng-class="{ 'hide': $ctrl.isSelected }" ng-if="!$ctrl.historical">
-      <div type="button" class="tx-icon tx-fab summary_actions_action--deny" ng-class="{'tx-flat summary_actions_action--deny-hist': false}" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
+    <div class="actions" ng-class="{ 'hide': $ctrl.isSelected }" ng-if="!$ctrl.historical">
+      <div type="button" class="tx-icon tx-fab action deny" ng-class="{'tx-flat action deny-hist': false}" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
         <i class="fa fa-times fa-2x fa-fw"></i>
       </div>
-      <div type="button" class="tx-icon tx-fab summary_actions_action--approve" ng-class="{'tx-flat summary_actions_action--approve-hist': false}" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
+      <div type="button" class="tx-icon tx-fab action approve" ng-class="{'tx-flat action approve-hist': false}" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
         <i class="fa fa-check fa-2x fa-fw"></i>
       </div>
-      <!-- <div type="button" class="tx-icon tx-fab summary_actions_action--merge" ng-class="{'tx-flat summary_actions_action--merge-hist': $ctrl.historical}" ng-if="$ctrl.isActionMade('merge')">
+      <!-- <div type="button" class="tx-icon tx-fab action merge" ng-class="{'tx-flat action merge-hist': $ctrl.historical}" ng-if="$ctrl.isActionMade('merge')">
         <i class="fa fa-link fa-2x fa-fw"></i>
       </div> -->
     </div>
   </div>
-  <div class="detail" ng-if="$ctrl.isSelected">
+  <div class="tx-detail" ng-if="$ctrl.isSelected">
     <div class="row is-flex">
-      <div class="col-md-8 col-xs-12 detail_changes no-gutters">
+      <div class="col-md-8 col-xs-12 no-gutters">
         <transac-tx-changes changes="$ctrl.formattedChanges"></transac-tx-changes>
       </div>
       <div class="col-md-4 col-xs-12 no-gutters">
-        <div class="row detail_apps no-gutters">
-          <div class="detail_apps_title">
+        <div class="row apps no-gutters">
+          <div class="title">
             <h5>Select apps to share with:</h5>
           </div>
-          <div class="detail_apps_app" ng-repeat="mapping in ::$ctrl.getPendingMappings()" ng-click="$ctrl.selectAppOnClick($event, mapping)">
+          <div class="app" ng-repeat="mapping in ::$ctrl.getPendingMappings()" ng-click="$ctrl.selectAppOnClick($event, mapping)">
             <span>{{::mapping.app_name}}</span>
             <input type="checkbox" ng-checked="mapping.sharedWith">
           </div>
@@ -50,61 +51,61 @@
     </div>
     <div class="row" ng-if="$ctrl.canReconcileRecords() && !$ctrl.historical">
       <div class="col-md-12 col-xs-12">
-        <div class="row detail_dup-line-break">
-          <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--left"></div>
-          <div class="detail_dup-line-break_title">
+        <div class="row dup-line-break">
+          <div class="spacer left"></div>
+          <div class="title">
             <div>
               <i class="fa fa-exclamation fa-lg" aria-hidden="true"></i>
               <span>Potential Duplicates</span>
             </div>
           </div>
-          <div class="detail_dup-line-break_spacer detail_dup-line-break_spacer--right"></div>
+          <div class="spacer right"></div>
         </div>
         <div class="row">
-          <div class="col-md-12 col-xs-12 detail_section detail_section_matches">
+          <div class="col-md-12 col-xs-12 matches">
             <transac-tx-matches matches="::$ctrl.matches"></transac-tx-matches>
           </div>
         </div>
       </div>
     </div>
-    <div class="row details_actions-bar">
-      <div class="col-md-12 col-xs-12 no-gutters detail_actions-bar">
-        <div class="detail_actions-bar_wrapper">
-          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--dups" ng-if="$ctrl.canReconcileRecords()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">
+    <div class="row">
+      <div class="col-md-12 col-xs-12 no-gutters actions-bar">
+        <div class="wrapper">
+          <div type="button" class="tx-icon tx-fab action dups" ng-if="$ctrl.canReconcileRecords()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">
             <i class="fa fa-link fa-2x fa-fw"></i>
           </div>
-          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--deny" ng-click="$ctrl.denyOnClick(true)" uib-tooltip="Never share this record" tooltip-popup-delay="300">
+          <div type="button" class="tx-icon tx-fab action deny" ng-click="$ctrl.denyOnClick(true)" uib-tooltip="Never share this record" tooltip-popup-delay="300">
             <i class="fa fa-times fa-2x first"/><i class="fa fa-times fa-2x second"/>
           </div>
-          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--approve-once" ng-click="$ctrl.approveOnClick()" uib-tooltip="Approve only this time" tooltip-popup-delay="300">
+          <div type="button" class="tx-icon tx-fab action approve-once" ng-click="$ctrl.approveOnClick()" uib-tooltip="Approve only this time" tooltip-popup-delay="300">
             <i class="fa fa-check fa-2x"></i><span>x1</span>
           </div>
-          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--deny-once" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
+          <div type="button" class="tx-icon tx-fab action deny-once" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
             <i class="fa fa-times fa-2x fa-fw"></i>
           </div>
-          <div type="button" class="tx-icon tx-fab detail_actions-bar_action--approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
+          <div type="button" class="tx-icon tx-fab action approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
             <i class="fa fa-check fa-2x fa-fw"></i>
           </div>
         </div>
         <!-- Button style action, kept incase we want to go back to this. -->
-        <!-- <div class="detail_actions-bar_wrapper">
-          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
+        <!-- <div class="wrapper">
+          <div type="button" class="tx-btn tx-raised action approve" ng-click="$ctrl.approveOnClick(true)" uib-tooltip="Always share this record" tooltip-popup-delay="300">
             <span>Always share</span>
             <i class="fa fa-check fa-fw"></i>
           </div>
-          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--deny-once" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
+          <div type="button" class="tx-btn tx-raised action deny-once" ng-click="$ctrl.denyOnClick()" uib-tooltip="Deny only this time" tooltip-popup-delay="300">
             <span>Do not share</span>
             <i class="fa fa-times fa-2x fa-fw"></i>
           </div>
-          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--approve-once" ng-click="$ctrl.approveOnClick()" uib-tooltip="Approve only this time" tooltip-popup-delay="300">
+          <div type="button" class="tx-btn tx-raised action approve-once" ng-click="$ctrl.approveOnClick()" uib-tooltip="Approve only this time" tooltip-popup-delay="300">
             <span>Share once</span>
             <i class="fa fa-check fa-2x"></i><span class="icon-text">x1</span>
           </div>
-          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--deny" ng-click="$ctrl.denyOnClick(true)" uib-tooltip="Never share this record" tooltip-popup-delay="300">
+          <div type="button" class="tx-btn tx-raised action deny" ng-click="$ctrl.denyOnClick(true)" uib-tooltip="Never share this record" tooltip-popup-delay="300">
             <span>Never share</span>
             <i class="fa fa-times fa-2x first"/><i class="fa fa-times fa-2x second"/>
           </div>
-          <div type="button" class="tx-btn tx-raised detail_actions-bar_action--dups" ng-if="$ctrl.hasMatches()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">
+          <div type="button" class="tx-btn tx-raised action dups" ng-if="$ctrl.hasMatches()" ng-click="$ctrl.reconcileOnClick()" uib-tooltip="Merge duplicate records" tooltip-popup-delay="300">
             <span>Merge Duplicates</span>
             <i class="fa fa-link fa-2x fa-fw"></i>
           </div>
