@@ -156,12 +156,16 @@
 
 // Column flex; columns with an even height.
 .row.is-flex {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  // Safari fix for flex-wrap
+  @media (min-width: @screen-md-min) {
+    flex-wrap: initial;
+  }
 }
 .row.is-flex > [class*='col-'] {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 // Remove borders from Bootstrap table
