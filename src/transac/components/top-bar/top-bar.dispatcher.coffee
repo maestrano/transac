@@ -1,3 +1,6 @@
+###
+#   @desc Service responsible for dispatching messages to alert the Topbar state with methods that represent actions made for the view layer.
+###
 angular.module('transac.transactions').service('TransacTopBarDispatcher', ($q, TransacTopBarStore)->
 
   _self = @
