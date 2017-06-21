@@ -198,12 +198,16 @@
 
 // Column flex; columns with an even height.
 .row.is-flex {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  // Safari fix for flex-wrap
+  @media (min-width: @screen-md-min) {
+    flex-wrap: initial;
+  }
 }
 .row.is-flex > [class*='col-'] {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 // Remove borders from Bootstrap table
@@ -788,6 +792,31 @@ transac-tx-changes {
   }
 }
 
+transac-tx-matches {
+  display: block;
+
+  & > .match {
+
+    .caption {
+      display: flex;
+      align-items: center;
+      padding: 6px 0;
+
+      .title {
+        display: inline-block;
+        .transac-title();
+        margin-right: 10px;
+      }
+
+      .subtitle {
+        flex: 1;
+        .transac-subtitle();
+        .transac-ellipsis();
+      }
+    }
+  }
+}
+
 transac-tx-reconcile {
   display: block;
   background-color: white;
@@ -834,7 +863,6 @@ transac-tx-reconcile {
     flex-wrap: wrap;
 
     transac-tx-tile {
-      flex: 1;
       min-width: 48%;
       max-width: 48%;
       margin: 1%;
@@ -853,7 +881,6 @@ transac-tx-reconcile {
     padding-bottom: 40px;
 
     transac-tx-tile {
-      flex: 1;
       min-width: 50%;
       max-width: 50%;
 
@@ -864,31 +891,6 @@ transac-tx-reconcile {
     }
   }
 
-}
-
-transac-tx-matches {
-  display: block;
-
-  & > .match {
-
-    .caption {
-      display: flex;
-      align-items: center;
-      padding: 6px 0;
-
-      .title {
-        display: inline-block;
-        .transac-title();
-        margin-right: 10px;
-      }
-
-      .subtitle {
-        flex: 1;
-        .transac-subtitle();
-        .transac-ellipsis();
-      }
-    }
-  }
 }
 
 transac-tx-tile {
